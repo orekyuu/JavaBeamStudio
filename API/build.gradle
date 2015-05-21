@@ -1,0 +1,19 @@
+javadoc {
+    options.encoding = "UTF-8"
+    options.locale = 'ja_JP'
+    project.configure(options) {
+        memberLevel = JavadocMemberLevel.PROTECTED
+        charSet = "UTF-8"
+        docTitle = "JavaBeamStudio API Document"
+        windowTitle = "JavaBeamStudio API Document"
+        use = "true"
+    }
+}
+
+dependencies {
+    compile 'javax.inject:javax.inject:1'
+    compile 'com.goldmansachs:gs-collections:4.1.0'
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}
+
+archivesBaseName = 'JavaBeamStudioAPI'
