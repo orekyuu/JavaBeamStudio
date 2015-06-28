@@ -17,9 +17,9 @@ public interface ColumnManager {
     /**
      * カラムのIDとプラグインIDから登録されているカラムのFactoryを返します。
      *
-     * @param pluginId
-     * @param columnId
-     * @return
+     * @param pluginId プラグインID
+     * @param columnId カラムID
+     * @return カラムのファクトリ
      */
     Optional<ColumnFactory> findByPluginIdAndColumnId(String pluginId, String columnId);
 

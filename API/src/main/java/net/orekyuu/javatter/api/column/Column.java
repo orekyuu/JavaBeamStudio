@@ -1,14 +1,46 @@
 package net.orekyuu.javatter.api.column;
 
-public interface Column {
+import javafx.scene.Node;
 
-    void restoration(ColumnState columnState);
+/**
+ * Twitterクライアントのカラムです。
+ *
+ * @since 1.0.0
+ */
+public final class Column {
 
-    String getPluginId();
+    private final ColumnController columnController;
+    private final Node root;
 
-    String getColumnId();
+    /**
+     * カラムのコントローラとノードをペアで持つColumnインスタンスを作成します。
+     *
+     * @param columnController コントローラ
+     * @param root             ルートNode
+     * @since 1.0.0
+     */
+    public Column(ColumnController columnController, Node root) {
+        this.columnController = columnController;
+        this.root = root;
+    }
 
-    default ColumnState newColumnState() {
-        return new ColumnState(getPluginId(), getColumnId());
+    /**
+     * Columnのコントローラを返します。
+     *
+     * @return Columnのコントローラ
+     * @since 1.0.0
+     */
+    public ColumnController getColumnController() {
+        return columnController;
+    }
+
+    /**
+     * Columnのルートノード
+     *
+     * @return Columnのルートノード
+     * @since 1.0.0
+     */
+    public Node getRoot() {
+        return root;
     }
 }

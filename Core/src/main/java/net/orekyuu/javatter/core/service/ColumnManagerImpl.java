@@ -7,8 +7,8 @@ import com.gs.collections.api.map.MutableMap;
 import com.gs.collections.impl.factory.Maps;
 import javafx.scene.Node;
 import net.orekyuu.javatter.api.column.Column;
+import net.orekyuu.javatter.api.column.ColumnController;
 import net.orekyuu.javatter.api.column.ColumnFactory;
-import net.orekyuu.javatter.api.column.ColumnNodePair;
 import net.orekyuu.javatter.api.column.ColumnState;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.service.ColumnManager;
@@ -39,14 +39,14 @@ public class ColumnManagerImpl implements ColumnManager {
     public Optional<ColumnFactory> findByPluginIdAndColumnId(String pluginId, String columnId) {
         ColumnFactory factory = new ColumnFactory() {
             @Override
-            public ColumnNodePair newInstance(ColumnState state) throws IOException {
+            public Column newInstance(ColumnState state) throws IOException {
                 String fxml = factories.get(pluginId + ":" + columnId);
                 JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource(fxml));
                 Node node = loader.load();
-                Column column = loader.getController();
-                column.restoration(state);
+                ColumnController columnController = loader.getController();
+                columnController.restoration(state);
 
-                return new ColumnNodePair(column, node);
+                return new Column(columnController, node);
             }
         };
         return Optional.ofNullable(factory);
@@ -60,12 +60,12 @@ public class ColumnManagerImpl implements ColumnManager {
             public ColumnFactory valueOf(String fxmlPath) {
                 return new ColumnFactory() {
                     @Override
-                    public ColumnNodePair newInstance(ColumnState state) throws IOException {
+                    public Column newInstance(ColumnState state) throws IOException {
                         JavatterFXMLLoader fxmlLoader = new JavatterFXMLLoader(getClass().getResource(fxmlPath));
                         Node load = fxmlLoader.load();
-                        Column column = fxmlLoader.getController();
-                        column.restoration(state);
-                        return new ColumnNodePair(column, load);
+                        ColumnController columnController = fxmlLoader.getController();
+                        columnController.restoration(state);
+                        return new Column(columnController, load);
                     }
                 };
             }

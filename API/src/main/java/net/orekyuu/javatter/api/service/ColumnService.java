@@ -2,7 +2,7 @@ package net.orekyuu.javatter.api.service;
 
 import com.gs.collections.api.list.ImmutableList;
 import net.orekyuu.javatter.api.column.Column;
-import net.orekyuu.javatter.api.column.ColumnNodePair;
+import net.orekyuu.javatter.api.column.ColumnController;
 import net.orekyuu.javatter.api.service.events.ColumnAddListener;
 import net.orekyuu.javatter.api.service.events.ColumnRemoveListener;
 
@@ -13,8 +13,9 @@ public interface ColumnService {
 
     /**
      * カラムを追加します。
+     * @param column 追加するカラム
      */
-    void addColumn(ColumnNodePair column);
+    void addColumn(Column column);
 
     /**
      * カラムが追加された時のイベント
@@ -25,8 +26,9 @@ public interface ColumnService {
 
     /**
      * カラムを削除します。
+     * @param column 削除するカラム
      */
-    void removeColumn(ColumnNodePair column);
+    void removeColumn(Column column);
 
     void removeColumnEvent(ColumnRemoveListener listener);
 
@@ -35,5 +37,5 @@ public interface ColumnService {
      *
      * @return 開いているカラム
      */
-    ImmutableList<Column> getAllColumn();
+    ImmutableList<ColumnController> getAllColumn();
 }

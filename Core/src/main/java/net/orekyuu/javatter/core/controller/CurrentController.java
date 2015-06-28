@@ -16,8 +16,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import net.orekyuu.javatter.api.account.TwitterAccount;
+import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnFactory;
-import net.orekyuu.javatter.api.column.ColumnNodePair;
 import net.orekyuu.javatter.api.column.ColumnState;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.controller.OwnerStage;
@@ -213,7 +213,7 @@ public class CurrentController implements Initializable {
 //                })
 //                .tweet());
         Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID);
-        ColumnNodePair pair = factory.get().newInstance(null);
+        Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);
     }
 }

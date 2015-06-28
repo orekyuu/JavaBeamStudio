@@ -1,7 +1,7 @@
 package net.orekyuu.javatter.core.column;
 
 import javafx.fxml.Initializable;
-import net.orekyuu.javatter.api.column.Column;
+import net.orekyuu.javatter.api.column.ColumnController;
 import net.orekyuu.javatter.api.column.ColumnState;
 import net.orekyuu.javatter.api.service.TwitterUserService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
-public class HomeTimeLineColumn implements Column, Initializable {
+public class HomeTimeLineColumn implements ColumnController, Initializable {
     public static final String ID = "timeline";
 
     private static final String KEY = "userId";

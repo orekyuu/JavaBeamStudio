@@ -1,8 +1,8 @@
 package net.orekyuu.javatter.api.service.events;
 
-import net.orekyuu.javatter.api.column.ColumnNodePair;
+import net.orekyuu.javatter.api.column.Column;
 
 public interface ColumnAddListener {
 
-    void onAddColumn(ColumnNodePair pair);
+    void onAddColumn(Column pair);
 }

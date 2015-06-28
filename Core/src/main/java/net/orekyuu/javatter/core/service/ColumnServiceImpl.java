@@ -4,7 +4,7 @@ import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.column.Column;
-import net.orekyuu.javatter.api.column.ColumnNodePair;
+import net.orekyuu.javatter.api.column.ColumnController;
 import net.orekyuu.javatter.api.service.ColumnService;
 import net.orekyuu.javatter.api.service.events.ColumnAddListener;
 import net.orekyuu.javatter.api.service.events.ColumnRemoveListener;
@@ -13,20 +13,20 @@ import java.util.logging.Logger;
 
 public class ColumnServiceImpl implements ColumnService {
 
-    private MutableList<ColumnNodePair> columns = Lists.mutable.of();
+    private MutableList<Column> columns = Lists.mutable.of();
     private MutableList<ColumnAddListener> addListeners = Lists.mutable.of();
     private MutableList<ColumnRemoveListener> removeListeners = Lists.mutable.of();
 
     private static final Logger logger = Logger.getLogger(ColumnServiceImpl.class.getName());
 
     public ColumnServiceImpl() {
-        MutableList<ColumnNodePair> list = Lists.mutable.of();
+        MutableList<Column> list = Lists.mutable.of();
         columns = list.asSynchronized();
     }
 
     @Override
-    public void addColumn(ColumnNodePair column) {
-        logger.info("Add: " + column.getColumn().getPluginId() + ":" + column.getColumn().getColumnId());
+    public void addColumn(Column column) {
+        logger.info("Add: " + column.getColumnController().getPluginId() + ":" + column.getColumnController().getColumnId());
         columns.add(column);
         addListeners.each(listener -> listener.onAddColumn(column));
     }
@@ -37,7 +37,7 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
-    public void removeColumn(ColumnNodePair column) {
+    public void removeColumn(Column column) {
         columns.remove(column);
         removeListeners.each(listener -> listener.onRemoveColumn(column));
     }
@@ -48,7 +48,7 @@ public class ColumnServiceImpl implements ColumnService {
     }
 
     @Override
-    public ImmutableList<Column> getAllColumn() {
-        return columns.collect(ColumnNodePair::getColumn).toImmutable();
+    public ImmutableList<ColumnController> getAllColumn() {
+        return columns.collect(Column::getColumnController).toImmutable();
     }
 }
