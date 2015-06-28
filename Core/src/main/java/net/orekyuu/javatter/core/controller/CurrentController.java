@@ -4,6 +4,7 @@ import com.gs.collections.api.list.ImmutableList;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -12,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -84,7 +86,9 @@ public class CurrentController implements Initializable {
 
         //カラムの追加のイベントを登録
         columnService.addColumnEvent(pair -> {
-            Runnable runnable = () -> columns.getChildren().add(pair.getRoot());
+            Node root = pair.getRoot();
+            HBox.setHgrow(root, Priority.ALWAYS);
+            Runnable runnable = () -> columns.getChildren().add(root);
             if (!Platform.isFxApplicationThread()) {
                 Platform.runLater(runnable);
             } else {
@@ -195,23 +199,26 @@ public class CurrentController implements Initializable {
 
     public void onTweet() throws IOException {
 //        System.gc();
-//        tweetInput.setDisable(true);
-//        twitterUserService.selectedAccount().ifPresent(a -> a.createTweet()
-//                .setText(tweetInput.getText())
-//                .setAsync()
-//                .setSuccessCallback(() -> {
-//                    System.out.println("成功");
-//                    Platform.runLater(() -> {
-//                        tweetInput.setDisable(false);
-//                        tweetInput.setText("");
-//                    });
-//                }).setFailedCallback(() -> {
-//                    System.out.println("失敗");
-//                    Platform.runLater(() ->{
-//                        tweetInput.setDisable(false);
-//                    });
-//                })
-//                .tweet());
+        tweetInput.setDisable(true);
+        twitterUserService.selectedAccount().ifPresent(a -> a.createTweet()
+                .setText(tweetInput.getText())
+                .setAsync()
+                .setSuccessCallback(() -> {
+                    System.out.println("成功");
+                    Platform.runLater(() -> {
+                        tweetInput.setDisable(false);
+                        tweetInput.setText("");
+                    });
+                }).setFailedCallback(() -> {
+                    System.out.println("失敗");
+                    Platform.runLater(() -> {
+                        tweetInput.setDisable(false);
+                    });
+                })
+                .tweet());
+    }
+
+    public void addHomeColumn() throws IOException {
         Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID);
         Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);

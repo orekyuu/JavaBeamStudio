@@ -44,7 +44,6 @@ public class TweetBuilderImpl implements TweetBuilder {
         //アカウントとテキストはnullにできない
         Objects.requireNonNull(twitter, "User is null.");
         Objects.requireNonNull(text, "TweetText is null.");
-        System.out.println(getClass().getName() + " ツイート:" + text);
 
         StatusUpdate status = new StatusUpdate(text);
         try {

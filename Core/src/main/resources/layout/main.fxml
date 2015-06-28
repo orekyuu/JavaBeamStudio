@@ -41,6 +41,11 @@
                         <MenuItem mnemonicParsing="false" text="カラム追加"/>
                     </items>
                 </Menu>
+                <Menu mnemonicParsing="false" text="カラム">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#addHomeColumn" text="タイムライン"/>
+                    </items>
+                </Menu>
                 <Menu mnemonicParsing="false" text="ヘルプ">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#openAbout" text="バージョン情報"/>
@@ -75,10 +80,6 @@
             </children>
         </StackPane>
         <HBox fx:id="columns" VBox.vgrow="ALWAYS">
-            <children>
-                <TitledPane HBox.hgrow="ALWAYS"/>
-                <TitledPane HBox.hgrow="ALWAYS"/>
-            </children>
         </HBox>
     </children>
 </VBox>
