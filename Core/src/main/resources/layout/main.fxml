@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.*?>
+<VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+      prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.orekyuu.javatter.core.controller.CurrentController">
+    <children>
+        <MenuBar>
+            <menus>
+                <Menu mnemonicParsing="false" text="一般">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="設定"/>
+                        <Menu mnemonicParsing="false" text="Javaビーム">
+                            <items>
+                                <MenuItem mnemonicParsing="false" text="一般的Javaビーム"/>
+                                <MenuItem mnemonicParsing="false" text="日常的Javaビーム"/>
+                                <MenuItem mnemonicParsing="false" text="楽観的Javaビーム"/>
+                                <MenuItem mnemonicParsing="false" text="悲観的Javaビーム"/>
+                                <MenuItem mnemonicParsing="false" text="非日常的Javaビーム"/>
+                                <MenuItem mnemonicParsing="false" text="常習的Javaビーム"/>
+                            </items>
+                        </Menu>
+
+                        <MenuItem mnemonicParsing="false" text="終了"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="アクション">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#onTweet" text="ツイート">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="ENTER" control="DOWN" meta="UP" shift="UP"
+                                                    shortcut="UP"/>
+                            </accelerator>
+                        </MenuItem>
+
+                        <MenuItem mnemonicParsing="false" text="カラム追加"/>
+                    </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="ヘルプ">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#openAbout" text="バージョン情報"/>
+                    </items>
+                </Menu>
+            </menus>
+        </MenuBar>
+        <StackPane prefHeight="128.0" prefWidth="600.0">
+            <children>
+                <TextArea fx:id="tweetInput" wrapText="true" StackPane.alignment="TOP_LEFT">
+                    <opaqueInsets>
+                        <Insets left="100.0"/>
+                    </opaqueInsets>
+                    <StackPane.margin>
+                        <Insets left="96.0"/>
+                    </StackPane.margin>
+                </TextArea>
+                <Button mnemonicParsing="false" onAction="#onTweet" text="Tweet" StackPane.alignment="BOTTOM_RIGHT">
+                    <StackPane.margin>
+                        <Insets bottom="10.0" right="20.0"/>
+                    </StackPane.margin>
+                </Button>
+                <ImageView fx:id="account" fitHeight="96.0" fitWidth="96.0" pickOnBounds="true" preserveRatio="true"
+                           StackPane.alignment="CENTER_LEFT">
+                    <StackPane.margin>
+                        <Insets/>
+                    </StackPane.margin>
+                    <image>
+                        <Image url="@imgres.png"/>
+                    </image>
+                </ImageView>
+            </children>
+        </StackPane>
+        <HBox fx:id="columns" VBox.vgrow="ALWAYS">
+            <children>
+                <TitledPane HBox.hgrow="ALWAYS"/>
+                <TitledPane HBox.hgrow="ALWAYS"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>
