@@ -17,6 +17,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnFactory;
@@ -35,7 +36,6 @@ import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class CurrentController implements Initializable {
@@ -73,10 +73,8 @@ public class CurrentController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         //アカウントの初期化
         initAccount();
-        //カラムの初期化
-        initColumn();
         //Windowを閉じた時にTwitterUserの後処理をする
-        owner.setOnCloseRequest(e -> twitterUserService.allUser().forEach((Consumer<TwitterUser>) TwitterUser::dispose));
+        owner.setOnCloseRequest(this::onCloseRequest);
 
         account.setOnMouseClicked(this::showAccountList);
 
@@ -103,6 +101,36 @@ public class CurrentController implements Initializable {
                 runnable.run();
             }
         });
+
+        //保存されていたカラムを復元する
+        openSavedColumns();
+    }
+
+    private void openSavedColumns() {
+        ImmutableList<ColumnState> states = columnStateStorageService.loadColumnStates();
+        for (ColumnState state : states) {
+            columnManager.findByPluginIdAndColumnId(state.getPluginId(), state.getColumnId())
+                    .map(factory -> {
+                        try {
+                            return factory.newInstance(state);
+                        } catch (IOException e) {
+                            throw new UncheckedIOException(e);
+                        }
+                    }).ifPresent(columnService::addColumn);
+        }
+    }
+
+    //Windowのクローズリクエストイベント
+    private void onCloseRequest(WindowEvent windowEvent) {
+        //カラムの状態の保存
+        ImmutableList<ColumnState> states = columnService.getAllColumn().collect(c -> {
+            ColumnState columnState = c.newColumnState();
+            c.onClose(columnState);
+            return columnState;
+        });
+        columnStateStorageService.save(states);
+        //ユーザーの後処理
+        twitterUserService.allUser().each(TwitterUser::dispose);
     }
 
     private void initAccount() {
@@ -112,7 +140,7 @@ public class CurrentController implements Initializable {
         //保存されてるTwitterアカウントを取得
         ImmutableList<TwitterAccount> twitterAccounts = accountStorageService.findByType(TwitterAccount.class);
         //全てのアカウントを認証
-        twitterAccounts.forEach((Consumer<TwitterAccount>) twitterUserService::register);
+        twitterAccounts.each(twitterUserService::register);
         if (!twitterAccounts.isEmpty()) {
             //最初に見つけたユーザーを選択
             ImmutableList<TwitterUser> allUser = twitterUserService.allUser();
@@ -125,20 +153,20 @@ public class CurrentController implements Initializable {
     }
 
     private void initColumn() {
-        ImmutableList<ColumnState> states = columnStateStorageService.loadColumnStates();
-        states.each(state -> {
-            //カラムのfactoryを取得
-            Optional<ColumnFactory> id = columnManager
-                    .findByPluginIdAndColumnId(state.getPluginId(), state.getPluginId());
-            //Stateからカラムを復元してServiceに追加
-            id.map(factory -> {
-                try {
-                    return factory.newInstance(state);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            }).ifPresent(columnService::addColumn);
-        });
+//        ImmutableList<ColumnState> states = columnStateStorageService.loadColumnStates();
+//        states.each(state -> {
+//            //カラムのfactoryを取得
+//            Optional<ColumnFactory> id = columnManager
+//                    .findByPluginIdAndColumnId(state.getPluginId(), state.getPluginId());
+//            //Stateからカラムを復元してServiceに追加
+//            id.map(factory -> {
+//                try {
+//                    return factory.newInstance(state);
+//                } catch (IOException e) {
+//                    throw new UncheckedIOException(e);
+//                }
+//            }).ifPresent(columnService::addColumn);
+//        });
     }
 
     private void showAccountList(MouseEvent mouseEvent) {
@@ -219,7 +247,8 @@ public class CurrentController implements Initializable {
     }
 
     public void addHomeColumn() throws IOException {
-        Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID);
+        Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(ColumnInfos.PLUGIN_ID_BUILDIN,
+                HomeTimeLineColumn.ID);
         Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);
     }

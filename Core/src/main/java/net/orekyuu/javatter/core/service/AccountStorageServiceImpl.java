@@ -31,6 +31,7 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     @Override
     public <T> ImmutableList<T> findByType(Class<T> accountType) {
         AccountContainer container = loadContainer();
+
         if (container == null) {
             return Lists.immutable.of();
         }

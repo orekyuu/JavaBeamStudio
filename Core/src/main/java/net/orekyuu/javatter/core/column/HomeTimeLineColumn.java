@@ -57,6 +57,12 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
     }
 
     @Override
+    public void onClose(ColumnState columnState) {
+        logger.info("save");
+        columnState.setData(KEY, user.getUser().getScreenName());
+    }
+
+    @Override
     public void initialize(URL location, ResourceBundle resources) {
         logger.info("initialize");
     }

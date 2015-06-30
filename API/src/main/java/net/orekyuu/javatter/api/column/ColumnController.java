@@ -33,6 +33,16 @@ public interface ColumnController {
      */
     String getColumnId();
 
+    //TODO onCloseの呼び出し
+
+    /**
+     * カラムが閉じられるときのイベントです。<br>
+     * 状態の永続化と後処理を行ってください。
+     *
+     * @param columnState カラムの状態を保存するためのState
+     */
+    void onClose(ColumnState columnState);
+
     /**
      * デフォルトのカラムの状態を作成します。
      *
