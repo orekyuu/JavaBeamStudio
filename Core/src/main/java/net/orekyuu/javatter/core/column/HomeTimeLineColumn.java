@@ -9,6 +9,8 @@ import net.orekyuu.javatter.api.column.ColumnController;
 import net.orekyuu.javatter.api.column.ColumnState;
 import net.orekyuu.javatter.api.service.TwitterUserService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
+import net.orekyuu.javatter.api.twitter.model.Tweet;
+import net.orekyuu.javatter.api.twitter.userstream.events.OnStatus;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -20,7 +22,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
 
     private static final String KEY = "userId";
     @FXML
-    private ListView timeline;
+    private ListView<String> timeline;
     @FXML
     private Label title;
 
@@ -29,21 +31,33 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
 
     @Inject
     private TwitterUserService userService;
+    private OnStatus onStatus;
 
     @Override
     public void restoration(ColumnState columnState) {
         if (columnState == null) {
             columnState = newColumnState();
         }
+        logger.info(columnState.toString());
         String userName = (String) columnState.getData(KEY).getFirst();
         userService.findTwitterUser(userName).ifPresent(user -> this.user = user);
         if (user == null) {
             user = userService.selectedAccount().get();
+
         }
 
         Runnable runnable = () -> title.setText("@" + user.getUser().getScreenName());
         Platform.runLater(runnable);
-        user.userStream().onStatus(tweet -> Platform.runLater(() -> timeline.getItems().add(tweet.getText())));
+        //弱参照でリスナが保持されるためフィールドに束縛しておく
+        onStatus = this::onStatus;
+        user.userStream().onStatus(onStatus);
+    }
+
+    private void onStatus(Tweet tweet) {
+        Platform.runLater(() -> {
+            logger.info("onStatus: " + tweet.getText());
+            timeline.getItems().add(tweet.getText());
+        });
     }
 
     @Override

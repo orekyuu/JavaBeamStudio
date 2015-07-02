@@ -142,7 +142,7 @@ public class UserStreamImpl implements UserStream {
     public void callStatus(Tweet tweet) {
         onStatusListeners.collect(Reference::get)
                 .select(listener -> listener != null)
-                .forEach((Consumer<OnStatus>) listener -> listener.onStatus(tweet));
+                .each(listener -> listener.onStatus(tweet));
 
     }
 
