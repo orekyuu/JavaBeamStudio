@@ -54,7 +54,7 @@ public class ColumnManagerImpl implements ColumnManager {
 
     @Override
     public ImmutableList<ColumnFactory> findAll() {
-        //ラムダに置き換えるとIDEAが思考停止するので仕方なく匿名クラス
+        //ラムダだとネスト深すぎてわからなくなったので匿名クラス
         MutableList<ColumnFactory> collect = factories.toList().collect(new Function<String, ColumnFactory>() {
             @Override
             public ColumnFactory valueOf(String fxmlPath) {

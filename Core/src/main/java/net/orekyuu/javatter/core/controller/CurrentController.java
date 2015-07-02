@@ -206,7 +206,6 @@ public class CurrentController implements Initializable {
     }
 
     public void onTweet() throws IOException {
-//        System.gc();
         tweetInput.setDisable(true);
         twitterUserService.selectedAccount().ifPresent(a -> a.createTweet()
                 .setText(tweetInput.getText())
