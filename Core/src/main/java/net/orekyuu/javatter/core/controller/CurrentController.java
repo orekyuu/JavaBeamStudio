@@ -54,7 +54,6 @@ public class CurrentController implements Initializable {
 
     @Inject
     private TwitterUserService twitterUserService;
-
     @Inject
     private ColumnManager columnManager;
     @Inject
@@ -139,8 +138,6 @@ public class CurrentController implements Initializable {
 
         //保存されてるTwitterアカウントを取得
         ImmutableList<TwitterAccount> twitterAccounts = accountStorageService.findByType(TwitterAccount.class);
-        //全てのアカウントを認証
-        twitterAccounts.each(twitterUserService::register);
         if (!twitterAccounts.isEmpty()) {
             //最初に見つけたユーザーを選択
             ImmutableList<TwitterUser> allUser = twitterUserService.allUser();
@@ -150,23 +147,6 @@ public class CurrentController implements Initializable {
             //アカウントの選択ポップアップ
             accountSelection = new AccountSelection(allUser.toList(), twitterUserService::select);
         }
-    }
-
-    private void initColumn() {
-//        ImmutableList<ColumnState> states = columnStateStorageService.loadColumnStates();
-//        states.each(state -> {
-//            //カラムのfactoryを取得
-//            Optional<ColumnFactory> id = columnManager
-//                    .findByPluginIdAndColumnId(state.getPluginId(), state.getPluginId());
-//            //Stateからカラムを復元してServiceに追加
-//            id.map(factory -> {
-//                try {
-//                    return factory.newInstance(state);
-//                } catch (IOException e) {
-//                    throw new UncheckedIOException(e);
-//                }
-//            }).ifPresent(columnService::addColumn);
-//        });
     }
 
     private void showAccountList(MouseEvent mouseEvent) {

@@ -14,6 +14,7 @@ import net.orekyuu.javatter.api.twitter.userstream.events.OnStatus;
 
 import javax.inject.Inject;
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
 
@@ -26,7 +27,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
     @FXML
     private Label title;
 
-    private TwitterUser user;
+    private Optional<TwitterUser> user;
     private static final Logger logger = Logger.getLogger(HomeTimeLineColumn.class.getName());
 
     @Inject
@@ -40,17 +41,17 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
         }
         logger.info(columnState.toString());
         String userName = (String) columnState.getData(KEY).getFirst();
-        userService.findTwitterUser(userName).ifPresent(user -> this.user = user);
-        if (user == null) {
-            user = userService.selectedAccount().get();
+        user = userService.findTwitterUser(userName);
 
-        }
 
-        Runnable runnable = () -> title.setText("@" + user.getUser().getScreenName());
+        Runnable runnable = () -> user
+                .map(u -> u.getUser().getScreenName())
+                .map(name -> "@" + name)
+                .ifPresent(title::setText);
         Platform.runLater(runnable);
         //弱参照でリスナが保持されるためフィールドに束縛しておく
         onStatus = this::onStatus;
-        user.userStream().onStatus(onStatus);
+        user.ifPresent(user -> user.userStream().onStatus(onStatus));
     }
 
     private void onStatus(Tweet tweet) {
@@ -73,7 +74,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
     @Override
     public void onClose(ColumnState columnState) {
         logger.info("save");
-        columnState.setData(KEY, user.getUser().getScreenName());
+        user.map(TwitterUser::getUser).ifPresent(u -> columnState.setData(KEY, u.getScreenName()));
     }
 
     @Override
