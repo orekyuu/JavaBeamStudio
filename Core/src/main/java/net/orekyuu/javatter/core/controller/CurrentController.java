@@ -60,6 +60,8 @@ public class CurrentController implements Initializable {
     private ColumnService columnService;
     @Inject
     private ColumnStateStorageService columnStateStorageService;
+    @Inject
+    private CurrentTweetAreaService currentTweetAreaService;
 
     private static final Logger logger = Logger.getLogger(CurrentController.class.getName());
 
@@ -103,6 +105,19 @@ public class CurrentController implements Initializable {
 
         //保存されていたカラムを復元する
         openSavedColumns();
+
+        currentTweetAreaService.addChangeTextListener(((oldValue, newValue) -> {
+            System.out.println("change");
+            Runnable runnable = () -> tweetInput.setText(newValue);
+            if (Platform.isFxApplicationThread()) {
+                runnable.run();
+            } else {
+                Platform.runLater(runnable);
+            }
+        }));
+        tweetInput.textProperty().addListener((observable, oldValue, newValue) -> {
+            currentTweetAreaService.setText(newValue);
+        });
     }
 
     private void openSavedColumns() {
@@ -206,23 +221,7 @@ public class CurrentController implements Initializable {
     }
 
     public void onTweet() throws IOException {
-        tweetInput.setDisable(true);
-        twitterUserService.selectedAccount().ifPresent(a -> a.createTweet()
-                .setText(tweetInput.getText())
-                .setAsync()
-                .setSuccessCallback(() -> {
-                    System.out.println("成功");
-                    Platform.runLater(() -> {
-                        tweetInput.setDisable(false);
-                        tweetInput.setText("");
-                    });
-                }).setFailedCallback(() -> {
-                    System.out.println("失敗");
-                    Platform.runLater(() -> {
-                        tweetInput.setDisable(false);
-                    });
-                })
-                .tweet());
+        currentTweetAreaService.tweet();
     }
 
     public void addHomeColumn() throws IOException {

@@ -9,7 +9,7 @@ import net.orekyuu.javatter.api.twitter.userstream.UserStream;
  *
  * @since 1.0.0
  */
-public interface TwitterUser {
+public interface TwitterUser extends FavoriteControl, RetweetControl, TweetControl {
 
     /**
      * 認証を行います。
@@ -17,13 +17,6 @@ public interface TwitterUser {
      * @since 1.0.0
      */
     void authentication(TwitterAccount account);
-
-    /**
-     * ツイートを作成します。
-     * @return ツイートを作成するためのビルダー
-     * @since 1.0.0
-     */
-    TweetBuilder createTweet();
 
     /**
      * このユーザーのユーザーストリームを返します。

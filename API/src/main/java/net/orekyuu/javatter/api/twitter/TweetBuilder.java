@@ -1,6 +1,8 @@
 package net.orekyuu.javatter.api.twitter;
 
 
+import net.orekyuu.javatter.api.twitter.model.Tweet;
+
 import java.io.File;
 
 /**
@@ -25,6 +27,15 @@ public interface TweetBuilder {
      * @since 1.0.0
      */
     TweetBuilder addFile(File file);
+
+    /**
+     * リプライ先を指定します。
+     *
+     * @param tweet リプライ先のツイート
+     * @return メソッドチェーンを行うためのthis
+     * @since 1.0.0
+     */
+    TweetBuilder replyTo(Tweet tweet);
 
     /**
      * ツイートを非同期で行うTweetBuilderを返します。<br>

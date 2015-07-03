@@ -1,22 +1,25 @@
 package net.orekyuu.javatter.core.column;
 
+import com.gs.collections.api.list.ImmutableList;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
+import javafx.scene.layout.VBox;
+import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnController;
 import net.orekyuu.javatter.api.column.ColumnState;
-import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
+import net.orekyuu.javatter.api.service.ColumnService;
 import net.orekyuu.javatter.api.service.TwitterUserService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.userstream.events.OnStatus;
-import net.orekyuu.javatter.core.control.TweetCellController;
+import net.orekyuu.javatter.core.control.TweetCell;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -31,15 +34,23 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
 
     private static final String KEY = "userId";
     @FXML
+    private MenuButton accountSelect;
+    @FXML
     private ListView<Tweet> timeline;
     @FXML
     private Label title;
+    @FXML
+    private VBox root;
 
     private Optional<TwitterUser> user;
+    private ObjectProperty<TwitterUser> owner = new SimpleObjectProperty<>();
     private static final Logger logger = Logger.getLogger(HomeTimeLineColumn.class.getName());
 
     @Inject
     private TwitterUserService userService;
+    @Inject
+    private ColumnService columnService;
+
     //弱参照でリスナが保持されるためフィールドに束縛しておく
     private OnStatus onStatus = this::onStatus;
 
@@ -56,7 +67,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
             user = userService.findTwitterUser(userName);
         }
 
-
+        owner.set(user.orElse(null));
         Runnable runnable = () -> user
                 .map(u -> u.getUser().getScreenName())
                 .map(name -> "@" + name)
@@ -93,37 +104,29 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
         logger.info("initialize");
         timeline.setCellFactory(param -> {
             try {
-                return new TweetCell();
+                TweetCell tweetCell = new TweetCell();
+                tweetCell.ownerProperty().bind(owner);
+                return tweetCell;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
             }
         });
+        ImmutableList<TwitterUser> twitterUsers = userService.allUser();
+        for (TwitterUser twitterUser : twitterUsers) {
+            MenuItem item = new MenuItem(twitterUser.getUser().getScreenName());
+            item.setOnAction(e -> {
+                user = Optional.of(twitterUser);
+                title.setText(twitterUser.getUser().getScreenName());
+                timeline.getItems().clear();
+                twitterUser.userStream().onStatus(this::onStatus);
+                owner.set(user.orElse(null));
+                System.gc();
+            });
+            accountSelect.getItems().add(item);
+        }
     }
 
-    private class TweetCell extends ListCell<Tweet> {
-
-        private Parent parent;
-        private TweetCellController controller;
-        private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
-
-        public TweetCell() throws IOException {
-            JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource("/layout/tweetCell.fxml"));
-            parent = loader.load();
-            controller = loader.getController();
-            controller.tweetProperty().bind(tweet);
-        }
-
-        @Override
-        protected void updateItem(Tweet item, boolean empty) {
-            super.updateItem(item, empty);
-            if (empty || tweet == null) {
-                setGraphic(null);
-            } else {
-                tweet.setValue(item);
-                if (getGraphic() == null) {
-                    setGraphic(parent);
-                }
-            }
-        }
+    public void closeRequest() {
+        columnService.removeColumn(new Column(this, root));
     }
 }

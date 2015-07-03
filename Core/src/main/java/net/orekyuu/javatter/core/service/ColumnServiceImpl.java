@@ -38,6 +38,7 @@ public class ColumnServiceImpl implements ColumnService {
 
     @Override
     public void removeColumn(Column column) {
+        logger.info("Remove: " + column.getColumnController().getPluginId() + ":" + column.getColumnController().getColumnId());
         columns.remove(column);
         removeListeners.each(listener -> listener.onRemoveColumn(column));
     }

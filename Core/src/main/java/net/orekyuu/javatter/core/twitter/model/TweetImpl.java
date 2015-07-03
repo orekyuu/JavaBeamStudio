@@ -4,6 +4,7 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.core.cache.FavoriteCache;
+import net.orekyuu.javatter.core.cache.ReTweetCache;
 import net.orekyuu.javatter.core.cache.TweetCache;
 import twitter4j.*;
 
@@ -22,7 +23,6 @@ public class TweetImpl implements Tweet {
     private final String viaLink;
     private final Tweet retweetFrom;
     private final User owner;
-    private final boolean isRetweeted;
     private final UserMentionEntity[] mentions;
     private final URLEntity[] urls;
     private final HashtagEntity[] hashtags;
@@ -56,7 +56,6 @@ public class TweetImpl implements Tweet {
         Status retweetedStatus = status.getRetweetedStatus();
         retweetFrom = retweetedStatus != null ? TweetImpl.create(retweetedStatus) : null;
         owner = UserImpl.create(status.getUser());
-        isRetweeted = status.isRetweeted();
     }
 
     /**
@@ -136,8 +135,9 @@ public class TweetImpl implements Tweet {
      * @since 1.0.0
      */
     @Override
-    public boolean isRetweeted() {
-        return isRetweeted;
+    public boolean isRetweeted(TwitterUser user) {
+        ReTweetCache.getInstance().isReTweeted(user, this);
+        return false;
     }
 
     /**

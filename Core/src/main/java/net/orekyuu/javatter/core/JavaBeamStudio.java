@@ -67,6 +67,7 @@ public class JavaBeamStudio extends Application {
                     bind(ColumnManager.class).to(ColumnManagerImpl.class).in(Singleton.class);
                     bind(ColumnService.class).to(ColumnServiceImpl.class).in(Singleton.class);
                     bind(UserIconStorage.class).to(UserIconStorageImpl.class).in(Singleton.class);
+                    bind(CurrentTweetAreaService.class).to(CurrentTweetAreaServiceImpl.class).in(Singleton.class);
                     bind(ColumnStateStorageService.class).to(ColumnStateStorageServiceImpl.class);
                 }
             });

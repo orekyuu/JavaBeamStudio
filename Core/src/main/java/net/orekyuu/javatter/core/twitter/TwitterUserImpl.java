@@ -3,6 +3,7 @@ package net.orekyuu.javatter.core.twitter;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.twitter.TweetBuilder;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
+import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.core.twitter.model.TweetImpl;
@@ -13,6 +14,8 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 public class TwitterUserImpl implements TwitterUser {
@@ -22,6 +25,13 @@ public class TwitterUserImpl implements TwitterUser {
     private UserStreamImpl userStream = new UserStreamImpl();
     private static final Logger logger = Logger.getLogger(TwitterUserImpl.class.getName());
     private User user;
+
+    private static final ExecutorService tweetActionExecutor = Executors.newSingleThreadExecutor(r -> {
+        Thread thread = new Thread(r);
+        thread.setName("AsyncTwitterActionThread");
+        thread.setDaemon(true);
+        return thread;
+    });
 
     @Override
     public void authentication(TwitterAccount account) {
@@ -147,6 +157,7 @@ public class TwitterUserImpl implements TwitterUser {
         twitterStream.setOAuthAccessToken(token);
         String sampleStream = System.getProperty("sampleStream");
         if (sampleStream != null && Boolean.valueOf(sampleStream)) {
+            logger.info("sampleStream enabled.");
             twitterStream.sample();
         } else {
             twitterStream.user();
@@ -172,5 +183,61 @@ public class TwitterUserImpl implements TwitterUser {
     public void dispose() {
         twitterStream.shutdown();
         logger.fine("user stream shutdown.");
+    }
+
+    @Override
+    public void favorite(Tweet tweet) {
+        try {
+            twitter.createFavorite(tweet.getStatusId());
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void favoriteAsync(Tweet tweet) {
+        tweetActionExecutor.execute(() -> favorite(tweet));
+    }
+
+    @Override
+    public void unFavorite(Tweet tweet) {
+        try {
+            twitter.destroyFavorite(tweet.getStatusId());
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void unFavoriteAsync(Tweet tweet) {
+        tweetActionExecutor.execute(() -> unFavorite(tweet));
+    }
+
+    @Override
+    public void reTweet(Tweet tweet) {
+        try {
+            twitter.retweetStatus(tweet.getStatusId());
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void reTweetAsync(Tweet tweet) {
+        tweetActionExecutor.execute(() -> reTweet(tweet));
+    }
+
+    @Override
+    public void removeTweet(Tweet tweet) {
+        try {
+            twitter.destroyStatus(tweet.getStatusId());
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void removeTweetAsync(Tweet tweet) {
+        tweetActionExecutor.execute(() -> removeTweet(tweet));
     }
 }

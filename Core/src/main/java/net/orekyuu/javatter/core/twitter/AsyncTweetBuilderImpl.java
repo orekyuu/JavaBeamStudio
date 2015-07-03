@@ -4,9 +4,11 @@ import com.gs.collections.impl.list.mutable.FastList;
 import net.orekyuu.javatter.api.twitter.AsyncTweetBuilder;
 import net.orekyuu.javatter.api.twitter.TweetFailedCallback;
 import net.orekyuu.javatter.api.twitter.TweetSuccessCallback;
+import net.orekyuu.javatter.api.twitter.model.Tweet;
 import twitter4j.Twitter;
 
 import java.io.File;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,17 +20,17 @@ public class AsyncTweetBuilderImpl extends TweetBuilderImpl implements AsyncTwee
         thread.setDaemon(true);
         return thread;
     });
-
     private ExecutorService useExecutor;
     private TweetSuccessCallback successCallback;
     private TweetFailedCallback failedCallback;
 
-    protected AsyncTweetBuilderImpl(String text, Twitter twitter, FastList<File> files) {
+    protected AsyncTweetBuilderImpl(String text, Twitter twitter, FastList<File> files, Optional<Tweet> reply) {
         super(twitter);
         setText(text);
         for (File file : files) {
             addFile(file);
         }
+        reply.ifPresent(this::replyTo);
     }
 
     @Override

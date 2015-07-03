@@ -21,7 +21,7 @@ public interface Tweet {
 
     User getOwner();
 
-    boolean isRetweeted();
+    boolean isRetweeted(TwitterUser user);
 
     boolean isFavorited(TwitterUser user);
 }

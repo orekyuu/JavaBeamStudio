@@ -2,6 +2,8 @@ package net.orekyuu.javatter.api.column;
 
 import javafx.scene.Node;
 
+import java.util.Objects;
+
 /**
  * Twitterクライアントのカラムです。
  *
@@ -42,5 +44,18 @@ public final class Column {
      */
     public Node getRoot() {
         return root;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Column column = (Column) o;
+        return Objects.equals(columnController, column.columnController);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(columnController);
     }
 }

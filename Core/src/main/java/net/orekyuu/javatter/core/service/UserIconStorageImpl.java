@@ -12,6 +12,11 @@ public class UserIconStorageImpl implements UserIconStorage {
 
     @Override
     public Image find(User user) {
-        return icons.getIfAbsent(user.getProfileImageURL(), () -> new Image(user.getProfileImageURL(), true));
+        return icons.getIfAbsentPut(user.getScreenName(), () -> createImage(user));
+    }
+
+    private Image createImage(User user) {
+        System.out.println("create: " + user.getScreenName() + ", " + this);
+        return new Image(user.getProfileImageURL(), true);
     }
 }
