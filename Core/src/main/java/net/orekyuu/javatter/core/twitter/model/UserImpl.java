@@ -6,6 +6,7 @@ import net.orekyuu.javatter.core.cache.UserCache;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+//ユーザーはゆーじゃ。ｗ
 public class UserImpl implements User {
 
     private final LocalDateTime createdAt;
