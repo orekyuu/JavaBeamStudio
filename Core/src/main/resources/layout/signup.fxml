@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.web.WebView?>
+<StackPane prefWidth="400" prefHeight="500" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="net.orekyuu.javatter.core.controller.SignupController">
+    <children>
+        <VBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity"
+              minWidth="-Infinity" StackPane.alignment="CENTER">
+            <children>
+                <WebView fx:id="webView" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS"/>
+                <TextField fx:id="pinField" promptText="Pin Code"/>
+                <Button maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="認証" onAction="#signup"/>
+            </children>
+        </VBox>
+        <Pane fx:id="veil" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" opacity="0.3"
+              style="-fx-background-color: #000000;"/>
+        <ProgressIndicator fx:id="indicator" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+                           minWidth="-Infinity" prefHeight="50.0" prefWidth="50.0"/>
+    </children>
+</StackPane>

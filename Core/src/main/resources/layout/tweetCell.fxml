@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+          xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="net.orekyuu.javatter.core.control.TweetCellController">
+    <columnConstraints>
+        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity"/>
+        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="-Infinity"/>
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints maxHeight="-Infinity" minHeight="0.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="10.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+        <RowConstraints vgrow="SOMETIMES"/>
+    </rowConstraints>
+    <children>
+        <Label fx:id="userName" text="\@hoge / Name" GridPane.columnIndex="1">
+            <font>
+                <Font name="System Bold" size="13.0"/>
+            </font>
+        </Label>
+        <ImageView fx:id="currentIcon" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true"
+                   GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets left="3.0" right="3.0"/>
+            </GridPane.margin>
+        </ImageView>
+        <Label fx:id="tweetContent" alignment="TOP_LEFT" wrapText="true" GridPane.columnIndex="1"
+               GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
+            <font>
+                <Font size="12.0"/>
+            </font>
+        </Label>
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <children>
+                <Button fx:id="reply" mnemonicParsing="false" onAction="#clickReply" text="←"/>
+                <Button fx:id="reTweet" mnemonicParsing="false" onAction="#clickRetweet" text="↑"/>
+                <Button fx:id="favorite" mnemonicParsing="false" onAction="#clickFavorite" text="★"/>
+                <MenuButton mnemonicParsing="false" text="...">
+                    <items>
+                        <MenuItem mnemonicParsing="false" text="Action 1"/>
+                        <MenuItem mnemonicParsing="false" text="Action 2"/>
+                    </items>
+                </MenuButton>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <Hyperlink fx:id="via" text="via JavaBeamStudio" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+            </children>
+        </HBox>
+    </children>
+</GridPane>

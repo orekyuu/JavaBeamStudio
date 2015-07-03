@@ -1,0 +1,6 @@
+.idea
+*.state
+*.data
+Core/build
+API/build
+*.iml

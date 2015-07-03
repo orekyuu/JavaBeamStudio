@@ -1,0 +1,2 @@
+rootProject.name = 'JavaBeamStudio'
+include 'API', 'Core'

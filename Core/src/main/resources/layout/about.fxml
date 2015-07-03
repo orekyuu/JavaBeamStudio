@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0"
+           prefWidth="720.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="net.orekyuu.javatter.core.controller.AboutController">
+    <children>
+        <ImageView fitHeight="480.0" fitWidth="720.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@about.png"/>
+            </image>
+        </ImageView>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JavaBeamStudio version" StackPane.alignment="BOTTOM_LEFT"
+              fx:id="version">
+            <StackPane.margin>
+                <Insets bottom="150.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JavaBeamStudioAPI version" StackPane.alignment="BOTTOM_LEFT"
+              fx:id="apiVersion">
+            <StackPane.margin>
+                <Insets bottom="130.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Release" StackPane.alignment="BOTTOM_LEFT" fx:id="release">
+            <StackPane.margin>
+                <Insets bottom="110.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JRE version Info" StackPane.alignment="BOTTOM_LEFT"
+              fx:id="jreInfo">
+            <StackPane.margin>
+                <Insets bottom="70.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="WebSite:" StackPane.alignment="BOTTOM_LEFT">
+            <StackPane.margin>
+                <Insets bottom="50.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+        <Hyperlink prefHeight="10.0" prefWidth="174.0" text="http://javatter.orekyuu.net/"
+                   StackPane.alignment="BOTTOM_LEFT" fx:id="webSiteLink">
+            <StackPane.margin>
+                <Insets bottom="46.0" left="85.0"/>
+            </StackPane.margin>
+        </Hyperlink>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Author: @orekyuu" StackPane.alignment="BOTTOM_LEFT">
+            <StackPane.margin>
+                <Insets bottom="30.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+    </children>
+</StackPane>
