@@ -36,6 +36,7 @@ public class TweetImpl implements Tweet {
         text = status.getText();
         createdAt = LocalDateTime.ofInstant(status.getCreatedAt().toInstant(), ZoneId.systemDefault());
         replyStatusId = status.getInReplyToStatusId();
+        //同意するSource「そーっすね」
         String via = status.getSource();
         Matcher matcher = viaNamePattern.matcher(via);
         mentions = status.getUserMentionEntities();
