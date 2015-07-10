@@ -1,0 +1,21 @@
+repositories {
+    mavenCentral()
+    maven {
+        url = 'http://twitter4j.org/maven2'
+    }
+}
+
+dependencies {
+    compile project(':API')
+}
+
+jar {
+    manifest {
+        attributes 'Plugin-ID': 'net.orekyuu.example'
+        attributes 'Plugin-Name': 'Sample Plugin'
+        attributes 'Author': 'orekyuu'
+        attributes 'Author-Web': 'http://orekyuu.net/'
+        attributes 'Plugin-Version': '1.0.0'
+        attributes 'Plugin-Class': 'net.orekyuu.example.ExamplePlugin'
+    }
+}
