@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
+import net.orekyuu.javatter.core.cache.TweetCache;
 import net.orekyuu.javatter.core.twitter.model.TweetImpl;
 import net.orekyuu.javatter.core.twitter.model.UserImpl;
 import net.orekyuu.javatter.core.twitter.userstream.UserStreamImpl;
@@ -14,6 +15,7 @@ import twitter4j.auth.AccessToken;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -77,7 +79,18 @@ public class TwitterUserImpl implements TwitterUser {
             @Override
             public void onStatus(Status status) {
                 logger.info(status.getText());
-                userStream.callStatus(TweetImpl.create(status));
+                Tweet tweet = TweetImpl.create(status);
+                userStream.callStatus(tweet);
+                long replyStatusId = tweet.getReplyStatusId();
+                //リプライ先がなければおしまい
+                if (replyStatusId == -1) {
+
+                    return;
+                }
+                Tweet replyTo = findTweet(replyStatusId);
+                if (replyTo.getOwner().getId() == getUser().getId()) {
+                    userStream.callMentions(tweet);
+                }
             }
 
             @Override
@@ -239,5 +252,23 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void removeTweetAsync(Tweet tweet) {
         tweetActionExecutor.execute(() -> removeTweet(tweet));
+    }
+
+    @Override
+    public Tweet findTweet(long id) {
+        Optional<Tweet> byId = TweetCache.getInstance().getById(id);
+        if (byId.isPresent()) {
+            return byId.get();
+        }
+
+        try {
+            Status status = twitter.showStatus(id);
+            Tweet tweet = TweetImpl.create(status);
+            TweetCache.getInstance().update(tweet);
+            return tweet;
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

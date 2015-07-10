@@ -3,6 +3,7 @@ package net.orekyuu.javatter.core.twitter.userstream;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
+import net.orekyuu.javatter.api.twitter.userstream.OnMention;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.api.twitter.userstream.events.*;
 
@@ -14,6 +15,7 @@ import java.util.function.Predicate;
 public class UserStreamImpl implements UserStream {
 
     private MutableList<WeakReference<OnStatus>> onStatusListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnMention>> onMentionListeners = Lists.mutable.of();
     private MutableList<WeakReference<OnException>> onExceptionListeners = Lists.mutable.of();
     private MutableList<WeakReference<OnUserProfileUpdate>> onUserProfileUpdateListeners = Lists.mutable.of();
     private MutableList<WeakReference<OnBlock>> onBlockListeners = Lists.mutable.of();
@@ -39,6 +41,12 @@ public class UserStreamImpl implements UserStream {
     public UserStream onStatus(OnStatus onStatus) {
         addListener(onStatus, onStatusListeners);
         return this;
+    }
+
+    @Override
+    public UserStream onMention(OnMention onMention) {
+        addListener(onMention, onMentionListeners);
+        return null;
     }
 
     @Override
@@ -143,9 +151,14 @@ public class UserStreamImpl implements UserStream {
         onStatusListeners.collect(Reference::get)
                 .select(listener -> listener != null)
                 .each(listener -> listener.onStatus(tweet));
-
     }
 
+    public void callMentions(Tweet tweet) {
+        onMentionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onMention(tweet, tweet.getOwner()));
+
+    }
 
     public void callException(Exception e) {
         onExceptionListeners.collect(Reference::get)

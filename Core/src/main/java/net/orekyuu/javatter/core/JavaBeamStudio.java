@@ -16,6 +16,7 @@ import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.api.util.lookup.Lookuper;
 import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
+import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.service.*;
 
 import javax.inject.Singleton;
@@ -87,6 +88,7 @@ public class JavaBeamStudio extends Application {
     private void registColumns() {
         ColumnManager columnManager = Lookup.lookup(ColumnManager.class);
         //タイムラインを登録
-        columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID, "/columns/home.fxml");
+        columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID, "/columns/home.fxml", "タイムライン");
+        columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, MentionColumn.ID, "/columns/mention.fxml", "メンション");
     }
 }

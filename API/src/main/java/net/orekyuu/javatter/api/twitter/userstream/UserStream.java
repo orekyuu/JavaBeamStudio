@@ -6,6 +6,8 @@ public interface UserStream {
 
     UserStream onStatus(OnStatus onStatus);
 
+    UserStream onMention(OnMention onMention);
+
     UserStream onException(OnException onException);
 
     UserStream onUserProfileUpdate(OnUserProfileUpdate onUserProfileUpdate);
