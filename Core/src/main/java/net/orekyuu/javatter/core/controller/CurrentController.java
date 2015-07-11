@@ -6,9 +6,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -40,6 +38,8 @@ import java.util.logging.Logger;
 
 public class CurrentController implements Initializable {
 
+    @FXML
+    private Menu columnSelector;
     @FXML
     private TextArea tweetInput;
     @FXML
@@ -82,6 +82,23 @@ public class CurrentController implements Initializable {
         //アカウントの画像を設定
         twitterUserService.selectedAccount().ifPresent(user -> account
                 .setImage(new Image(user.getUser().getProfileImageURL(), true)));
+
+        for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
+            if (info.getPluginId().equals(ColumnInfos.PLUGIN_ID_BUILDIN)) {
+                MenuItem menuItem = new MenuItem(info.getName());
+                menuItem.setOnAction(e -> {
+                    Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(info.getPluginId(),
+                            info.getColumnName());
+                    try {
+                        Column pair = factory.get().newInstance(null);
+                        columnService.addColumn(pair);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                });
+                columnSelector.getItems().add(menuItem);
+            }
+        }
 
         //カラムの追加のイベントを登録
         columnService.addColumnEvent(pair -> {

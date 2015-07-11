@@ -41,10 +41,7 @@
                         <MenuItem mnemonicParsing="false" text="カラム追加"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="カラム">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#addHomeColumn" text="タイムライン"/>
-                    </items>
+                <Menu mnemonicParsing="false" text="カラム" fx:id="columnSelector">
                 </Menu>
                 <Menu mnemonicParsing="false" text="ヘルプ">
                     <items>
