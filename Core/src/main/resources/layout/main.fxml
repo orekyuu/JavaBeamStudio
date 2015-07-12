@@ -7,7 +7,7 @@
 <?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
 <VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
+      prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
       fx:controller="net.orekyuu.javatter.core.controller.CurrentController">
     <children>
         <MenuBar useSystemMenuBar="true">
@@ -37,8 +37,12 @@
                                                     shortcut="UP"/>
                             </accelerator>
                         </MenuItem>
-
-                        <MenuItem mnemonicParsing="false" text="カラム追加"/>
+                        <MenuItem mnemonicParsing="false" text="コマンド実行" onAction="#onExecCommand">
+                            <accelerator>
+                                <KeyCodeCombination alt="UP" code="SPACE" control="UP" meta="UP" shift="UP"
+                                                    shortcut="DOWN"/>
+                            </accelerator>
+                        </MenuItem>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="カラム" fx:id="columnSelector">
