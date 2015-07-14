@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.account.Account;
 
 import java.util.Optional;
 
+@Service
 public interface AccountStorageService {
 
     <T extends Account> Optional<T> find(Class<T> accountType, String userName);

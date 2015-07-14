@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 
 import java.util.Optional;
 
+@Service
 public interface TwitterUserService {
 
     Optional<TwitterUser> selectedAccount();

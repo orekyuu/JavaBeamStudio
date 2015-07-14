@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 import java.io.File;
 import java.util.Optional;
 
+@Service
 public interface CurrentTweetAreaService {
 
     void setReply(Tweet tweet);

@@ -9,6 +9,7 @@ import net.orekyuu.javatter.api.service.events.ColumnRemoveListener;
 /**
  * 開いているカラムを制御するServiceです。
  */
+@Service
 public interface ColumnService {
 
     /**
