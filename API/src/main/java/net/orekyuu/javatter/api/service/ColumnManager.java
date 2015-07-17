@@ -8,6 +8,7 @@ import java.util.Optional;
 /**
  * 使用できるカラムを管理するManagerです。
  */
+@Service
 public interface ColumnManager {
 
     void registerColumn(String pluginId, String columnName, String fxmlPath, String name);

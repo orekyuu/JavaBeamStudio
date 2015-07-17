@@ -22,9 +22,11 @@ import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.service.*;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.file.Files;
@@ -129,11 +131,20 @@ public class JavaBeamStudio extends Application {
 
             @Override
             public <T> T lookup(Class<T> clazz) {
+                if (!clazz.isAnnotationPresent(Service.class)) {
+                    throw new ServiceException(clazz.getName());
+                }
                 return injector.getInstance(clazz);
             }
 
             @Override
             public void inject(Object object) {
+                for (Field field : object.getClass().getDeclaredFields()) {
+                    if (field.isAnnotationPresent(Inject.class) && !field.getType()
+                            .isAnnotationPresent(Service.class)) {
+                        throw new ServiceException(object.getClass().getName() + "#" + field.getType().getName());
+                    }
+                }
                 injector.injectMembers(object);
             }
         });
