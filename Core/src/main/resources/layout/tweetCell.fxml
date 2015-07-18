@@ -8,14 +8,15 @@
 <?import net.orekyuu.javatter.core.control.TweetText?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
           xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="net.orekyuu.javatter.core.control.TweetCellController">
+          fx:controller="net.orekyuu.javatter.core.control.TweetCellController"
+          fx:id="root">
     <columnConstraints>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity"/>
         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="0.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="-Infinity" minHeight="0.0" vgrow="ALWAYS"/>
-        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="ALWAYS"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="0.0" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" valignment="TOP"/>
         <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
     </rowConstraints>
@@ -26,14 +27,13 @@
             </font>
         </Label>
         <ImageView fx:id="currentIcon" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true"
-                   GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+                   GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets left="3.0" right="3.0"/>
             </GridPane.margin>
         </ImageView>
-        <TweetText fx:id="tweetContent" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
-                   GridPane.vgrow="ALWAYS">
-        </TweetText>
+        <TweetText fx:id="tweetContent" GridPane.columnIndex="1" GridPane.rowIndex="1"
+                   GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS"/>
         <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
             <children>
                 <Button fx:id="reply" mnemonicParsing="false" onAction="#clickReply" text="←"/>

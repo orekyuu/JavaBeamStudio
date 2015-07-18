@@ -8,12 +8,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 
 import javax.inject.Inject;
+import java.awt.*;
+import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -26,6 +30,7 @@ public class TweetCellController implements Initializable {
     public Button reply;
     public Button reTweet;
     public Button favorite;
+    public GridPane root;
     private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
     private ObjectProperty<TwitterUser> owner = new SimpleObjectProperty<>();
     @Inject
@@ -36,6 +41,13 @@ public class TweetCellController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tweet.addListener(this::onChange);
+        tweetContent.setOnClickLink(url -> {
+            try {
+                Desktop.getDesktop().browse(new URL(url).toURI());
+            } catch (IOException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void onChange(ObservableValue<? extends Tweet> observable, Tweet oldValue, Tweet newValue) {
