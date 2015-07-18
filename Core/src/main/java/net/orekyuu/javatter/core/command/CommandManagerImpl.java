@@ -18,6 +18,7 @@ public class CommandManagerImpl implements CommandManager {
         registerCommand(new HelpCommand());
         registerCommand(new VersionCommand());
         registerCommand(new SignupCommand());
+        registerCommand(new JavaBeamCommand());
     }
 
     public MutableList<Command> getCommands() {
