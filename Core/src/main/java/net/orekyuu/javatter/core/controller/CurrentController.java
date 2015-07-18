@@ -114,6 +114,7 @@ public class CurrentController implements Initializable {
                 Platform.runLater(runnable);
             }
         }));
+	//謝るソリ「Sorry.」
         tweetInput.textProperty().addListener((observable, oldValue, newValue) -> {
             currentTweetAreaService.setText(newValue);
         });
