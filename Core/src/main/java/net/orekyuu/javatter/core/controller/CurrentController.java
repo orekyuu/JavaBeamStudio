@@ -20,6 +20,7 @@ import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnFactory;
 import net.orekyuu.javatter.api.column.ColumnState;
+import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.controller.OwnerStage;
 import net.orekyuu.javatter.api.service.*;
@@ -62,6 +63,8 @@ public class CurrentController implements Initializable {
     private ColumnStateStorageService columnStateStorageService;
     @Inject
     private CurrentTweetAreaService currentTweetAreaService;
+    @Inject
+    private CommandManager commandManager;
 
     private static final Logger logger = Logger.getLogger(CurrentController.class.getName());
 
@@ -124,7 +127,6 @@ public class CurrentController implements Initializable {
         openSavedColumns();
 
         currentTweetAreaService.addChangeTextListener(((oldValue, newValue) -> {
-            System.out.println("change");
             Runnable runnable = () -> tweetInput.setText(newValue);
             if (Platform.isFxApplicationThread()) {
                 runnable.run();
@@ -246,5 +248,14 @@ public class CurrentController implements Initializable {
                 HomeTimeLineColumn.ID);
         Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);
+    }
+
+    public void onExecCommand() {
+        String text = currentTweetAreaService.getText();
+        String s = commandManager.execCommand(currentTweetAreaService.getText());
+        //コマンドによってテキストが書き換えられなかった場合のみ実行
+        if (currentTweetAreaService.getText().equals(text)) {
+            currentTweetAreaService.setText(s);
+        }
     }
 }

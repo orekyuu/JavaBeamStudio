@@ -3,6 +3,8 @@ package net.orekyuu.javatter.core.controller;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.text.Text;
+import net.orekyuu.javatter.api.service.EnvironmentService;
+import net.orekyuu.javatter.api.util.lookup.Lookup;
 
 import java.awt.*;
 import java.io.IOException;
@@ -19,8 +21,10 @@ public class AboutController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        version.setText(String.format("JavaBeamStudio %s", "0.0.1"));
-        apiVersion.setText(String.format("JavaBeamStudioAPI %s", "0.0.1"));
+        EnvironmentService environmentService = Lookup.lookup(EnvironmentService.class);
+
+        version.setText(String.format("JavaBeamStudio %s", environmentService.getJavaBeamStudioVersion()));
+        apiVersion.setText(String.format("JavaBeamStudioAPI %s", environmentService.getJavaBeamStudioApiVersion()));
         release.setText(String.format("Release %d/%d/%d", 2015, 5, 29));
         webSiteLink.setOnMouseClicked(e -> {
             try {

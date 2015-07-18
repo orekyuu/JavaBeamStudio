@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import net.orekyuu.javatter.api.account.TwitterAccount;
+import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.plugin.*;
 import net.orekyuu.javatter.api.service.*;
@@ -20,6 +21,7 @@ import net.orekyuu.javatter.api.util.lookup.Lookuper;
 import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
+import net.orekyuu.javatter.core.command.CommandManagerImpl;
 import net.orekyuu.javatter.core.service.*;
 
 import javax.inject.Inject;
@@ -126,6 +128,8 @@ public class JavaBeamStudio extends Application {
                     bind(CurrentTweetAreaService.class).to(CurrentTweetAreaServiceImpl.class).in(Singleton.class);
                     bind(ColumnStateStorageService.class).to(ColumnStateStorageServiceImpl.class);
                     bind(PluginService.class).to(PluginServiceImpl.class);
+                    bind(CommandManager.class).to(CommandManagerImpl.class).in(Singleton.class);
+                    bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
                 }
             });
 
