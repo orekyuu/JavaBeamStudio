@@ -5,16 +5,17 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
+<?import net.orekyuu.javatter.core.control.TweetText?>
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-          xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1"
+          xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
           fx:controller="net.orekyuu.javatter.core.control.TweetCellController">
     <columnConstraints>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity"/>
-        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="-Infinity"/>
+        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="0.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="-Infinity" minHeight="0.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="-Infinity" minHeight="10.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="-Infinity" minHeight="0.0" vgrow="ALWAYS"/>
+        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
     </rowConstraints>
@@ -30,12 +31,9 @@
                 <Insets left="3.0" right="3.0"/>
             </GridPane.margin>
         </ImageView>
-        <Label fx:id="tweetContent" alignment="TOP_LEFT" wrapText="true" GridPane.columnIndex="1"
-               GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS">
-            <font>
-                <Font size="12.0"/>
-            </font>
-        </Label>
+        <TweetText fx:id="tweetContent" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1"
+                   GridPane.vgrow="ALWAYS">
+        </TweetText>
         <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
             <children>
                 <Button fx:id="reply" mnemonicParsing="false" onAction="#clickReply" text="←"/>

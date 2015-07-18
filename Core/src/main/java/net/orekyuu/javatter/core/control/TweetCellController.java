@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
 
 public class TweetCellController implements Initializable {
 
-    public Label tweetContent;
+    public TweetText tweetContent;
     public ImageView currentIcon;
     public Hyperlink via;
     public Label userName;
@@ -39,7 +39,7 @@ public class TweetCellController implements Initializable {
     }
 
     private void onChange(ObservableValue<? extends Tweet> observable, Tweet oldValue, Tweet newValue) {
-        tweetContent.setText(newValue.getText());
+        tweetContent.setTweet(newValue);
         currentIcon.setImage(iconStorage.find(newValue.getOwner()));
         via.setText(newValue.getViaName());
         userName.setText(String.format("@%s / %s", newValue.getOwner().getScreenName(), newValue.getOwner().getName()));
