@@ -140,6 +140,22 @@ public class TweetImpl implements Tweet {
         return false;
     }
 
+    public UserMentionEntity[] getMentions() {
+        return mentions;
+    }
+
+    public URLEntity[] getUrls() {
+        return urls;
+    }
+
+    public HashtagEntity[] getHashtags() {
+        return hashtags;
+    }
+
+    public MediaEntity[] getMedias() {
+        return medias;
+    }
+
     /**
      * @return このツイートをお気に入りしたか
      * @since 1.0.0

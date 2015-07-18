@@ -5,7 +5,6 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Control;
 import javafx.scene.control.Skin;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
-import net.orekyuu.javatter.api.twitter.model.User;
 
 import java.util.function.Consumer;
 
@@ -13,7 +12,7 @@ public final class TweetText extends Control {
 
     private ObjectProperty<Tweet> tweet;
     private ObjectProperty<Consumer<String>> onClickLink;
-    private ObjectProperty<Consumer<User>> onClickUserLink;
+    private ObjectProperty<Consumer<String>> onClickUserLink;
     private ObjectProperty<Consumer<String>> onClickHashTag;
 
     public TweetText(Tweet tweet) {
@@ -63,18 +62,18 @@ public final class TweetText extends Control {
     }
 
     //onClickUserLink
-    public Consumer<User> getOnClickUserLink() {
+    public Consumer<String> getOnClickUserLink() {
         return onClickUserLink == null ? null : onClickUserLink.get();
     }
 
-    public ObjectProperty<Consumer<User>> onClickUserLinkProperty() {
+    public ObjectProperty<Consumer<String>> onClickUserLinkProperty() {
         if (onClickUserLink == null) {
             onClickUserLink = new SimpleObjectProperty<>();
         }
         return onClickUserLink;
     }
 
-    public void setOnClickUserLink(Consumer<User> onClickUserLink) {
+    public void setOnClickUserLink(Consumer<String> onClickUserLink) {
         this.onClickUserLinkProperty().set(onClickUserLink);
     }
 

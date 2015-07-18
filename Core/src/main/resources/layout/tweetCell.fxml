@@ -15,7 +15,7 @@
     </columnConstraints>
     <rowConstraints>
         <RowConstraints maxHeight="-Infinity" minHeight="0.0" vgrow="ALWAYS"/>
-        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="SOMETIMES"/>
+        <RowConstraints minHeight="10.0" valignment="TOP" vgrow="ALWAYS"/>
         <RowConstraints vgrow="SOMETIMES"/>
         <RowConstraints vgrow="SOMETIMES"/>
     </rowConstraints>
