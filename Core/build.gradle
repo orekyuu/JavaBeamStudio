@@ -12,6 +12,8 @@ dependencies {
     compile 'org.twitter4j:twitter4j-core:4.0.2'
     compile 'org.twitter4j:twitter4j-async:4.0.2'
     compile 'org.twitter4j:twitter4j-stream:4.0.2'
+    compile 'com.aquafx-project:aquafx:+'
+
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 

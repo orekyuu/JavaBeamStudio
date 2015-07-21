@@ -1,5 +1,6 @@
 package net.orekyuu.javatter.core;
 
+import com.aquafx_project.AquaFx;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -64,6 +65,7 @@ public class JavaBeamStudio extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        AquaFx.style();
     }
 
     private void initPlugins() throws IOException {

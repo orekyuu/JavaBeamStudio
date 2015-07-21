@@ -6,8 +6,12 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.layout.*?>
+<?import java.net.URL?>
 <VBox fx:controller="net.orekyuu.javatter.core.column.HomeTimeLineColumn"
       xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
+    <stylesheets>
+        <URL value="@home.css"/>
+    </stylesheets>
     <children>
         <HBox>
             <Label text="AccountName" fx:id="title"/>
