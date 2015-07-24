@@ -1,5 +1,6 @@
 package net.orekyuu.javatter.api.twitter.model;
 
+import com.gs.collections.api.list.ImmutableList;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 
 import java.time.LocalDateTime;
@@ -24,4 +25,6 @@ public interface Tweet {
     boolean isRetweeted(TwitterUser user);
 
     boolean isFavorited(TwitterUser user);
+
+    ImmutableList<String> medias();
 }

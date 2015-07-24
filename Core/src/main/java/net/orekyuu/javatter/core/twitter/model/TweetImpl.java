@@ -1,5 +1,8 @@
 package net.orekyuu.javatter.core.twitter.model;
 
+import com.gs.collections.api.list.ImmutableList;
+import com.gs.collections.api.list.MutableList;
+import com.gs.collections.impl.list.fixed.ArrayAdapter;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
@@ -163,6 +166,12 @@ public class TweetImpl implements Tweet {
     @Override
     public boolean isFavorited(TwitterUser account) {
         return FavoriteCache.getInstance().isFavorited(account, this);
+    }
+
+    @Override
+    public ImmutableList<String> medias() {
+        MutableList<String> urls = ArrayAdapter.adapt(medias).collect(MediaEntity::getMediaURL);
+        return urls.toImmutable();
     }
 
     public static Tweet create(twitter4j.Status status) {
