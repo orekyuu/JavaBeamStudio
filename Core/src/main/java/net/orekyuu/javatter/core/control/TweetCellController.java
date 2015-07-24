@@ -8,6 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -77,14 +78,26 @@ public class TweetCellController implements Initializable {
         Stage stage = new Stage();
         stage.centerOnScreen();
         Image image = new Image(url, true);
-        ImageView imageView = new ImageView(image);
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(imageView);
-
-        imageView.fitWidthProperty().bind(borderPane.widthProperty());
-        imageView.fitHeightProperty().bind(borderPane.heightProperty());
-        Scene scene = new Scene(borderPane);
-        stage.setScene(scene);
+        BorderPane pane = new BorderPane();
+        ProgressIndicator indicator = new ProgressIndicator(0);
+        indicator.setMaxSize(150, 150);
+        pane.setCenter(indicator);
+        Scene progressScene = new Scene(pane, 400, 400);
+        image.progressProperty().addListener((observable, oldValue, newValue) -> {
+            if (1.0 <= newValue.doubleValue()) {
+                ImageView imageView = new ImageView(image);
+                BorderPane borderPane = new BorderPane();
+                borderPane.setCenter(imageView);
+                Scene scene = new Scene(borderPane);
+                borderPane.setPrefSize(image.getWidth(), image.getHeight());
+                stage.setScene(scene);
+                imageView.fitWidthProperty().bind(borderPane.widthProperty());
+                imageView.fitHeightProperty().bind(borderPane.heightProperty());
+            } else {
+                indicator.setProgress(newValue.doubleValue());
+            }
+        });
+        stage.setScene(progressScene);
         stage.setTitle(url);
         stage.show();
     }
