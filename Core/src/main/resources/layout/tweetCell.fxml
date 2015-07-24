@@ -49,5 +49,6 @@
                 <Hyperlink fx:id="via" text="via JavaBeamStudio" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
             </children>
         </HBox>
+        <HBox GridPane.columnIndex="1" GridPane.rowIndex="3" fx:id="images"/>
     </children>
 </GridPane>

@@ -4,11 +4,14 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
+import javafx.scene.image.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
+import javafx.stage.Stage;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
@@ -31,6 +34,7 @@ public class TweetCellController implements Initializable {
     public Button reTweet;
     public Button favorite;
     public GridPane root;
+    public HBox images;
     private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
     private ObjectProperty<TwitterUser> owner = new SimpleObjectProperty<>();
     @Inject
@@ -59,6 +63,30 @@ public class TweetCellController implements Initializable {
         if (twitterUser != null) {
             //TODO ボタンの状態の更新
         }
+
+        images.getChildren().clear();
+        for (String url : newValue.medias()) {
+            Image image = new Image(url, 128, 128, true, true, true);
+            ImageView view = new ImageView(image);
+            view.setOnMouseClicked(e -> openPreview(url));
+            images.getChildren().add(view);
+        }
+    }
+
+    private void openPreview(String url) {
+        Stage stage = new Stage();
+        stage.centerOnScreen();
+        Image image = new Image(url, true);
+        ImageView imageView = new ImageView(image);
+        BorderPane borderPane = new BorderPane();
+        borderPane.setCenter(imageView);
+
+        imageView.fitWidthProperty().bind(borderPane.widthProperty());
+        imageView.fitHeightProperty().bind(borderPane.heightProperty());
+        Scene scene = new Scene(borderPane);
+        stage.setScene(scene);
+        stage.setTitle(url);
+        stage.show();
     }
 
 
