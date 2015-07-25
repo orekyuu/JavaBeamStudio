@@ -25,6 +25,10 @@ public interface User {
 
     String getProfileImageURL();
 
+    String getOriginalProfileImageURL();
+
+    String getProfileBackgroundImageURL();
+
     int getTweetCount();
 
     String getWebSite();
