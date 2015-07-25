@@ -227,7 +227,7 @@ public class TwitterUserImpl implements TwitterUser {
     }
 
     @Override
-    public void reTweet(Tweet tweet) {
+    public void retweet(Tweet tweet) {
         try {
             twitter.retweetStatus(tweet.getStatusId());
         } catch (TwitterException e) {
@@ -236,8 +236,8 @@ public class TwitterUserImpl implements TwitterUser {
     }
 
     @Override
-    public void reTweetAsync(Tweet tweet) {
-        tweetActionExecutor.execute(() -> reTweet(tweet));
+    public void retweetAsync(Tweet tweet) {
+        tweetActionExecutor.execute(() -> retweet(tweet));
     }
 
     @Override

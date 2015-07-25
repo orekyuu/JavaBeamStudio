@@ -37,7 +37,7 @@
         <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
             <children>
                 <Button fx:id="reply" mnemonicParsing="false" onAction="#clickReply" text="←"/>
-                <Button fx:id="reTweet" mnemonicParsing="false" onAction="#clickRetweet" text="↑"/>
+                <Button fx:id="retweet" mnemonicParsing="false" onAction="#clickRetweet" text="↑"/>
                 <Button fx:id="favorite" mnemonicParsing="false" onAction="#clickFavorite" text="★"/>
                 <MenuButton mnemonicParsing="false" text="...">
                     <items>

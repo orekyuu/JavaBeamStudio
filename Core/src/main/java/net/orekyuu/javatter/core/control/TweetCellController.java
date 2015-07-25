@@ -32,7 +32,7 @@ public class TweetCellController implements Initializable {
     public Hyperlink via;
     public Label userName;
     public Button reply;
-    public Button reTweet;
+    public Button retweet;
     public Button favorite;
     public GridPane root;
     public HBox images;
@@ -139,7 +139,7 @@ public class TweetCellController implements Initializable {
         TwitterUser twitterUser = owner.get();
         Tweet tweet = this.tweet.get();
         if (twitterUser != null && tweet != null) {
-            twitterUser.reTweetAsync(tweet);
+            twitterUser.retweetAsync(tweet);
         }
     }
 
