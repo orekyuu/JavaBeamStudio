@@ -21,6 +21,8 @@ public class UserImpl implements User {
     private final String name;
     private final String screenName;
     private final String profileImageURL;
+    public final String biggerProfileImageURL;
+    public final String originalProfileImageURL;
 
     private UserImpl(twitter4j.User user) {
         createdAt = LocalDateTime.ofInstant(user.getCreatedAt().toInstant(), ZoneId.systemDefault());
@@ -36,6 +38,8 @@ public class UserImpl implements User {
         name = user.getName();
         screenName = user.getScreenName();
         profileImageURL = user.getProfileImageURL();
+        biggerProfileImageURL = user.getProfileBackgroundImageURL();
+        originalProfileImageURL = user.getOriginalProfileImageURL();
     }
 
     @Override
@@ -94,6 +98,16 @@ public class UserImpl implements User {
     }
 
     @Override
+    public String getOriginalProfileImageURL() {
+        return originalProfileImageURL;
+    }
+
+    @Override
+    public String getProfileBackgroundImageURL() {
+        return biggerProfileImageURL;
+    }
+
+    @Override
     public int getTweetCount() {
         return tweetCount;
     }
@@ -125,6 +139,7 @@ public class UserImpl implements User {
         sb.append(", name='").append(name).append('\'');
         sb.append(", screenName='").append(screenName).append('\'');
         sb.append(", profileImageURL='").append(profileImageURL).append('\'');
+        sb.append(", profileBackgroundImageURL='").append(biggerProfileImageURL).append('\'');
         sb.append('}');
         return sb.toString();
     }

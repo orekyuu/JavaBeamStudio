@@ -32,4 +32,8 @@ public class UserCache {
     public Optional<User> getById(long id) {
         return Optional.ofNullable(cache.get(id));
     }
+
+    public Optional<User> getByName(String name) {
+        return cache.values().stream().filter(user -> user.getScreenName().equals(name)).findFirst();
+    }
 }

@@ -130,6 +130,7 @@ public class JavaBeamStudio extends Application {
                     bind(PluginService.class).to(PluginServiceImpl.class);
                     bind(CommandManager.class).to(CommandManagerImpl.class).in(Singleton.class);
                     bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
+                    bind(UserWindowService.class).to(UserWindowServiceImpl.class);
                 }
             });
 

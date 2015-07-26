@@ -15,6 +15,7 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
+import net.orekyuu.javatter.api.service.UserWindowService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 
@@ -42,6 +43,8 @@ public class TweetCellController implements Initializable {
     private UserIconStorage iconStorage;
     @Inject
     private CurrentTweetAreaService tweetAreaService;
+    @Inject
+    private UserWindowService service;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -51,6 +54,12 @@ public class TweetCellController implements Initializable {
                 Desktop.getDesktop().browse(new URL(url).toURI());
             } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
+            }
+        });
+        tweetContent.setOnClickUserLink(userName -> {
+            TwitterUser user = owner.get();
+            if (user != null) {
+                service.open(user.findUser(userName));
             }
         });
     }
@@ -72,6 +81,10 @@ public class TweetCellController implements Initializable {
             view.setOnMouseClicked(e -> openPreview(url));
             images.getChildren().add(view);
         }
+
+        currentIcon.setOnMouseClicked(e -> {
+            service.open(newValue.getOwner());
+        });
     }
 
     private void openPreview(String url) {

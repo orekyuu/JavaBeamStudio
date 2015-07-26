@@ -7,6 +7,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.core.cache.TweetCache;
+import net.orekyuu.javatter.core.cache.UserCache;
 import net.orekyuu.javatter.core.twitter.model.TweetImpl;
 import net.orekyuu.javatter.core.twitter.model.UserImpl;
 import net.orekyuu.javatter.core.twitter.userstream.UserStreamImpl;
@@ -266,6 +267,42 @@ public class TwitterUserImpl implements TwitterUser {
             Tweet tweet = TweetImpl.create(status);
             TweetCache.getInstance().update(tweet);
             return tweet;
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public User findUser(String screenName) {
+        Optional<User> byName = UserCache.getInstance().getByName(screenName);
+        if (byName.isPresent()) {
+            return byName.get();
+        }
+
+        try {
+            twitter4j.User showUser = twitter.showUser(screenName);
+            User user = UserImpl.create(showUser);
+            UserCache.getInstance().update(user);
+            return user;
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public User findUser(long id) {
+        Optional<User> byName = UserCache.getInstance().getById(id);
+        if (byName.isPresent()) {
+            return byName.get();
+        }
+
+        try {
+            twitter4j.User showUser = twitter.showUser(id);
+            User user = UserImpl.create(showUser);
+            UserCache.getInstance().update(user);
+            return user;
         } catch (TwitterException e) {
             e.printStackTrace();
         }
