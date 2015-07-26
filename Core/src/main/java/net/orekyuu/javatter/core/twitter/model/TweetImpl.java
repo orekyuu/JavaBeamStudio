@@ -7,7 +7,7 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.core.cache.FavoriteCache;
-import net.orekyuu.javatter.core.cache.ReTweetCache;
+import net.orekyuu.javatter.core.cache.RetweetCache;
 import net.orekyuu.javatter.core.cache.TweetCache;
 import twitter4j.*;
 
@@ -139,7 +139,7 @@ public class TweetImpl implements Tweet {
      */
     @Override
     public boolean isRetweeted(TwitterUser user) {
-        ReTweetCache.getInstance().isReTweeted(user, this);
+        RetweetCache.getInstance().isRetweeted(user, this);
         return false;
     }
 

@@ -7,18 +7,18 @@ import com.gs.collections.impl.map.mutable.primitive.MutableLongObjectMapFactory
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 
-public class ReTweetCache {
+public class RetweetCache {
 
-    private static final ReTweetCache instance = new ReTweetCache();
+    private static final RetweetCache instance = new RetweetCache();
 
     private final MutableLongObjectMap<MutableLongBooleanMap> cache;
 
-    public ReTweetCache() {
+    public RetweetCache() {
         MutableLongObjectMap<MutableLongBooleanMap> map = new MutableLongObjectMapFactoryImpl().empty();
         cache = map.asSynchronized();
     }
 
-    public static ReTweetCache getInstance() {
+    public static RetweetCache getInstance() {
         return instance;
     }
 
@@ -36,7 +36,7 @@ public class ReTweetCache {
         favoritedCache.put(tweet.getStatusId(), retweeted);
     }
 
-    public boolean isReTweeted(TwitterUser account, Tweet tweet) {
+    public boolean isRetweeted(TwitterUser account, Tweet tweet) {
         //Mapがなければ用意する
         MutableLongBooleanMap retweetedCache = cache
                 .getIfAbsentPut(account.getUser().getId(), new MutableLongBooleanMapFactoryImpl().empty().asSynchronized());
