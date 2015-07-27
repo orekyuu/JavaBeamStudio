@@ -44,29 +44,33 @@ public class JavaBeamStudio extends Application {
         //DIの設定は必ず最初に行うこと！
         //初期化しないとDIが使えない
         initDISettings();
+
+        Runnable task = () -> {
+            //アカウントの初期化
+            initAccount();
+            registColumns();
+
+            URL resource = getClass().getResource("/layout/main.fxml");
+            JavatterFXMLLoader loader = new JavatterFXMLLoader(resource);
+            try {
+                loader.setOwnerStage(primaryStage);
+                Parent parent = loader.load();
+                primaryStage.setScene(new Scene(parent));
+                primaryStage.centerOnScreen();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+
         //プラグインのロード
         try {
-            initPlugins();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //アカウントの初期化
-        initAccount();
-        registColumns();
-
-        URL resource = getClass().getResource("/layout/main.fxml");
-        JavatterFXMLLoader loader = new JavatterFXMLLoader(resource);
-        try {
-            loader.setOwnerStage(primaryStage);
-            Parent parent = loader.load();
-            primaryStage.setScene(new Scene(parent));
-            primaryStage.centerOnScreen();
+            initPlugins(task);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void initPlugins() throws IOException {
+    private void initPlugins(Runnable initializeTask) throws IOException {
         PluginService pluginService = Lookup.lookup(PluginService.class);
         PluginClassLoader classLoader = new PluginClassLoader(ClassLoader.getSystemClassLoader());
         Path plugins = Paths.get("plugins");
@@ -87,6 +91,7 @@ public class JavaBeamStudio extends Application {
         }
 
         callAnnotateMethod(pluginClass, OnInit.class);
+        initializeTask.run();
         callAnnotateMethod(pluginClass, OnPostInit.class);
     }
 
