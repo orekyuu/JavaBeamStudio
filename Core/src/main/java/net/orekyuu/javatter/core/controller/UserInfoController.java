@@ -48,14 +48,23 @@ public class UserInfoController implements Initializable {
             }
         });
         desc.setText(user.getDescription());
-        webSite.setText(user.getWebSite());
-        webSite.setOnAction(e -> {
-            try {
-                Desktop.getDesktop().browse(new URL(user.getWebSite()).toURI());
-            } catch (IOException | URISyntaxException e1) {
-                e1.printStackTrace();
-            }
-        });
+
+        if (user.getWebSite() != null) {
+            webSite.setVisible(true);
+            webSite.setDisable(false);
+            webSite.setText(user.getWebSite());
+            webSite.setOnAction(e -> {
+                try {
+                    Desktop.getDesktop().browse(new URL(user.getWebSite()).toURI());
+                } catch (IOException | URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
+            });
+        } else {
+            webSite.setVisible(false);
+            webSite.setDisable(true);
+        }
+
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/ddに作成されました。");
         created.setText(user.getCreatedAt().format(format));
     }
