@@ -5,10 +5,9 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
@@ -18,6 +17,7 @@ import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.service.UserWindowService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
+import net.orekyuu.javatter.api.twitter.model.User;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -34,7 +34,7 @@ public class TweetCellController implements Initializable {
     public Label userName;
     public Button reply;
     public Button retweet;
-    public Button favorite;
+    public ToggleButton favorite;
     public GridPane root;
     public HBox images;
     private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
@@ -71,7 +71,7 @@ public class TweetCellController implements Initializable {
         userName.setText(String.format("@%s / %s", newValue.getOwner().getScreenName(), newValue.getOwner().getName()));
         TwitterUser twitterUser = owner.get();
         if (twitterUser != null) {
-            //TODO ボタンの状態の更新
+            updateButtonState(newValue, twitterUser);
         }
 
         images.getChildren().clear();
@@ -85,6 +85,13 @@ public class TweetCellController implements Initializable {
         currentIcon.setOnMouseClicked(e -> {
             service.open(newValue.getOwner());
         });
+    }
+
+    private void updateButtonState(Tweet tweet, TwitterUser twitterUser) {
+        User owner = tweet.getOwner();
+        retweet.setDisable(owner.getId() == twitterUser.getUser().getId() || tweet.isRetweeted(twitterUser));
+        favorite.setSelected(tweet.isFavorited(twitterUser));
+
     }
 
     private void openPreview(String url) {
@@ -160,7 +167,11 @@ public class TweetCellController implements Initializable {
         TwitterUser twitterUser = owner.get();
         Tweet tweet = this.tweet.get();
         if (twitterUser != null && tweet != null) {
-            twitterUser.favoriteAsync(tweet);
+            if (favorite.isSelected()) {
+                twitterUser.favoriteAsync(tweet);
+            } else {
+                twitterUser.unFavoriteAsync(tweet);
+            }
         }
     }
 }

@@ -38,7 +38,7 @@
             <children>
                 <Button fx:id="reply" mnemonicParsing="false" onAction="#clickReply" text="←"/>
                 <Button fx:id="retweet" mnemonicParsing="false" onAction="#clickRetweet" text="↑"/>
-                <Button fx:id="favorite" mnemonicParsing="false" onAction="#clickFavorite" text="★"/>
+                <ToggleButton fx:id="favorite" mnemonicParsing="false" onAction="#clickFavorite" text="★"/>
                 <MenuButton mnemonicParsing="false" text="...">
                     <items>
                         <MenuItem mnemonicParsing="false" text="Action 1"/>

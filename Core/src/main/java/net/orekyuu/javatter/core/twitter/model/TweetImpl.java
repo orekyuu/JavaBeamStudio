@@ -139,8 +139,7 @@ public class TweetImpl implements Tweet {
      */
     @Override
     public boolean isRetweeted(TwitterUser user) {
-        RetweetCache.getInstance().isRetweeted(user, this);
-        return false;
+        return RetweetCache.getInstance().isRetweeted(user, this);
     }
 
     public UserMentionEntity[] getMentions() {
