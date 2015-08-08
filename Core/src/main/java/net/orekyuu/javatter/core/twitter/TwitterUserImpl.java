@@ -6,6 +6,8 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
+import net.orekyuu.javatter.core.cache.FavoriteCache;
+import net.orekyuu.javatter.core.cache.RetweetCache;
 import net.orekyuu.javatter.core.cache.TweetCache;
 import net.orekyuu.javatter.core.cache.UserCache;
 import net.orekyuu.javatter.core.twitter.model.TweetImpl;
@@ -80,8 +82,14 @@ public class TwitterUserImpl implements TwitterUser {
             @Override
             public void onStatus(Status status) {
                 logger.info(status.getText());
+                //ツイートイベントの発火
                 Tweet tweet = TweetImpl.create(status);
                 userStream.callStatus(tweet);
+                //リツイート状態の更新
+                RetweetCache.getInstance().update(TwitterUserImpl.this, tweet, status.isRetweetedByMe());
+                //お気に入り状態の更新
+                FavoriteCache.getInstance().update(TwitterUserImpl.this, tweet, status.isFavorited());
+
                 long replyStatusId = tweet.getReplyStatusId();
                 //リプライ先がなければおしまい
                 if (replyStatusId == -1) {
@@ -101,6 +109,10 @@ public class TwitterUserImpl implements TwitterUser {
 
             @Override
             public void onFavorite(twitter4j.User source, twitter4j.User target, Status favoritedStatus) {
+                //ふぁぼったのが自分ならツイートのふぁぼ状況を更新
+                if (source.getId() == getUser().getId()) {
+                    FavoriteCache.getInstance().update(TwitterUserImpl.this, TweetImpl.create(favoritedStatus), true);
+                }
 //                stream.onFavorite(source, target, favoritedStatus);
             }
 
@@ -121,6 +133,10 @@ public class TwitterUserImpl implements TwitterUser {
 
             @Override
             public void onUnfavorite(twitter4j.User source, twitter4j.User target, Status unfavoritedStatus) {
+                //あんふぁぼったのが自分ならツイートのふぁぼ状況を更新
+                if (source.getId() == getUser().getId()) {
+                    FavoriteCache.getInstance().update(TwitterUserImpl.this, TweetImpl.create(unfavoritedStatus), false);
+                }
 //                stream.onUnfavorite(source, target, unfavoritedStatus);
             }
 
@@ -196,12 +212,13 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void dispose() {
         twitterStream.shutdown();
-        logger.fine("user stream shutdown.");
+        logger.info("user stream shutdown.");
     }
 
     @Override
     public void favorite(Tweet tweet) {
         try {
+            logger.info("favorite: " + tweet);
             twitter.createFavorite(tweet.getStatusId());
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -216,6 +233,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void unFavorite(Tweet tweet) {
         try {
+            logger.info("unfavorite: " + tweet);
             twitter.destroyFavorite(tweet.getStatusId());
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -230,6 +248,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void retweet(Tweet tweet) {
         try {
+            logger.info("retweet: " + tweet);
             twitter.retweetStatus(tweet.getStatusId());
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -244,6 +263,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void removeTweet(Tweet tweet) {
         try {
+            logger.info("removeTweet: " + tweet);
             twitter.destroyStatus(tweet.getStatusId());
         } catch (TwitterException e) {
             e.printStackTrace();
