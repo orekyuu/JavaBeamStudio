@@ -4,12 +4,13 @@ import com.gs.collections.api.list.ImmutableList;
 import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.MenuItem;
+import javafx.geometry.Orientation;
+import javafx.scene.Node;
+import javafx.scene.control.*;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.VBox;
 import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnController;
@@ -27,6 +28,9 @@ import java.io.UncheckedIOException;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
 public class HomeTimeLineColumn implements ColumnController, Initializable {
@@ -79,8 +83,52 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
     private void onStatus(Tweet tweet) {
         Platform.runLater(() -> {
             logger.info("onStatus: " + tweet.getText());
-            timeline.getItems().add(0, tweet);
+
+            ScrollBar bar = getScrollBar().get();
+            if (bar == null) {
+                timeline.getItems().add(0, tweet);
+            } else {
+                if (bar.getOnScroll() == null) {
+                    EventHandler<ScrollEvent> scrollEventEventHandler = e -> clearQueue();
+                    bar.setOnScroll(scrollEventEventHandler);
+                    bar.setOnDragDone(event -> clearQueue());
+                    timeline.setOnScroll(scrollEventEventHandler);
+                }
+                if (bar.getValue() == bar.getMin()) {
+                    timeline.getItems().add(0, tweet);
+                } else {
+                    queue.add(tweet);
+                }
+            }
         });
+    }
+
+    private void clearQueue() {
+        Optional<ScrollBar> scrollBar = getScrollBar();
+        if (!scrollBar.isPresent()) {
+            return;
+        }
+        ScrollBar bar = scrollBar.get();
+        if (bar.getValue() != bar.getMin()) {
+            return;
+        }
+        while (!queue.isEmpty()) {
+            try {
+                Tweet take = queue.take();
+                timeline.getItems().add(0, take);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    private Optional<ScrollBar> getScrollBar() {
+        Set<Node> nodes = timeline.lookupAll(".scroll-bar");
+        return nodes.stream()
+                .filter(e -> e instanceof ScrollBar)
+                .map(e -> (ScrollBar) e)
+                .filter(bar -> bar.getOrientation() == Orientation.VERTICAL)
+                .findFirst();
     }
 
     @Override
@@ -98,6 +146,8 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
         logger.info("save");
         user.map(TwitterUser::getUser).ifPresent(u -> columnState.setData(KEY, u.getScreenName()));
     }
+
+    private BlockingQueue<Tweet> queue = new LinkedBlockingQueue<>();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
