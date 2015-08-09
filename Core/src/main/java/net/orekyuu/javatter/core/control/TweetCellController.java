@@ -5,12 +5,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.*;
 import javafx.scene.control.Label;
-import javafx.scene.image.*;
 import javafx.scene.image.Image;
-import javafx.scene.layout.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
@@ -24,6 +26,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 public class TweetCellController implements Initializable {
@@ -37,6 +42,7 @@ public class TweetCellController implements Initializable {
     public ToggleButton favorite;
     public GridPane root;
     public HBox images;
+    public Label time;
     private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
     private ObjectProperty<TwitterUser> owner = new SimpleObjectProperty<>();
     @Inject
@@ -85,6 +91,45 @@ public class TweetCellController implements Initializable {
         currentIcon.setOnMouseClicked(e -> {
             service.open(newValue.getOwner());
         });
+
+        updateTime(newValue);
+    }
+
+    private void updateTime(Tweet tweet) {
+        Tweet retweetFrom = tweet.getRetweetFrom();
+        LocalDateTime from = retweetFrom == null ? tweet.getCreatedAt() : retweetFrom.getCreatedAt();
+        LocalDateTime to = LocalDateTime.now();
+        LocalDateTime temp = LocalDateTime.from(from);
+        long year = temp.until(to, ChronoUnit.YEARS);
+        temp = temp.plusYears(year);
+        long month = temp.until(to, ChronoUnit.MONTHS);
+        temp = temp.plusMonths(month);
+        long day = temp.until(to, ChronoUnit.DAYS);
+        temp = temp.plusDays(day);
+        long hour = temp.until(to, ChronoUnit.HOURS);
+        temp = temp.plusHours(hour);
+        long minute = temp.until(to, ChronoUnit.MINUTES);
+        temp = temp.plusMinutes(minute);
+        long second = temp.until(to, ChronoUnit.SECONDS);
+
+        if (0 < year) {
+            time.setText(year + "年前");
+        } else if (0 < month) {
+            time.setText(month + "ヶ月前");
+        } else if (0 < day) {
+            time.setText(day + "日前");
+        } else if (0 < hour) {
+            time.setText(hour + "時間前");
+        } else if (0 < minute) {
+            time.setText(minute + "分前");
+        } else if (0 < second){
+            time.setText(second + "秒前");
+        } else {
+            time.setText("Now");
+        }
+
+        DateTimeFormatter pattern = DateTimeFormatter.ofPattern("yyyy/MM/dd hh:mm:ss");
+        time.getTooltip().setText(from.format(pattern));
     }
 
     private void updateButtonState(Tweet tweet, TwitterUser twitterUser) {
