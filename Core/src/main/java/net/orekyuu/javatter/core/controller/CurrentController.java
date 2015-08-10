@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -28,6 +29,8 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.control.AccountSelection;
+import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
+import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -65,6 +68,8 @@ public class CurrentController implements Initializable {
     private CurrentTweetAreaService currentTweetAreaService;
     @Inject
     private CommandManager commandManager;
+    @Inject
+    private SettingsStorage settingsStorage;
 
     private static final Logger logger = Logger.getLogger(CurrentController.class.getName());
 
@@ -240,7 +245,15 @@ public class CurrentController implements Initializable {
     }
 
     public void onTweet() throws IOException {
-        currentTweetAreaService.tweet();
+        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        if (setting.isCheckTweet()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "ツイートしますか？", ButtonType.YES, ButtonType.NO);
+            alert.setTitle("確認");
+            Optional<ButtonType> result = alert.showAndWait();
+            result.filter(t -> t == ButtonType.YES).ifPresent(t -> currentTweetAreaService.tweet());
+        } else {
+            currentTweetAreaService.tweet();
+        }
     }
 
     public void addHomeColumn() throws IOException {
@@ -256,6 +269,23 @@ public class CurrentController implements Initializable {
         //コマンドによってテキストが書き換えられなかった場合のみ実行
         if (currentTweetAreaService.getText().equals(text)) {
             currentTweetAreaService.setText(s);
+        }
+    }
+
+    public void openSettings() {
+        JavatterFXMLLoader fxmlLoader = new JavatterFXMLLoader(getClass()
+                .getResource("/layout/settings/settings.fxml"));
+        fxmlLoader.setOwnerStage(owner);
+        try {
+            Parent parent = fxmlLoader.load();
+            Scene scene = new Scene(parent);
+            Stage stage = new Stage();
+            stage.initOwner(owner);
+            stage.setScene(scene);
+            stage.setTitle("設定");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
