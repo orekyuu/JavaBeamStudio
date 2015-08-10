@@ -21,11 +21,22 @@
         <RowConstraints vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-        <Label fx:id="userName" text="\@hoge / Name" GridPane.columnIndex="1">
-            <font>
-                <Font name="System Bold" size="13.0"/>
-            </font>
-        </Label>
+        <HBox GridPane.columnIndex="1">
+            <Label fx:id="userName" text="\@hoge / Name">
+                <font>
+                    <Font name="System Bold" size="13.0"/>
+                </font>
+            </Label>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="time" text="Now">
+                <font>
+                    <Font name="System Bold" size="13.0"/>
+                </font>
+                <tooltip>
+                    <Tooltip text="Now"/>
+                </tooltip>
+            </Label>
+        </HBox>
         <ImageView fx:id="currentIcon" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true"
                    GridPane.rowIndex="1">
             <GridPane.margin>
