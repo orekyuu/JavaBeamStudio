@@ -20,6 +20,8 @@ import net.orekyuu.javatter.api.service.UserWindowService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
+import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
+import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
 import java.awt.*;
@@ -29,6 +31,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class TweetCellController implements Initializable {
@@ -51,6 +54,8 @@ public class TweetCellController implements Initializable {
     private CurrentTweetAreaService tweetAreaService;
     @Inject
     private UserWindowService service;
+    @Inject
+    private SettingsStorage settingsStorage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -201,6 +206,18 @@ public class TweetCellController implements Initializable {
     }
 
     public void clickRetweet() {
+        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        if (setting.isCheckRT()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "リツイートしますか？", ButtonType.YES, ButtonType.NO);
+            alert.setTitle("確認");
+            Optional<ButtonType> result = alert.showAndWait();
+            result.filter(t -> t == ButtonType.YES).ifPresent(t -> retweet());
+        } else {
+            retweet();
+        }
+    }
+
+    private void retweet() {
         TwitterUser twitterUser = owner.get();
         Tweet tweet = this.tweet.get();
         if (twitterUser != null && tweet != null) {
@@ -209,6 +226,25 @@ public class TweetCellController implements Initializable {
     }
 
     public void clickFavorite() {
+        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        if (setting.isCheckFavorite()) {
+            String str = favorite.isSelected() ? "ふぁぼ" : "あんふぁぼ";
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, str + "しますか？", ButtonType.YES, ButtonType.NO);
+            alert.setTitle("確認");
+            Optional<ButtonType> result = alert.showAndWait();
+            result.ifPresent(t -> {
+                if (t == ButtonType.YES) {
+                    favorite();
+                } else {
+                    favorite.setSelected(!favorite.isSelected());
+                }
+            });
+        } else {
+            favorite();
+        }
+    }
+
+    private void favorite() {
         TwitterUser twitterUser = owner.get();
         Tweet tweet = this.tweet.get();
         if (twitterUser != null && tweet != null) {

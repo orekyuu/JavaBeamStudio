@@ -14,7 +14,7 @@
             <menus>
                 <Menu mnemonicParsing="false" text="一般">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="設定"/>
+                        <MenuItem mnemonicParsing="false" text="設定" onAction="#openSettings"/>
                         <Menu mnemonicParsing="false" text="Javaビーム">
                             <items>
                                 <MenuItem mnemonicParsing="false" text="一般的Javaビーム"/>
