@@ -23,6 +23,8 @@ import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.command.CommandManagerImpl;
 import net.orekyuu.javatter.core.service.*;
+import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
+import net.orekyuu.javatter.core.settings.storage.SettingsStorageImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -136,6 +138,7 @@ public class JavaBeamStudio extends Application {
                     bind(CommandManager.class).to(CommandManagerImpl.class).in(Singleton.class);
                     bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
                     bind(UserWindowService.class).to(UserWindowServiceImpl.class);
+                    bind(SettingsStorage.class).to(SettingsStorageImpl.class);
                 }
             });
 
