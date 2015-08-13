@@ -89,7 +89,7 @@ public class CurrentController implements Initializable {
 
         //アカウントの画像を設定
         twitterUserService.selectedAccount().ifPresent(user -> account
-                .setImage(new Image(user.getUser().getProfileImageURL(), true)));
+                .setImage(new Image(user.getUser().getOriginalProfileImageURL(), true)));
 
         for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
             if (info.getPluginId().equals(ColumnInfos.PLUGIN_ID_BUILDIN)) {
