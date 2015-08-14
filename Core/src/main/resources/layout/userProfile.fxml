@@ -15,26 +15,10 @@
       <AnchorPane prefHeight="130.0" prefWidth="600.0" fx:id="header">
          <children>
             <ImageView fx:id="userImage" fitHeight="128.0" fitWidth="128.0" layoutX="-7.0" layoutY="-20.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="1.0" />
-            <Text fx:id="userName" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" AnchorPane.bottomAnchor="35.0" AnchorPane.leftAnchor="210.0" AnchorPane.topAnchor="35.0">
-               <font>
-                  <Font size="35.0" />
-               </font>
-            </Text>
          </children>
       </AnchorPane>
       <TabPane fx:id="tabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" VBox.vgrow="ALWAYS">
-        <tabs>
-          <Tab text="Untitled Tab 1">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-          <Tab text="Untitled Tab 2">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </Tab>
-        </tabs>
+
       </TabPane>
    </children>
 </VBox>
