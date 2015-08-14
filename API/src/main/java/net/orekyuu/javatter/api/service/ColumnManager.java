@@ -11,10 +11,29 @@ import java.util.Optional;
 @Service
 public interface ColumnManager {
 
+    /**
+     * カラムを登録する
+     * @param pluginId プラグインID
+     * @param columnName カラム名
+     * @param fxmlPath FXMLのパス
+     * @param name カラムの表示名
+     * @since 1.0.0
+     */
     void registerColumn(String pluginId, String columnName, String fxmlPath, String name);
 
+    /**
+     * カラムを削除する
+     * @param pluginId プラグインID
+     * @param columnName カラム名
+     * @since 1.0.0
+     */
     void unregisterColumn(String pluginId, String columnName);
 
+    /**
+     * 全てのカラム情報を取得する
+     * @return 全てのカラム情報
+     * @since 1.0.0
+     */
     ImmutableList<ColumnInfo> getAllColumnInfo();
 
     /**
@@ -23,9 +42,15 @@ public interface ColumnManager {
      * @param pluginId プラグインID
      * @param columnId カラムID
      * @return カラムのファクトリ
+     * @since 1.0.0
      */
     Optional<ColumnFactory> findByPluginIdAndColumnId(String pluginId, String columnId);
 
+    /**
+     * 全てのカラム情報
+     * @return 全ての絡む情報
+     * @since 1.0.0
+     */
     ImmutableList<ColumnFactory> findAll();
 
     final class ColumnInfo {

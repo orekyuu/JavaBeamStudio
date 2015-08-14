@@ -15,6 +15,7 @@ public interface ColumnService {
     /**
      * カラムを追加します。
      * @param column 追加するカラム
+     * @since 1.0.0
      */
     void addColumn(Column column);
 
@@ -22,21 +23,29 @@ public interface ColumnService {
      * カラムが追加された時のイベント
      *
      * @param listener リスナ
+     * @since 1.0.0
      */
     void addColumnEvent(ColumnAddListener listener);
 
     /**
      * カラムを削除します。
      * @param column 削除するカラム
+     * @since 1.0.0
      */
     void removeColumn(Column column);
 
+    /**
+     * カラムが削除された時のイベント
+     * @param listener リスナ
+     * @since 1.0.0
+     */
     void removeColumnEvent(ColumnRemoveListener listener);
 
     /**
      * 開いているカラムのリストを返します
      *
      * @return 開いているカラム
+     * @since 1.0.0
      */
     ImmutableList<ColumnController> getAllColumn();
 }

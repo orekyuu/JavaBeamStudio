@@ -9,7 +9,17 @@ import net.orekyuu.javatter.api.column.ColumnState;
 @Service
 public interface ColumnStateStorageService {
 
+    /**
+     * カラムの状態
+     * @param columnStates カラムの状態
+     * @since 1.0.0
+     */
     void save(ImmutableList<ColumnState> columnStates);
 
+    /**
+     * カラムの情報をファイルシステムからロードします
+     * @return 復元したカラムの状態
+     * @since 1.0.0
+     */
     ImmutableList<ColumnState> loadColumnStates();
 }
