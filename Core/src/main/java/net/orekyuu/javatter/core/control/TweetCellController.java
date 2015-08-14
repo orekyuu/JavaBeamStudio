@@ -5,15 +5,14 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import net.orekyuu.javatter.api.service.ApplicationService;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.service.UserWindowService;
@@ -24,8 +23,8 @@ import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
-import java.awt.*;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.LocalDateTime;
@@ -56,13 +55,17 @@ public class TweetCellController implements Initializable {
     private UserWindowService service;
     @Inject
     private SettingsStorage settingsStorage;
+    @Inject
+    private ApplicationService applicationService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         tweet.addListener(this::onChange);
         tweetContent.setOnClickLink(url -> {
             try {
-                Desktop.getDesktop().browse(new URL(url).toURI());
+                applicationService.getApplication()
+                        .getHostServices()
+                        .showDocument(new URL(url).toURI().toString());
             } catch (IOException | URISyntaxException e) {
                 e.printStackTrace();
             }
@@ -79,6 +82,16 @@ public class TweetCellController implements Initializable {
         tweetContent.setTweet(newValue);
         currentIcon.setImage(iconStorage.find(newValue.getOwner()));
         via.setText(newValue.getViaName());
+        via.setOnAction(e -> {
+            try {
+                applicationService.getApplication()
+                        .getHostServices()
+                        .showDocument(new URL(newValue.getViaLink()).toURI().toString());
+            } catch (URISyntaxException | MalformedURLException e1) {
+                e1.printStackTrace();
+            }
+        });
+
         userName.setText(String.format("@%s / %s", newValue.getOwner().getScreenName(), newValue.getOwner().getName()));
         TwitterUser twitterUser = owner.get();
         if (twitterUser != null) {
