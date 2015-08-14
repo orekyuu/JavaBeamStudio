@@ -77,7 +77,10 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
                 .map(name -> "@" + name)
                 .ifPresent(title::setText);
         Platform.runLater(runnable);
-        user.ifPresent(user -> user.userStream().onStatus(onStatus));
+        user.ifPresent(user -> {
+            timeline.getItems().addAll(user.getHomeTimeline());
+            user.userStream().onStatus(onStatus);
+        });
     }
 
     private void onStatus(Tweet tweet) {
