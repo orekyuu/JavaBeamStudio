@@ -94,7 +94,7 @@ public class MentionColumn implements ColumnController, Initializable {
 
     @Override
     public String getColumnId() {
-        return HomeTimeLineColumn.ID;
+        return MentionColumn.ID;
     }
 
     @Override
