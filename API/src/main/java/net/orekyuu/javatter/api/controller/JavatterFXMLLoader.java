@@ -7,6 +7,9 @@ import net.orekyuu.javatter.api.util.lookup.Lookup;
 import java.lang.reflect.Field;
 import java.net.URL;
 
+/**
+ * FXML ControllerへDIを行うFXMLLoader
+ */
 public class JavatterFXMLLoader extends FXMLLoader {
 
     private Stage ownerStage;
@@ -20,6 +23,11 @@ public class JavatterFXMLLoader extends FXMLLoader {
         setControllerFactory(this::createController);
     }
 
+    /**
+     * FXMLの描画を行うStageを設定する
+     * @param stage FXMLの描画を行うStage
+     * @since 1.0.0
+     */
     public void setOwnerStage(Stage stage) {
         ownerStage = stage;
     }

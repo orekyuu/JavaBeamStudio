@@ -2,6 +2,10 @@ package net.orekyuu.javatter.api.plugin;
 
 import java.util.Objects;
 
+/**
+ * プラグインの情報
+ * @since 1.0.0
+ */
 public final class PluginInfo {
 
     private String pluginId;
