@@ -3,10 +3,11 @@ package net.orekyuu.javatter.core.controller;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.text.Text;
+import net.orekyuu.javatter.api.service.ApplicationService;
 import net.orekyuu.javatter.api.service.EnvironmentService;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 
-import java.awt.*;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -19,6 +20,9 @@ public class AboutController implements Initializable {
     public Hyperlink webSiteLink;
     public Text apiVersion;
 
+    @Inject
+    private ApplicationService service;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         EnvironmentService environmentService = Lookup.lookup(EnvironmentService.class);
@@ -28,8 +32,9 @@ public class AboutController implements Initializable {
         release.setText(String.format("Release %d/%d/%d", 2015, 5, 29));
         webSiteLink.setOnMouseClicked(e -> {
             try {
-                Desktop.getDesktop()
-                        .browse(new URL(webSiteLink.getText()).toURI());
+                service.getApplication()
+                        .getHostServices()
+                        .showDocument(new URL(webSiteLink.getText()).toURI().toString());
             } catch (IOException | URISyntaxException e1) {
                 e1.printStackTrace();
             }

@@ -139,6 +139,7 @@ public class JavaBeamStudio extends Application {
                     bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
                     bind(UserWindowService.class).to(UserWindowServiceImpl.class);
                     bind(SettingsStorage.class).to(SettingsStorageImpl.class);
+                    bind(ApplicationService.class).toInstance(new ApplicationServiceImpl(JavaBeamStudio.this));
                 }
             });
 
