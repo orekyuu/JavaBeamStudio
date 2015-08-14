@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
+import net.orekyuu.javatter.api.notification.NotificationService;
 import net.orekyuu.javatter.api.plugin.*;
 import net.orekyuu.javatter.api.service.*;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
@@ -22,6 +23,7 @@ import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.command.CommandManagerImpl;
+import net.orekyuu.javatter.core.notification.NotificationServiceImpl;
 import net.orekyuu.javatter.core.service.*;
 import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 import net.orekyuu.javatter.core.settings.storage.SettingsStorageImpl;
@@ -139,6 +141,7 @@ public class JavaBeamStudio extends Application {
                     bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
                     bind(UserWindowService.class).to(UserWindowServiceImpl.class);
                     bind(SettingsStorage.class).to(SettingsStorageImpl.class);
+                    bind(NotificationService.class).to(NotificationServiceImpl.class);
                 }
             });
 
