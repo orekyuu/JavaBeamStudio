@@ -1,5 +1,7 @@
 package net.orekyuu.javatter.core.twitter;
 
+import com.gs.collections.api.list.MutableList;
+import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.twitter.TweetBuilder;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
@@ -327,5 +329,27 @@ public class TwitterUserImpl implements TwitterUser {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public MutableList<Tweet> getHomeTimeline() {
+        try {
+            ResponseList<Status> homeTimeline = twitter.getHomeTimeline();
+            return Lists.mutable.ofAll(homeTimeline).collect(TweetImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<Tweet> getMentions() {
+        try {
+            ResponseList<Status> statuses = twitter.getMentionsTimeline();
+            return Lists.mutable.ofAll(statuses).collect(TweetImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
     }
 }

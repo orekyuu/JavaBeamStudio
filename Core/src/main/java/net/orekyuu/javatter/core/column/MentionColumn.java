@@ -77,7 +77,10 @@ public class MentionColumn implements ColumnController, Initializable {
                 .ifPresent(title::setText);
         Platform.runLater(runnable);
         onStatus = this::onStatus;
-        user.ifPresent(user -> user.userStream().onMention(onStatus));
+        user.ifPresent(user -> {
+            timeline.getItems().addAll(user.getMentions());
+            user.userStream().onMention(onStatus);
+        });
     }
 
     private void onStatus(Tweet tweet, User from) {
