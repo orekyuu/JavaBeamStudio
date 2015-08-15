@@ -3,13 +3,13 @@ package net.orekyuu.javatter.core.twitter.userstream;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
+import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.OnMention;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.api.twitter.userstream.events.*;
 
 import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class UserStreamImpl implements UserStream {
@@ -163,97 +163,56 @@ public class UserStreamImpl implements UserStream {
     public void callException(Exception e) {
         onExceptionListeners.collect(Reference::get)
                 .select(listener -> listener != null)
-                .forEach((Consumer<OnException>) listener -> listener.onException(e));
+                .each(listener -> listener.onException(e));
 
     }
 
 
-    public void callUserProfileUpdate(OnUserProfileUpdate onUserProfileUpdate) {
-        addListener(onUserProfileUpdate, onUserProfileUpdateListeners);
+    public void callUserProfileUpdate(User user) {
+        onUserProfileUpdateListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserProfileUpdate(user));
 
     }
 
 
-    public void callBlock(OnBlock onBlock) {
-        addListener(onBlock, onBlockListeners);
-
+    public void callBlock(User source, User blockedUser) {
+        onBlockListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onBlock(source, blockedUser));
     }
 
 
-    public void callFavorite(OnFavorite onFavorite) {
-        addListener(onFavorite, onFavoriteListeners);
-
+    public void callFavorite(User source, User target, Tweet tweet) {
+        onFavoriteListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onFavorite(source, target, tweet));
     }
 
-
-    public void callFollow(OnFollow onFollow) {
-        addListener(onFollow, onFollowListeners);
-
+    public void callFollow(User source, User followedUser) {
+        onFollowListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onFollow(source, followedUser));
     }
 
-
-    public void callUnblock(OnUnblock onUnblock) {
-        addListener(onUnblock, onUnblockListeners);
-
+    public void callUnblock(User source, User unblockedUser) {
+        onUnblockListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUnblock(source, unblockedUser));
     }
 
-
-    public void callUnfollow(OnUnfollow onUnfollow) {
-        addListener(onUnfollow, onUnfollowListeners);
-
+    public void callUnfollow(User source, User unfollowedUser) {
+        onUnfollowListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUnfollow(source, unfollowedUser));
     }
 
-
-    public void callUnfavorite(OnUnfavorite onUnfavorite) {
-        addListener(onUnfavorite, onUnfavoriteListeners);
-
+    public void callUnfavorite(User source, User target, Tweet unfavoritedTweet) {
+        onUnfavoriteListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUnfavorite(source, target, unfavoritedTweet));
     }
 
-
-    public void callDirectMessage(OnDirectMessage onDirectMessage) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListUpdate(OnUserListUpdate onUserListUpdate) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListSubscription(OnUserListSubscription onUserListSubscription) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListUnsubscription(OnUserListUnsubscription onUserListUnsubscription) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListMemberAddition(OnUserListMemberAddition onUserListMemberAddition) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListMemberDeletion(OnUserListMemberDeletion onUserListMemberDeletion) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListDeletion(OnUserListDeletion onUserListDeletion) {
-        //TODO 後で実装
-
-    }
-
-
-    public void callUserListCreation(OnUserListCreation onUserListCreation) {
-        //TODO 後で実装
-
+    public void callScrubGeo(long userId, long upToStatusId) {
     }
 }

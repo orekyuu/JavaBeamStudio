@@ -17,6 +17,11 @@ import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.notification.NotificationService;
 import net.orekyuu.javatter.api.plugin.*;
 import net.orekyuu.javatter.api.service.*;
+import net.orekyuu.javatter.api.twitter.model.Tweet;
+import net.orekyuu.javatter.api.twitter.model.User;
+import net.orekyuu.javatter.api.twitter.userstream.OnMention;
+import net.orekyuu.javatter.api.twitter.userstream.UserStream;
+import net.orekyuu.javatter.api.twitter.userstream.events.*;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.api.util.lookup.Lookuper;
 import net.orekyuu.javatter.core.column.ColumnInfos;
@@ -40,6 +45,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class JavaBeamStudio extends Application {
+
     @Override
     public void start(Stage primaryStage) {
         Scene waitingScene = new Scene(new Label("起動中"), 300, 100);
@@ -52,6 +58,7 @@ public class JavaBeamStudio extends Application {
         Runnable task = () -> {
             //アカウントの初期化
             initAccount();
+            registerNotification();
             registColumns();
 
             URL resource = getClass().getResource("/layout/main.fxml");
@@ -172,5 +179,107 @@ public class JavaBeamStudio extends Application {
         //タイムラインを登録
         columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID, "/columns/home.fxml", "タイムライン");
         columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, MentionColumn.ID, "/columns/mention.fxml", "メンション");
+    }
+
+    private OnFavorite onFavorite;
+    private OnUnfavorite onUnfavorite;
+    private OnMention onMention;
+    private OnStatus onStatus;
+    private OnFollow onFollow;
+    private OnUnfollow onUnfollow;
+    private void registerNotification() {
+        TwitterUserService service = Lookup.lookup(TwitterUserService.class);
+        NotificationService notification = Lookup.lookup(NotificationService.class);
+        UserIconStorage iconStorage = Lookup.lookup(UserIconStorage.class);
+        service.allUser().each(user -> {
+            UserStream stream = user.userStream();
+            //お気に入り
+            onFavorite = new OnFavorite() {
+                @Override
+                public void onFavorite(User source, User target, Tweet tweet) {
+                    if (source.getId() == user.getUser().getId()) {
+                        return;
+                    }
+                    notification.create()
+                            .title("@" + source.getScreenName() + "にふぁぼられました")
+                            .text(tweet.getText())
+                            .icon(iconStorage.find(source))
+                            .show();
+                }
+            };
+            stream.onFavorite(onFavorite);
+            //あんふぁぼ
+            onUnfavorite = new OnUnfavorite() {
+                @Override
+                public void onUnfavorite(User source, User target, Tweet tweet) {
+                    if (source.getId() == user.getUser().getId()) {
+                        return;
+                    }
+                    notification.create()
+                            .title("@" + source.getScreenName() + "にあんふぁぼされました")
+                            .text(tweet.getText())
+                            .icon(iconStorage.find(source))
+                            .show();
+                }
+            };
+            stream.onUnfavorite(onUnfavorite);
+            //メンション
+            onMention = new OnMention() {
+                @Override
+                public void onMention(Tweet tweet, User from) {
+                    notification.create()
+                            .title("@" + from.getScreenName() + "からメンション")
+                            .text(tweet.getText())
+                            .icon(iconStorage.find(from))
+                            .show();
+                }
+            };
+            stream.onMention(onMention);
+            //RT
+            onStatus = new OnStatus() {
+                @Override
+                public void onStatus(Tweet tweet) {
+                    Tweet retweetFrom = tweet.getRetweetFrom();
+                    if (retweetFrom != null && retweetFrom.getOwner().getId() == user.getUser().getId()) {
+                        notification.create()
+                                .title("RTされました")
+                                .text(retweetFrom.getText())
+                                .icon(iconStorage.find(tweet.getOwner()))
+                                .show();
+                    }
+                }
+            };
+            stream.onStatus(onStatus);
+            //フォロー
+            onFollow = new OnFollow() {
+                @Override
+                public void onFollow(User source, User followedUser) {
+                    if (followedUser.getId() == user.getUser().getId()) {
+                        notification.create()
+                                .title("@" + source.getScreenName() + "にフォローされました")
+                                .text(source.getDescription())
+                                .icon(iconStorage.find(source))
+                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source))
+                                .show();
+                    }
+                }
+            };
+            stream.onFollow(onFollow);
+            //アンフォロー
+            onUnfollow = new OnUnfollow() {
+                @Override
+                public void onUnfollow(User source, User unfollowedUser) {
+                    if (unfollowedUser.getId() == user.getUser().getId()) {
+                        notification.create()
+                                .title("@" + source.getScreenName() + "にリムられました")
+                                .text(source.getDescription())
+                                .icon(iconStorage.find(source))
+                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source))
+                                .show();
+                    }
+                }
+            };
+            stream.onUnfollow(onUnfollow);
+        });
     }
 }

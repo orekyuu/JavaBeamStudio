@@ -48,7 +48,7 @@ public class NotificationBuilderImpl implements NotificationBuilder {
     }
 
     @Override
-    public void popup() {
+    public void show() {
         Notifications notifications = Notifications.create();
         if (text != null) {
             notifications.text(text);

@@ -69,11 +69,12 @@ public class TwitterUserImpl implements TwitterUser {
             @Override
             public void onScrubGeo(long userId, long upToStatusId) {
 //                stream.onScrubGeo(userId, upToStatusId);
+                userStream.callScrubGeo(userId, upToStatusId);
             }
 
             @Override
             public void onUserProfileUpdate(twitter4j.User updatedUser) {
-//                stream.onUserProfileUpdate(updatedUser);
+                userStream.callUserProfileUpdate(UserImpl.create(updatedUser));
             }
 
             @Override
@@ -107,39 +108,42 @@ public class TwitterUserImpl implements TwitterUser {
             @Override
             public void onBlock(twitter4j.User source, twitter4j.User blockedUser) {
 //                stream.onBlock(source, blockedUser);
+                userStream.callBlock(UserImpl.create(source), UserImpl.create(blockedUser));
             }
 
             @Override
             public void onFavorite(twitter4j.User source, twitter4j.User target, Status favoritedStatus) {
                 //ふぁぼったのが自分ならツイートのふぁぼ状況を更新
+                Tweet tweet = TweetImpl.create(favoritedStatus);
                 if (source.getId() == getUser().getId()) {
-                    FavoriteCache.getInstance().update(TwitterUserImpl.this, TweetImpl.create(favoritedStatus), true);
+                    FavoriteCache.getInstance().update(TwitterUserImpl.this, tweet, true);
                 }
-//                stream.onFavorite(source, target, favoritedStatus);
+                userStream.callFavorite(UserImpl.create(source), UserImpl.create(target), tweet);
             }
 
             @Override
             public void onFollow(twitter4j.User source, twitter4j.User followedUser) {
-//                stream.onFollow(source, followedUser);
+                userStream.callFollow(UserImpl.create(source), UserImpl.create(followedUser));
             }
 
             @Override
             public void onUnblock(twitter4j.User source, twitter4j.User unblockedUser) {
-//                stream.onUnblock(source, unblockedUser);
+                userStream.callUnblock(UserImpl.create(source), UserImpl.create(unblockedUser));
             }
 
             @Override
             public void onUnfollow(twitter4j.User source, twitter4j.User unfollowedUser) {
-//                stream.onUnfollow(source, unfollowedUser);
+                userStream.callUnfollow(UserImpl.create(source), UserImpl.create(unfollowedUser));
             }
 
             @Override
             public void onUnfavorite(twitter4j.User source, twitter4j.User target, Status unfavoritedStatus) {
                 //あんふぁぼったのが自分ならツイートのふぁぼ状況を更新
+                Tweet tweet = TweetImpl.create(unfavoritedStatus);
                 if (source.getId() == getUser().getId()) {
-                    FavoriteCache.getInstance().update(TwitterUserImpl.this, TweetImpl.create(unfavoritedStatus), false);
+                    FavoriteCache.getInstance().update(TwitterUserImpl.this, tweet, false);
                 }
-//                stream.onUnfavorite(source, target, unfavoritedStatus);
+                userStream.callUnfavorite(UserImpl.create(source), UserImpl.create(target), tweet);
             }
 
             @Override
