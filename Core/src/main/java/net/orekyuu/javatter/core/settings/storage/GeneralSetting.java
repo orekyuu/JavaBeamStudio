@@ -5,6 +5,7 @@ public final class GeneralSetting {
     private boolean checkRT;
     private boolean checkFavorite;
     private boolean checkTweet;
+    private String nameViewType = NameViewType.SN_NAME.name();
 
     public boolean isCheckRT() {
         return checkRT;
@@ -28,5 +29,13 @@ public final class GeneralSetting {
 
     public void setCheckTweet(boolean checkTweet) {
         this.checkTweet = checkTweet;
+    }
+
+    public String getNameViewType() {
+        return nameViewType;
+    }
+
+    public void setNameViewType(String nameViewType) {
+        this.nameViewType = nameViewType;
     }
 }

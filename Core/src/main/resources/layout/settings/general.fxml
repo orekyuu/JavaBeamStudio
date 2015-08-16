@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
+<?import javafx.scene.control.ComboBox?>
 <ScrollPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
             xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="net.orekyuu.javatter.core.controller.GeneralSettingsPageController">
@@ -14,6 +15,8 @@
                 <CheckBox fx:id="tweetCheck" mnemonicParsing="false" text="ツイート時に確認する"/>
                 <CheckBox fx:id="rtCheck" mnemonicParsing="false" text="リツイート時に確認する"/>
                 <CheckBox fx:id="favCheck" mnemonicParsing="false" text="お気に入り時に確認する"/>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="表示"/>
+                <ComboBox fx:id="nameViewType"/>
             </children>
         </VBox>
     </content>
