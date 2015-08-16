@@ -36,4 +36,12 @@ public interface PluginService {
      * @since 1.0.0
      */
     ImmutableList<PluginInfo> loadPlugins(Path path, PluginClassLoader classLoader);
+
+    /**
+     * プラグインが存在しているかをチェックします。
+     * @since 1.0.0
+     * @param pluginID プラグインID
+     * @return 存在していればtrue
+     */
+    boolean exist(String pluginID);
 }

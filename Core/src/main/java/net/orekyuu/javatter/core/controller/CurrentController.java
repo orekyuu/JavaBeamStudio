@@ -26,9 +26,9 @@ import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.controller.OwnerStage;
 import net.orekyuu.javatter.api.service.*;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
-import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.control.AccountSelection;
+import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
@@ -92,7 +92,7 @@ public class CurrentController implements Initializable {
                 .setImage(new Image(user.getUser().getOriginalProfileImageURL(), true)));
 
         for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
-            if (info.getPluginId().equals(ColumnInfos.PLUGIN_ID_BUILDIN)) {
+            if (info.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
                 MenuItem menuItem = new MenuItem(info.getName());
                 menuItem.setOnAction(e -> {
                     Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(info.getPluginId(),
@@ -257,7 +257,7 @@ public class CurrentController implements Initializable {
     }
 
     public void addHomeColumn() throws IOException {
-        Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(ColumnInfos.PLUGIN_ID_BUILDIN,
+        Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(PluginServiceImpl.BUILD_IN.getPluginId(),
                 HomeTimeLineColumn.ID);
         Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);

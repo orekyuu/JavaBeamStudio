@@ -20,6 +20,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.OnMention;
 import net.orekyuu.javatter.core.control.TweetCell;
+import net.orekyuu.javatter.core.service.PluginServiceImpl;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -89,7 +90,7 @@ public class MentionColumn implements ColumnController, Initializable {
 
     @Override
     public String getPluginId() {
-        return ColumnInfos.PLUGIN_ID_BUILDIN;
+        return PluginServiceImpl.BUILD_IN.getPluginId();
     }
 
     @Override
