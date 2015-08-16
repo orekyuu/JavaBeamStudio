@@ -59,6 +59,10 @@ public class DataStorageServiceImpl implements DataStorageService {
     public void save(String pluginID, Object obj) {
         Path path = getFilePath(pluginID, obj.getClass());
         try {
+            if (Files.notExists(path)) {
+                Files.createDirectories(path.getParent());
+                Files.createFile(path);
+            }
             JAXB.marshal(obj, Files.newBufferedWriter(path));
         } catch (IOException e) {
             throw new UncheckedIOException(e);

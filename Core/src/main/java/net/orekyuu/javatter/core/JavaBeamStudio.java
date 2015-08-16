@@ -17,6 +17,7 @@ import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.notification.NotificationService;
 import net.orekyuu.javatter.api.plugin.*;
 import net.orekyuu.javatter.api.service.*;
+import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.OnMention;
@@ -29,8 +30,7 @@ import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.command.CommandManagerImpl;
 import net.orekyuu.javatter.core.notification.NotificationServiceImpl;
 import net.orekyuu.javatter.core.service.*;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorageImpl;
+import net.orekyuu.javatter.core.storage.DataStorageServiceImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -146,9 +146,9 @@ public class JavaBeamStudio extends Application {
                     bind(CommandManager.class).to(CommandManagerImpl.class).in(Singleton.class);
                     bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
                     bind(UserWindowService.class).to(UserWindowServiceImpl.class);
-                    bind(SettingsStorage.class).to(SettingsStorageImpl.class);
                     bind(ApplicationService.class).toInstance(new ApplicationServiceImpl(JavaBeamStudio.this));
                     bind(NotificationService.class).to(NotificationServiceImpl.class);
+                    bind(DataStorageService.class).to(DataStorageServiceImpl.class);
                 }
             });
 

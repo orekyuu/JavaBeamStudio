@@ -18,12 +18,13 @@ import net.orekyuu.javatter.api.service.ApplicationService;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.service.UserWindowService;
+import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
+import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 import net.orekyuu.javatter.core.settings.storage.NameViewType;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -58,7 +59,7 @@ public class TweetCellController implements Initializable {
     @Inject
     private UserWindowService service;
     @Inject
-    private SettingsStorage settingsStorage;
+    private DataStorageService storageService;
     @Inject
     private ApplicationService applicationService;
     private MenuItem openBrowserMenu;
@@ -130,7 +131,7 @@ public class TweetCellController implements Initializable {
             }
         });
 
-        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         NameViewType type = NameViewType.valueOf(setting.getNameViewType());
         userName.setText(type.convert(newValue.getOwner()));
         TwitterUser twitterUser = owner.get();
@@ -151,7 +152,6 @@ public class TweetCellController implements Initializable {
         });
 
         updateTime(newValue);
-
     }
 
     private void updateTime(Tweet tweet) {
@@ -260,7 +260,7 @@ public class TweetCellController implements Initializable {
     }
 
     public void clickRetweet() {
-        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         if (setting.isCheckRT()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "リツイートしますか？", ButtonType.YES, ButtonType.NO);
             alert.setTitle("確認");
@@ -280,7 +280,7 @@ public class TweetCellController implements Initializable {
     }
 
     public void clickFavorite() {
-        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         if (setting.isCheckFavorite()) {
             String str = favorite.isSelected() ? "ふぁぼ" : "あんふぁぼ";
             Alert alert = new Alert(Alert.AlertType.INFORMATION, str + "しますか？", ButtonType.YES, ButtonType.NO);

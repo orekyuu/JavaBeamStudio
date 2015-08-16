@@ -27,6 +27,10 @@ public class PluginServiceImpl implements PluginService {
         BUILD_IN = new PluginInfo("BuildIn", "ビルドイン", "orekyuu", "javatter.orekyuu.net", "", "", "", "1.0.0", "");
     }
 
+    public PluginServiceImpl() {
+        map.put(BUILD_IN.getPluginId(), BUILD_IN);
+    }
+
     @Override
     public PluginInfo load(Path path, PluginClassLoader classLoader) {
         if (isPlugin(path)) {
