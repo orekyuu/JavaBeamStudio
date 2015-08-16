@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -45,6 +47,7 @@ public class TweetCellController implements Initializable {
     public GridPane root;
     public HBox images;
     public Label time;
+    public MenuButton actions;
     private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
     private ObjectProperty<TwitterUser> owner = new SimpleObjectProperty<>();
     @Inject
@@ -57,6 +60,12 @@ public class TweetCellController implements Initializable {
     private SettingsStorage settingsStorage;
     @Inject
     private ApplicationService applicationService;
+    private MenuItem openBrowserMenu;
+    private MenuItem favRTMenu;
+    private MenuItem copyToClipboardMenu;
+
+    //アクションボタンクリック時のツイートを保存するための変数
+    private Tweet actionTargetTweet;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -75,6 +84,34 @@ public class TweetCellController implements Initializable {
             if (user != null) {
                 service.open(user.findUser(userName));
             }
+        });
+        openBrowserMenu = new MenuItem("ブラウザで開く");
+        favRTMenu = new MenuItem("ふぁぼ&RT");
+        copyToClipboardMenu = new MenuItem("ツイートをコピー");
+        //アクションボタンをクリックした時に現在のツイートを保存
+        actions.setOnMouseClicked(e -> actionTargetTweet = tweet.get());
+        actions.getItems().addAll(openBrowserMenu, favRTMenu, copyToClipboardMenu);
+
+        openBrowserMenu.setOnAction(e -> {
+            try {
+                String url = String.format("https://twitter.com/%s/status/%d",
+                        actionTargetTweet.getOwner().getScreenName(), actionTargetTweet.getStatusId());
+                applicationService.getApplication()
+                        .getHostServices()
+                        .showDocument(new URL(url).toURI().toString());
+            } catch (URISyntaxException | MalformedURLException e1) {
+                e1.printStackTrace();
+            }
+        });
+        favRTMenu.setOnAction(e -> {
+            owner.get().favoriteAsync(actionTargetTweet);
+            owner.get().retweetAsync(actionTargetTweet);
+        });
+        copyToClipboardMenu.setOnAction(e -> {
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            ClipboardContent content = new ClipboardContent();
+            content.putString(actionTargetTweet.getText());
+            clipboard.setContent(content);
         });
     }
 
@@ -111,6 +148,7 @@ public class TweetCellController implements Initializable {
         });
 
         updateTime(newValue);
+
     }
 
     private void updateTime(Tweet tweet) {
