@@ -4,6 +4,7 @@ import com.gs.collections.api.map.primitive.MutableLongObjectMap;
 import com.gs.collections.impl.map.mutable.primitive.MutableLongObjectMapFactoryImpl;
 import net.orekyuu.javatter.api.twitter.model.User;
 
+import java.lang.ref.SoftReference;
 import java.util.Optional;
 
 /**
@@ -13,11 +14,11 @@ public class UserCache {
 
     private static final UserCache instance = new UserCache();
 
-    private final MutableLongObjectMap<User> cache;
+    private final MutableLongObjectMap<SoftReference<User>> cache;
 
     public UserCache() {
         //なんか間違ってる気がするぞ・・・たぶんどこかにstatic factoryがあるはず
-        MutableLongObjectMap<User> map = new MutableLongObjectMapFactoryImpl().empty();
+        MutableLongObjectMap<SoftReference<User>> map = new MutableLongObjectMapFactoryImpl().empty();
         cache = map.asSynchronized();
     }
 
@@ -26,14 +27,21 @@ public class UserCache {
     }
 
     public void update(User user) {
-        cache.put(user.getId(), user);
+        cache.put(user.getId(), new SoftReference<>(user));
     }
 
     public Optional<User> getById(long id) {
-        return Optional.ofNullable(cache.get(id));
+        SoftReference<User> reference = cache.get(id);
+        if (reference == null) {
+            return Optional.empty();
+        }
+        return Optional.ofNullable(reference.get());
     }
 
     public Optional<User> getByName(String name) {
-        return cache.values().stream().filter(user -> user.getScreenName().equals(name)).findFirst();
+        return cache.values().stream()
+                .map(SoftReference::get)
+                .filter(user -> user != null && user.getScreenName().equals(name))
+                .findAny();
     }
 }

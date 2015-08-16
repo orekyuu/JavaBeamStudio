@@ -6,13 +6,29 @@ import javafx.scene.image.Image;
 import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.twitter.model.User;
 
+import java.lang.ref.SoftReference;
+
 public class UserIconStorageImpl implements UserIconStorage {
 
-    private MutableMap<String, Image> icons = Maps.mutable.empty();
+    private MutableMap<String, SoftReference<Image>> icons = Maps.mutable.empty();
 
     @Override
     public Image find(User user) {
-        return icons.getIfAbsentPut(user.getScreenName(), () -> createImage(user));
+        SoftReference<Image> reference = icons.get(user.getScreenName());
+        if (reference == null) {
+            Image image = createImage(user);
+            SoftReference<Image> value = new SoftReference<>(image);
+            icons.put(user.getScreenName(), value);
+            return image;
+        }
+
+        Image image = reference.get();
+        if (image == null) {
+            image = createImage(user);
+            SoftReference<Image> value = new SoftReference<>(image);
+            icons.put(user.getScreenName(), value);
+        }
+        return image;
     }
 
     private Image createImage(User user) {
