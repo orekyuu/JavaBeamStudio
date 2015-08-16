@@ -20,6 +20,7 @@ import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
+import net.orekyuu.javatter.core.settings.storage.NameViewType;
 import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
@@ -92,7 +93,9 @@ public class TweetCellController implements Initializable {
             }
         });
 
-        userName.setText(String.format("@%s / %s", newValue.getOwner().getScreenName(), newValue.getOwner().getName()));
+        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        NameViewType type = NameViewType.valueOf(setting.getNameViewType());
+        userName.setText(type.convert(newValue.getOwner()));
         TwitterUser twitterUser = owner.get();
         if (twitterUser != null) {
             updateButtonState(newValue, twitterUser);
