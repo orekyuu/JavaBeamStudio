@@ -6,9 +6,10 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.util.Callback;
+import net.orekyuu.javatter.api.storage.DataStorageService;
+import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 import net.orekyuu.javatter.core.settings.storage.NameViewType;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -21,7 +22,7 @@ public class GeneralSettingsPageController implements Initializable {
     public CheckBox favCheck;
     public ComboBox<NameViewType> nameViewType;
     @Inject
-    private SettingsStorage settingsStorage;
+    private DataStorageService storageService;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -44,7 +45,7 @@ public class GeneralSettingsPageController implements Initializable {
             }
         });
 
-        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         if (setting == null) {
             setting = new GeneralSetting();
         }
@@ -56,19 +57,19 @@ public class GeneralSettingsPageController implements Initializable {
         GeneralSetting temp = setting;
         tweetCheck.selectedProperty().addListener((observable, oldValue, newValue) -> {
             temp.setCheckTweet(newValue);
-            settingsStorage.saveGeneralSetting(temp);
+            storageService.save(PluginServiceImpl.BUILD_IN.getPluginId(), temp);
         });
         rtCheck.selectedProperty().addListener((observable, oldValue, newValue) -> {
             temp.setCheckRT(newValue);
-            settingsStorage.saveGeneralSetting(temp);
+            storageService.save(PluginServiceImpl.BUILD_IN.getPluginId(), temp);
         });
         favCheck.selectedProperty().addListener((observable, oldValue, newValue) -> {
             temp.setCheckFavorite(newValue);
-            settingsStorage.saveGeneralSetting(temp);
+            storageService.save(PluginServiceImpl.BUILD_IN.getPluginId(), temp);
         });
         nameViewType.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             temp.setNameViewType(newValue.name());
-            settingsStorage.saveGeneralSetting(temp);
+            storageService.save(PluginServiceImpl.BUILD_IN.getPluginId(), temp);
         });
     }
 }

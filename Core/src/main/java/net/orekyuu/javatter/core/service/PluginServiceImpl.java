@@ -2,6 +2,7 @@ package net.orekyuu.javatter.core.service;
 
 import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.impl.factory.Lists;
+import com.gs.collections.impl.factory.Maps;
 import net.orekyuu.javatter.api.plugin.PluginClassLoader;
 import net.orekyuu.javatter.api.plugin.PluginInfo;
 import net.orekyuu.javatter.api.plugin.PluginService;
@@ -11,12 +12,25 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
 import java.util.stream.Collectors;
 
 public class PluginServiceImpl implements PluginService {
+
+    private Map<String, PluginInfo> map = Maps.mutable.of();
+    public static final PluginInfo BUILD_IN;
+
+    static {
+        BUILD_IN = new PluginInfo("BuildIn", "ビルドイン", "orekyuu", "javatter.orekyuu.net", "", "", "", "1.0.0", "");
+    }
+
+    public PluginServiceImpl() {
+        map.put(BUILD_IN.getPluginId(), BUILD_IN);
+    }
+
     @Override
     public PluginInfo load(Path path, PluginClassLoader classLoader) {
         if (isPlugin(path)) {
@@ -24,6 +38,7 @@ public class PluginServiceImpl implements PluginService {
                 JarFile jarFile = new JarFile(path.toFile());
                 Manifest manifest = jarFile.getManifest();
                 PluginInfo pluginInfo = parseManifest(manifest);
+                map.put(pluginInfo.getPluginId(), pluginInfo);
                 classLoader.addPath(path);
                 return pluginInfo;
             } catch (IOException e) {
@@ -70,7 +85,12 @@ public class PluginServiceImpl implements PluginService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+        return Lists.immutable.empty();
+    }
+
+    @Override
+    public boolean exist(String pluginID) {
+        return map.containsKey(pluginID);
     }
 
     private PluginInfo parseManifest(Manifest manifest) {

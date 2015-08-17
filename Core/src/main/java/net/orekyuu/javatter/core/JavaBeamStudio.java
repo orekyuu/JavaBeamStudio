@@ -17,6 +17,7 @@ import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.notification.NotificationService;
 import net.orekyuu.javatter.api.plugin.*;
 import net.orekyuu.javatter.api.service.*;
+import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.OnMention;
@@ -24,14 +25,12 @@ import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.api.twitter.userstream.events.*;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.api.util.lookup.Lookuper;
-import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.command.CommandManagerImpl;
 import net.orekyuu.javatter.core.notification.NotificationServiceImpl;
 import net.orekyuu.javatter.core.service.*;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorageImpl;
+import net.orekyuu.javatter.core.storage.DataStorageServiceImpl;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -147,9 +146,9 @@ public class JavaBeamStudio extends Application {
                     bind(CommandManager.class).to(CommandManagerImpl.class).in(Singleton.class);
                     bind(EnvironmentService.class).to(EnvironmentServiceImpl.class);
                     bind(UserWindowService.class).to(UserWindowServiceImpl.class);
-                    bind(SettingsStorage.class).to(SettingsStorageImpl.class);
                     bind(ApplicationService.class).toInstance(new ApplicationServiceImpl(JavaBeamStudio.this));
                     bind(NotificationService.class).to(NotificationServiceImpl.class);
+                    bind(DataStorageService.class).to(DataStorageServiceImpl.class);
                 }
             });
 
@@ -177,8 +176,8 @@ public class JavaBeamStudio extends Application {
     private void registColumns() {
         ColumnManager columnManager = Lookup.lookup(ColumnManager.class);
         //タイムラインを登録
-        columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, HomeTimeLineColumn.ID, "/columns/home.fxml", "タイムライン");
-        columnManager.registerColumn(ColumnInfos.PLUGIN_ID_BUILDIN, MentionColumn.ID, "/columns/mention.fxml", "メンション");
+        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), HomeTimeLineColumn.ID, "/columns/home.fxml", "タイムライン");
+        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), MentionColumn.ID, "/columns/mention.fxml", "メンション");
     }
 
     private OnFavorite onFavorite;

@@ -25,12 +25,12 @@ import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.controller.OwnerStage;
 import net.orekyuu.javatter.api.service.*;
+import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
-import net.orekyuu.javatter.core.column.ColumnInfos;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.control.AccountSelection;
+import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
-import net.orekyuu.javatter.core.settings.storage.SettingsStorage;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -69,7 +69,7 @@ public class CurrentController implements Initializable {
     @Inject
     private CommandManager commandManager;
     @Inject
-    private SettingsStorage settingsStorage;
+    private DataStorageService storageService;
 
     private static final Logger logger = Logger.getLogger(CurrentController.class.getName());
 
@@ -92,7 +92,7 @@ public class CurrentController implements Initializable {
                 .setImage(new Image(user.getUser().getOriginalProfileImageURL(), true)));
 
         for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
-            if (info.getPluginId().equals(ColumnInfos.PLUGIN_ID_BUILDIN)) {
+            if (info.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
                 MenuItem menuItem = new MenuItem(info.getName());
                 menuItem.setOnAction(e -> {
                     Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(info.getPluginId(),
@@ -245,7 +245,7 @@ public class CurrentController implements Initializable {
     }
 
     public void onTweet() throws IOException {
-        GeneralSetting setting = settingsStorage.getGeneralSetting();
+        GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         if (setting.isCheckTweet()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "ツイートしますか？", ButtonType.YES, ButtonType.NO);
             alert.setTitle("確認");
@@ -257,7 +257,7 @@ public class CurrentController implements Initializable {
     }
 
     public void addHomeColumn() throws IOException {
-        Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(ColumnInfos.PLUGIN_ID_BUILDIN,
+        Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(PluginServiceImpl.BUILD_IN.getPluginId(),
                 HomeTimeLineColumn.ID);
         Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);
