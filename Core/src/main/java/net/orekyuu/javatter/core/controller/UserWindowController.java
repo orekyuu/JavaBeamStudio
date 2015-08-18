@@ -23,8 +23,8 @@ public class UserWindowController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource("/layout/userInfo.fxml"));
         try {
+            JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource("/layout/userInfo.fxml"));
             Parent p = loader.load();
             tabPane.getTabs().add(new Tab("ユーザー情報", p));
             controller = loader.getController();

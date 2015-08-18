@@ -336,6 +336,94 @@ public class TwitterUserImpl implements TwitterUser {
     }
 
     @Override
+    public MutableList<Tweet> getUserTimeline(User user) {
+        try {
+            ResponseList<Status> timeline = twitter.getUserTimeline(user.getId());
+            return Lists.mutable.ofAll(timeline).collect(TweetImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<Tweet> getUserTimeline(long id) {
+        try {
+            ResponseList<Status> timeline = twitter.getUserTimeline(id);
+            return Lists.mutable.ofAll(timeline).collect(TweetImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<Tweet> getUserFavorites(User user) {
+        try {
+            ResponseList<Status> favorites = twitter.getFavorites(user.getId());
+            return Lists.mutable.ofAll(favorites).collect(TweetImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<Tweet> getUserFavorites(long id) {
+        try {
+            ResponseList<Status> favorites = twitter.getFavorites(id);
+            return Lists.mutable.ofAll(favorites).collect(TweetImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<User> getFollowers(User user) {
+        try {
+            PagableResponseList<twitter4j.User> followersList = twitter.getFollowersList(user.getId(), 1);
+            return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<User> getFollowers(long id) {
+        try {
+            PagableResponseList<twitter4j.User> followersList = twitter.getFollowersList(id, 1);
+            return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<User> getFriends(User user) {
+        try {
+            PagableResponseList<twitter4j.User> followersList = twitter.getFriendsList(user.getId(), 1);
+            return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
+    public MutableList<User> getFriends(long id) {
+        try {
+            PagableResponseList<twitter4j.User> followersList = twitter.getFriendsList(id, 1);
+            return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return Lists.mutable.empty();
+    }
+
+    @Override
     public MutableList<Tweet> getHomeTimeline() {
         try {
             ResponseList<Status> homeTimeline = twitter.getHomeTimeline();
