@@ -382,7 +382,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public MutableList<User> getFollowers(User user) {
         try {
-            PagableResponseList<twitter4j.User> followersList = twitter.getFollowersList(user.getId(), 1);
+            PagableResponseList<twitter4j.User> followersList = twitter.getFollowersList(user.getId(), -1);
             return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -393,7 +393,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public MutableList<User> getFollowers(long id) {
         try {
-            PagableResponseList<twitter4j.User> followersList = twitter.getFollowersList(id, 1);
+            PagableResponseList<twitter4j.User> followersList = twitter.getFollowersList(id, -1);
             return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -404,7 +404,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public MutableList<User> getFriends(User user) {
         try {
-            PagableResponseList<twitter4j.User> followersList = twitter.getFriendsList(user.getId(), 1);
+            PagableResponseList<twitter4j.User> followersList = twitter.getFriendsList(user.getId(), -1);
             return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
         } catch (TwitterException e) {
             e.printStackTrace();
@@ -415,7 +415,7 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public MutableList<User> getFriends(long id) {
         try {
-            PagableResponseList<twitter4j.User> followersList = twitter.getFriendsList(id, 1);
+            PagableResponseList<twitter4j.User> followersList = twitter.getFriendsList(id, -1);
             return Lists.mutable.ofAll(followersList).collect(UserImpl::create);
         } catch (TwitterException e) {
             e.printStackTrace();
