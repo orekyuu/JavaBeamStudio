@@ -23,6 +23,8 @@ import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.OnMention;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.api.twitter.userstream.events.*;
+import net.orekyuu.javatter.api.userwindow.UserWindowService;
+import net.orekyuu.javatter.api.userwindow.UserWindowTabManager;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.api.util.lookup.Lookuper;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
@@ -59,6 +61,7 @@ public class JavaBeamStudio extends Application {
             initAccount();
             registerNotification();
             registColumns();
+            initUserWindowTab();
 
             URL resource = getClass().getResource("/layout/main.fxml");
             JavatterFXMLLoader loader = new JavatterFXMLLoader(resource);
@@ -120,6 +123,12 @@ public class JavaBeamStudio extends Application {
         }
     }
 
+    private void initUserWindowTab() {
+        UserWindowTabManager manager = Lookup.lookup(UserWindowTabManager.class);
+        manager.registerTab("/layout/userInfo.fxml");
+        manager.registerTab("/layout/user_timeline.fxml");
+    }
+
     private void initAccount() {
         AccountStorageService accountStorageService = Lookup.lookup(AccountStorageService.class);
         TwitterUserService twitterUserService = Lookup.lookup(TwitterUserService.class);
@@ -149,6 +158,7 @@ public class JavaBeamStudio extends Application {
                     bind(ApplicationService.class).toInstance(new ApplicationServiceImpl(JavaBeamStudio.this));
                     bind(NotificationService.class).to(NotificationServiceImpl.class);
                     bind(DataStorageService.class).to(DataStorageServiceImpl.class);
+                    bind(UserWindowTabManager.class).to(UserWindowTabManagerImpl.class).in(Singleton.class);
                 }
             });
 
@@ -258,7 +268,7 @@ public class JavaBeamStudio extends Application {
                                 .title("@" + source.getScreenName() + "にフォローされました")
                                 .text(source.getDescription())
                                 .icon(iconStorage.find(source))
-                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source))
+                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
                                 .show();
                     }
                 }
@@ -269,11 +279,12 @@ public class JavaBeamStudio extends Application {
                 @Override
                 public void onUnfollow(User source, User unfollowedUser) {
                     if (unfollowedUser.getId() == user.getUser().getId()) {
+
                         notification.create()
                                 .title("@" + source.getScreenName() + "にリムられました")
                                 .text(source.getDescription())
                                 .icon(iconStorage.find(source))
-                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source))
+                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
                                 .show();
                     }
                 }

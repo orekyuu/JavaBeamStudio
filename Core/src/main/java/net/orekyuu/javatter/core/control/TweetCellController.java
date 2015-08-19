@@ -17,7 +17,7 @@ import javafx.stage.Stage;
 import net.orekyuu.javatter.api.service.ApplicationService;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
-import net.orekyuu.javatter.api.service.UserWindowService;
+import net.orekyuu.javatter.api.userwindow.UserWindowService;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
@@ -84,7 +84,7 @@ public class TweetCellController implements Initializable {
         tweetContent.setOnClickUserLink(userName -> {
             TwitterUser user = owner.get();
             if (user != null) {
-                service.open(user.findUser(userName));
+                service.open(user.findUser(userName), user);
             }
         });
         openBrowserMenu = new MenuItem("ブラウザで開く");
@@ -148,7 +148,7 @@ public class TweetCellController implements Initializable {
         }
 
         currentIcon.setOnMouseClicked(e -> {
-            service.open(newValue.getOwner());
+            service.open(newValue.getOwner(), twitterUser);
         });
 
         updateTime(newValue);
