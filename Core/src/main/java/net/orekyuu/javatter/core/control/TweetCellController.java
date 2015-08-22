@@ -50,6 +50,7 @@ public class TweetCellController implements Initializable {
     public HBox images;
     public Label time;
     public MenuButton actions;
+    public ImageView subIcon;
     private ObjectProperty<Tweet> tweet = new SimpleObjectProperty<>();
     private ObjectProperty<TwitterUser> owner = new SimpleObjectProperty<>();
     @Inject
@@ -117,15 +118,30 @@ public class TweetCellController implements Initializable {
         });
     }
 
+    //表示するツイートが変更された時呼び出される
     private void onChange(ObservableValue<? extends Tweet> observable, Tweet oldValue, Tweet newValue) {
-        tweetContent.setTweet(newValue);
-        currentIcon.setImage(iconStorage.find(newValue.getOwner()));
-        via.setText(newValue.getViaName());
+        Tweet currentTweet = newValue.getRetweetFrom() == null ? newValue : newValue.getRetweetFrom();
+        Tweet subTweet = null;
+        if (newValue.getRetweetFrom() != null) {
+            subTweet = newValue;
+        }
+
+        if (subTweet == null) {
+            subIcon.setImage(null);
+            subIcon.setVisible(false);
+        } else {
+            subIcon.setImage(iconStorage.find(subTweet.getOwner()));
+            subIcon.setVisible(true);
+        }
+
+        tweetContent.setTweet(currentTweet);
+        currentIcon.setImage(iconStorage.find(currentTweet.getOwner()));
+        via.setText(currentTweet.getViaName());
         via.setOnAction(e -> {
             try {
                 applicationService.getApplication()
                         .getHostServices()
-                        .showDocument(new URL(newValue.getViaLink()).toURI().toString());
+                        .showDocument(new URL(currentTweet.getViaLink()).toURI().toString());
             } catch (URISyntaxException | MalformedURLException e1) {
                 e1.printStackTrace();
             }
@@ -133,14 +149,14 @@ public class TweetCellController implements Initializable {
 
         GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         NameViewType type = NameViewType.valueOf(setting.getNameViewType());
-        userName.setText(type.convert(newValue.getOwner()));
+        userName.setText(type.convert(currentTweet.getOwner()));
         TwitterUser twitterUser = owner.get();
         if (twitterUser != null) {
-            updateButtonState(newValue, twitterUser);
+            updateButtonState(currentTweet, twitterUser);
         }
 
         images.getChildren().clear();
-        for (String url : newValue.medias()) {
+        for (String url : currentTweet.medias()) {
             Image image = new Image(url, 128, 128, true, true, true);
             ImageView view = new ImageView(image);
             view.setOnMouseClicked(e -> openPreview(url));
@@ -151,12 +167,11 @@ public class TweetCellController implements Initializable {
             service.open(newValue.getOwner(), twitterUser);
         });
 
-        updateTime(newValue);
+        updateTime(currentTweet);
     }
 
     private void updateTime(Tweet tweet) {
-        Tweet retweetFrom = tweet.getRetweetFrom();
-        LocalDateTime from = retweetFrom == null ? tweet.getCreatedAt() : retweetFrom.getCreatedAt();
+        LocalDateTime from = tweet.getCreatedAt();
         LocalDateTime to = LocalDateTime.now();
         LocalDateTime temp = LocalDateTime.from(from);
         long year = temp.until(to, ChronoUnit.YEARS);
