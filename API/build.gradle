@@ -2,13 +2,14 @@ javadoc {
     options.encoding = "UTF-8"
     options.locale = 'ja_JP'
     project.configure(options) {
-        memberLevel = JavadocMemberLevel.PROTECTED
         charSet = "UTF-8"
         docTitle = "JavaBeamStudio API Document"
         windowTitle = "JavaBeamStudio API Document"
         use = "true"
     }
 }
+
+version = '1.0.0'
 
 repositories {
     mavenCentral()
@@ -24,4 +25,12 @@ archivesBaseName = 'JavaBeamStudioAPI'
 
 [compileJava, compileTestJava].each {
     it.options.encoding = 'UTF-8'
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repositories(url: "file://localhost/var/repos")
+        }
+    }
 }
