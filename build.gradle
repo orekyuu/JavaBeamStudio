@@ -6,5 +6,4 @@ allprojects {
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
     group = 'net.orekyuu'
-    version = '0.0.1'
 }

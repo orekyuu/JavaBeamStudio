@@ -5,6 +5,8 @@ repositories {
     }
 }
 
+version = '1.0.0'
+
 dependencies {
     compile project(':API')
     compile 'org.controlsfx:controlsfx:8.20.8'
