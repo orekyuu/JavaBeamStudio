@@ -56,7 +56,7 @@
         </MenuBar>
         <StackPane prefHeight="128.0" prefWidth="600.0">
             <children>
-                <TextArea fx:id="tweetInput" wrapText="true" StackPane.alignment="TOP_LEFT">
+                <TextArea fx:id="tweetInput" wrapText="true" StackPane.alignment="TOP_LEFT" onDragDropped="#onImageDrop" onDragOver="#onImageDragOver">
                     <opaqueInsets>
                         <Insets left="100.0"/>
                     </opaqueInsets>

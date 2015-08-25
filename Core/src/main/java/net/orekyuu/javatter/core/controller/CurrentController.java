@@ -10,7 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -33,12 +36,16 @@ import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class CurrentController implements Initializable {
 
@@ -287,5 +294,27 @@ public class CurrentController implements Initializable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void onImageDrop(DragEvent event) {
+        Dragboard dragboard = event.getDragboard();
+        Pattern pattern = Pattern.compile("\\.(png|jpg|gif)$");
+        if (dragboard.hasFiles()) {
+            List<File> first = dragboard.getFiles().stream()
+                    .filter(file -> pattern.matcher(file.getPath()).find())
+                    .collect(Collectors.toList());
+            first.forEach(currentTweetAreaService::addMedia);
+            event.setDropCompleted(!first.isEmpty());
+        }
+        event.consume();
+
+    }
+
+    public void onImageDragOver(DragEvent event) {
+        Dragboard dragboard=event.getDragboard();
+        if (dragboard.hasFiles()) {
+            event.acceptTransferModes(TransferMode.MOVE);
+        }
+        event.consume();
     }
 }

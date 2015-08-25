@@ -55,6 +55,7 @@ public class TweetBuilderImpl implements TweetBuilder {
         Objects.requireNonNull(text, "TweetText is null.");
 
         StatusUpdate status = new StatusUpdate(text);
+        status.media(files.getFirst());
         reply.map(Tweet::getStatusId).ifPresent(status::setInReplyToStatusId);
         try {
             twitter.updateStatus(status);
