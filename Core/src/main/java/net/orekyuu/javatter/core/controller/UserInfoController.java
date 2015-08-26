@@ -1,12 +1,15 @@
 package net.orekyuu.javatter.core.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
+import net.orekyuu.javatter.api.twitter.FollowStatus;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.userwindow.UserWindowTab;
@@ -28,6 +31,8 @@ public class UserInfoController implements UserWindowTab {
     public Label desc;
     public Hyperlink webSite;
     public Text created;
+    public Text followStatus;
+    public ToggleButton follow;
 
     @Override
     public void update(User user, TwitterUser owner) {
@@ -65,7 +70,41 @@ public class UserInfoController implements UserWindowTab {
 
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/ddに作成されました。");
         created.setText(user.getCreatedAt().format(format));
+        follow.textProperty().bind(Bindings.when(follow.selectedProperty()).then("フォローを外す").otherwise("フォローする"));
+        FollowStatus status = owner.checkFollowStatus(user);
+        updateStatus(status);
+        follow.setOnAction(e -> {
+            if (follow.isSelected()) {
+                owner.followAsync(user);
+            } else {
+                owner.unfollowAsync(user);
+            }
+        });
+    }
 
+    private void updateStatus(FollowStatus status) {
+        switch (status) {
+            case INDIFFERENCE: {
+                follow.setSelected(false);
+                followStatus.setText("無関心");
+                break;
+            }
+            case FOLLOW: {
+                follow.setSelected(true);
+                followStatus.setText("フォローしています");
+                break;
+            }
+            case FOLLOWER: {
+                follow.setSelected(false);
+                followStatus.setText("フォローされています");
+                break;
+            }
+            case FRIEND: {
+                follow.setSelected(true);
+                followStatus.setText("相互フォロー");
+                break;
+            }
+        }
     }
 
     @Override

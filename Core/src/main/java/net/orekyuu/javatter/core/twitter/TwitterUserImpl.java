@@ -3,11 +3,13 @@ package net.orekyuu.javatter.core.twitter;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.account.TwitterAccount;
+import net.orekyuu.javatter.api.twitter.FollowStatus;
 import net.orekyuu.javatter.api.twitter.TweetBuilder;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
+import net.orekyuu.javatter.api.util.Callback;
 import net.orekyuu.javatter.core.cache.FavoriteCache;
 import net.orekyuu.javatter.core.cache.RetweetCache;
 import net.orekyuu.javatter.core.cache.TweetCache;
@@ -35,7 +37,13 @@ public class TwitterUserImpl implements TwitterUser {
 
     private static final ExecutorService tweetActionExecutor = Executors.newSingleThreadExecutor(r -> {
         Thread thread = new Thread(r);
-        thread.setName("AsyncTwitterActionThread");
+        thread.setName("AsyncTweetActionThread");
+        thread.setDaemon(true);
+        return thread;
+    });
+    private static final ExecutorService userActionExecutor = Executors.newSingleThreadExecutor(r -> {
+        Thread thread = new Thread(r);
+        thread.setName("AsyncUserActionThread");
         thread.setDaemon(true);
         return thread;
     });
@@ -443,5 +451,73 @@ public class TwitterUserImpl implements TwitterUser {
             e.printStackTrace();
         }
         return Lists.mutable.empty();
+    }
+
+    @Override
+    public FollowStatus checkFollowStatus(User target) {
+        return checkFollowStatus(getUser(), target);
+    }
+
+    @Override
+    public void checkFollowStatusAsync(User target, Callback<FollowStatus> callback) {
+        userActionExecutor.submit(() -> {
+            FollowStatus status = checkFollowStatus(target);
+            callback.result(status);
+        });
+    }
+
+    @Override
+    public FollowStatus checkFollowStatus(User user, User target) {
+        try {
+            Relationship friendship = twitter.showFriendship(user.getId(), target.getId());
+            if (friendship.isSourceFollowedByTarget() && friendship.isSourceFollowingTarget()) {
+                return FollowStatus.FRIEND;
+            } else if (friendship.isSourceFollowedByTarget()) {
+                return FollowStatus.FOLLOWER;
+            } else if (friendship.isSourceFollowingTarget()) {
+                return FollowStatus.FOLLOW;
+            } else {
+                return FollowStatus.INDIFFERENCE;
+            }
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+        return FollowStatus.INDIFFERENCE;
+    }
+
+    @Override
+    public void checkFollowStatusAsync(User user, User target, Callback<FollowStatus> callback) {
+        userActionExecutor.submit(() -> {
+            FollowStatus status = checkFollowStatus(user, target);
+            callback.result(status);
+        });
+    }
+
+    @Override
+    public void follow(User target) {
+        try {
+            twitter.createFriendship(target.getId());
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void followAsync(User target) {
+        userActionExecutor.submit(() -> follow(target));
+    }
+
+    @Override
+    public void unfollow(User target) {
+        try {
+            twitter.destroyFriendship(target.getId());
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void unfollowAsync(User target) {
+        userActionExecutor.submit(() -> unfollow(target));
     }
 }

@@ -9,7 +9,7 @@ import net.orekyuu.javatter.api.twitter.userstream.UserStream;
  *
  * @since 1.0.0
  */
-public interface TwitterUser extends FavoriteControl, RetweetControl, TweetControl, TweetResource, UserResource,
+public interface TwitterUser extends FavoriteControl, RetweetControl, TweetControl, TweetResource, UserResource, UserControl,
         TimelineResource, MentionsResource {
 
     /**
