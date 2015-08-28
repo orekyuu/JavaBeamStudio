@@ -2,6 +2,7 @@ package net.orekyuu.javatter.core.controller;
 
 import com.gs.collections.api.list.ImmutableList;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -10,10 +11,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
+import javafx.scene.input.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -21,6 +19,9 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import net.orekyuu.javatter.api.account.TwitterAccount;
+import net.orekyuu.javatter.api.action.ActionManager;
+import net.orekyuu.javatter.api.action.MenuAction;
+import net.orekyuu.javatter.api.action.MenuActionEvent;
 import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnFactory;
 import net.orekyuu.javatter.api.column.ColumnState;
@@ -30,6 +31,7 @@ import net.orekyuu.javatter.api.controller.OwnerStage;
 import net.orekyuu.javatter.api.service.*;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
+import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.control.AccountSelection;
 import net.orekyuu.javatter.core.service.PluginServiceImpl;
@@ -49,6 +51,8 @@ import java.util.stream.Collectors;
 
 public class CurrentController implements Initializable {
 
+    @FXML
+    private Menu actionsMenu;
     @FXML
     private Menu columnSelector;
     @FXML
@@ -113,6 +117,20 @@ public class CurrentController implements Initializable {
                 });
                 columnSelector.getItems().add(menuItem);
             }
+        }
+
+        //アクションの登録
+        ActionManager actionManager = Lookup.lookup(ActionManager.class);
+        ImmutableList<MenuAction> actions = actionManager.getMenuActions();
+        ObservableList<MenuItem> items = actionsMenu.getItems();
+        for (MenuAction action : actions) {
+            MenuItem e = new MenuItem(action.getActionName());
+            KeyCombination defaultShortcut = action.getDefaultShortcut();
+            if (defaultShortcut != null) {
+                e.setAccelerator(defaultShortcut);
+            }
+            e.setOnAction(event -> action.getEvent().action(new MenuActionEvent()));
+            items.add(e);
         }
 
         //カラムの追加のイベントを登録
@@ -251,32 +269,11 @@ public class CurrentController implements Initializable {
         }
     }
 
-    public void onTweet() throws IOException {
-        GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
-        if (setting.isCheckTweet()) {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION, "ツイートしますか？", ButtonType.YES, ButtonType.NO);
-            alert.setTitle("確認");
-            Optional<ButtonType> result = alert.showAndWait();
-            result.filter(t -> t == ButtonType.YES).ifPresent(t -> currentTweetAreaService.tweet());
-        } else {
-            currentTweetAreaService.tweet();
-        }
-    }
-
     public void addHomeColumn() throws IOException {
         Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(PluginServiceImpl.BUILD_IN.getPluginId(),
                 HomeTimeLineColumn.ID);
         Column pair = factory.get().newInstance(null);
         columnService.addColumn(pair);
-    }
-
-    public void onExecCommand() {
-        String text = currentTweetAreaService.getText();
-        String s = commandManager.execCommand(currentTweetAreaService.getText());
-        //コマンドによってテキストが書き換えられなかった場合のみ実行
-        if (currentTweetAreaService.getText().equals(text)) {
-            currentTweetAreaService.setText(s);
-        }
     }
 
     public void openSettings() {
@@ -316,5 +313,20 @@ public class CurrentController implements Initializable {
             event.acceptTransferModes(TransferMode.MOVE);
         }
         event.consume();
+    }
+
+    public void onTweet() {
+        DataStorageService storageService = Lookup.lookup(DataStorageService.class);
+        CurrentTweetAreaService currentTweetAreaService = Lookup.lookup(CurrentTweetAreaService.class);
+        GeneralSetting setting = storageService
+                .find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
+        if (setting.isCheckTweet()) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION, "ツイートしますか？", ButtonType.YES, ButtonType.NO);
+            alert.setTitle("確認");
+            Optional<ButtonType> result = alert.showAndWait();
+            result.filter(t -> t == ButtonType.YES).ifPresent(t -> currentTweetAreaService.tweet());
+        } else {
+            currentTweetAreaService.tweet();
+        }
     }
 }

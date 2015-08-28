@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import net.orekyuu.javatter.api.account.TwitterAccount;
+import net.orekyuu.javatter.api.action.ActionManager;
 import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.notification.NotificationService;
@@ -27,6 +28,8 @@ import net.orekyuu.javatter.api.userwindow.UserWindowService;
 import net.orekyuu.javatter.api.userwindow.UserWindowTabManager;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.api.util.lookup.Lookuper;
+import net.orekyuu.javatter.core.action.ActionConfig;
+import net.orekyuu.javatter.core.action.ActionManagerImpl;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.command.CommandManagerImpl;
@@ -62,6 +65,7 @@ public class JavaBeamStudio extends Application {
             registerNotification();
             registColumns();
             initUserWindowTab();
+            ActionConfig.initialize();
 
             URL resource = getClass().getResource("/layout/main.fxml");
             JavatterFXMLLoader loader = new JavatterFXMLLoader(resource);
@@ -162,6 +166,7 @@ public class JavaBeamStudio extends Application {
                     bind(NotificationService.class).to(NotificationServiceImpl.class);
                     bind(DataStorageService.class).to(DataStorageServiceImpl.class);
                     bind(UserWindowTabManager.class).to(UserWindowTabManagerImpl.class).in(Singleton.class);
+                    bind(ActionManager.class).to(ActionManagerImpl.class).in(Singleton.class);
                 }
             });
 
