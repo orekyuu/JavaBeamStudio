@@ -29,21 +29,7 @@
                         <MenuItem mnemonicParsing="false" text="終了"/>
                     </items>
                 </Menu>
-                <Menu mnemonicParsing="false" text="アクション">
-                    <items>
-                        <MenuItem mnemonicParsing="false" onAction="#onTweet" text="ツイート">
-                            <accelerator>
-                                <KeyCodeCombination alt="UP" code="ENTER" control="DOWN" meta="UP" shift="UP"
-                                                    shortcut="UP"/>
-                            </accelerator>
-                        </MenuItem>
-                        <MenuItem mnemonicParsing="false" text="コマンド実行" onAction="#onExecCommand">
-                            <accelerator>
-                                <KeyCodeCombination alt="UP" code="SPACE" control="UP" meta="UP" shift="UP"
-                                                    shortcut="DOWN"/>
-                            </accelerator>
-                        </MenuItem>
-                    </items>
+                <Menu mnemonicParsing="false" text="アクション" fx:id="actionsMenu">
                 </Menu>
                 <Menu mnemonicParsing="false" text="カラム" fx:id="columnSelector">
                 </Menu>

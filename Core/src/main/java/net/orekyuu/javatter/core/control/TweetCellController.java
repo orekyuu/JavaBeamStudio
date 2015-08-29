@@ -1,5 +1,6 @@
 package net.orekyuu.javatter.core.control;
 
+import com.gs.collections.api.list.ImmutableList;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -8,12 +9,13 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.Clipboard;
-import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+import net.orekyuu.javatter.api.action.ActionManager;
+import net.orekyuu.javatter.api.action.TweetCellAction;
+import net.orekyuu.javatter.api.action.TweetCellActionEvent;
 import net.orekyuu.javatter.api.service.ApplicationService;
 import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
@@ -22,6 +24,7 @@ import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
+import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 import net.orekyuu.javatter.core.settings.storage.NameViewType;
@@ -63,9 +66,8 @@ public class TweetCellController implements Initializable {
     private DataStorageService storageService;
     @Inject
     private ApplicationService applicationService;
-    private MenuItem openBrowserMenu;
-    private MenuItem favRTMenu;
-    private MenuItem copyToClipboardMenu;
+    @Inject
+    private ActionManager actionManager;
 
     //アクションボタンクリック時のツイートを保存するための変数
     private Tweet actionTargetTweet;
@@ -88,34 +90,15 @@ public class TweetCellController implements Initializable {
                 service.open(user.findUser(userName), user);
             }
         });
-        openBrowserMenu = new MenuItem("ブラウザで開く");
-        favRTMenu = new MenuItem("ふぁぼ&RT");
-        copyToClipboardMenu = new MenuItem("ツイートをコピー");
         //アクションボタンをクリックした時に現在のツイートを保存
         actions.setOnMouseClicked(e -> actionTargetTweet = tweet.get());
-        actions.getItems().addAll(openBrowserMenu, favRTMenu, copyToClipboardMenu);
-
-        openBrowserMenu.setOnAction(e -> {
-            try {
-                String url = String.format("https://twitter.com/%s/status/%d",
-                        actionTargetTweet.getOwner().getScreenName(), actionTargetTweet.getStatusId());
-                applicationService.getApplication()
-                        .getHostServices()
-                        .showDocument(new URL(url).toURI().toString());
-            } catch (URISyntaxException | MalformedURLException e1) {
-                e1.printStackTrace();
-            }
-        });
-        favRTMenu.setOnAction(e -> {
-            owner.get().favoriteAsync(actionTargetTweet);
-            owner.get().retweetAsync(actionTargetTweet);
-        });
-        copyToClipboardMenu.setOnAction(e -> {
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            ClipboardContent content = new ClipboardContent();
-            content.putString(actionTargetTweet.getText());
-            clipboard.setContent(content);
-        });
+        ActionManager actionManager = Lookup.lookup(ActionManager.class);
+        ImmutableList<TweetCellAction> tweetCellActions = actionManager.getTweetCellActions();
+        for (TweetCellAction tweetCellAction : tweetCellActions) {
+            MenuItem item = new MenuItem(tweetCellAction.getActionName());
+            item.setOnAction(e -> tweetCellAction.getEvent().action(new TweetCellActionEvent(actionTargetTweet, owner.getValue())));
+            actions.getItems().add(item);
+        }
     }
 
     //表示するツイートが変更された時呼び出される
