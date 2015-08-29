@@ -14,11 +14,10 @@ public interface PluginService {
     /**
      * プラグインをロードする
      * @param path プラグインのPath
-     * @param classLoader ClassLoader
      * @return プラグインの情報
      * @since 1.0.0
      */
-    PluginInfo load(Path path, PluginClassLoader classLoader);
+    PluginInfo load(Path path);
 
     /**
      * 指定されたファイルがプラグインかどうかを判定します。
@@ -31,11 +30,10 @@ public interface PluginService {
     /**
      * 指定されたPath以下のディレクトリを検索し、見つかったプラグインをロードします。
      * @param path 検索するディレクトリ
-     * @param classLoader ClassLoader
      * @return プラグインの情報
      * @since 1.0.0
      */
-    ImmutableList<PluginInfo> loadPlugins(Path path, PluginClassLoader classLoader);
+    ImmutableList<PluginInfo> loadPlugins(Path path);
 
     /**
      * プラグインが存在しているかをチェックします。
@@ -44,4 +42,18 @@ public interface PluginService {
      * @return 存在していればtrue
      */
     boolean exist(String pluginID);
+
+    /**
+     * 全てのプラグインの情報を取得します。
+     * @since 1.0.0
+     * @return ロード済みの全てのプラグイン情報
+     */
+    ImmutableList<PluginInfo> getAllPluginInfo();
+
+    /**
+     * プラグインをロードするClassLoaderを返します。
+     * @since 1.0.0
+     * @return ClassLoader
+     */
+    ClassLoader getPluginClassLoader();
 }

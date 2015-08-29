@@ -20,11 +20,12 @@ import java.util.stream.Collectors;
 
 public class PluginServiceImpl implements PluginService {
 
-    private Map<String, PluginInfo> map = Maps.mutable.of();
+    private static Map<String, PluginInfo> map = Maps.mutable.of();
+    private static PluginClassLoader classLoader = new PluginClassLoader(ClassLoader.getSystemClassLoader());
     public static final PluginInfo BUILD_IN;
 
     static {
-        BUILD_IN = new PluginInfo("BuildIn", "ビルドイン", "orekyuu", "javatter.orekyuu.net", "", "", "", "1.0.0", "");
+        BUILD_IN = new PluginInfo("BuildIn", "ビルドイン", "orekyuu", "javatter.orekyuu.net", null, null, null, "1.0.0", "", null);
     }
 
     public PluginServiceImpl() {
@@ -32,7 +33,7 @@ public class PluginServiceImpl implements PluginService {
     }
 
     @Override
-    public PluginInfo load(Path path, PluginClassLoader classLoader) {
+    public PluginInfo load(Path path) {
         if (isPlugin(path)) {
             try {
                 JarFile jarFile = new JarFile(path.toFile());
@@ -75,11 +76,11 @@ public class PluginServiceImpl implements PluginService {
     }
 
     @Override
-    public ImmutableList<PluginInfo> loadPlugins(Path path, PluginClassLoader classLoader) {
+    public ImmutableList<PluginInfo> loadPlugins(Path path) {
         try {
             List<PluginInfo> pluginInfos = Files.walk(path)
                     .filter(this::isPlugin)
-                    .map(p -> load(p, classLoader))
+                    .map(this::load)
                     .collect(Collectors.toList());
             return Lists.immutable.ofAll(pluginInfos);
         } catch (IOException e) {
@@ -93,6 +94,16 @@ public class PluginServiceImpl implements PluginService {
         return map.containsKey(pluginID);
     }
 
+    @Override
+    public ImmutableList<PluginInfo> getAllPluginInfo() {
+        return Lists.immutable.ofAll(map.values());
+    }
+
+    @Override
+    public ClassLoader getPluginClassLoader() {
+        return classLoader;
+    }
+
     private PluginInfo parseManifest(Manifest manifest) {
         Attributes attributes = manifest.getMainAttributes();
         String pluginId = attributes.getValue("Plugin-ID");
@@ -104,7 +115,8 @@ public class PluginServiceImpl implements PluginService {
         String bugTrackWebLink = attributes.getValue("Bug-Track-Web");
         String version = attributes.getValue("Plugin-Version");
         String main = attributes.getValue("Plugin-Class");
+        String pluginPage = attributes.getValue("Plugin-Page");
         return new PluginInfo(pluginId, pluginName, author, authorWebLink, repository, repositoryLink,
-                bugTrackWebLink, version, main);
+                bugTrackWebLink, version, main, pluginPage);
     }
 }

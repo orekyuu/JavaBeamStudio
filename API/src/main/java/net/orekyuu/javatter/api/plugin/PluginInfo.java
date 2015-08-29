@@ -8,18 +8,19 @@ import java.util.Objects;
  */
 public final class PluginInfo {
 
-    private String pluginId;
-    private String pluginName;
-    private String author;
-    private String authorWebLink;
-    private String repository;
-    private String srcWebLink;
-    private String bugTrackWebLink;
-    private String version;
-    private String main;
+    private final String pluginId;
+    private final String pluginName;
+    private final String author;
+    private final String authorWebLink;
+    private final String repository;
+    private final String srcWebLink;
+    private final String bugTrackWebLink;
+    private final String version;
+    private final String main;
+    private final String pluginPage;
 
     public PluginInfo(String pluginId, String pluginName, String author, String authorWebLink, String repository,
-                      String srcWebLink, String bugTrackWebLink, String version, String main) {
+                      String srcWebLink, String bugTrackWebLink, String version, String main, String pluginPage) {
         Objects.requireNonNull(pluginId, "pluginId is null");
         Objects.requireNonNull(pluginName, "pluginName is null");
         Objects.requireNonNull(version, "version is null");
@@ -34,6 +35,7 @@ public final class PluginInfo {
         this.bugTrackWebLink = bugTrackWebLink;
         this.version = version;
         this.main = main;
+        this.pluginPage = pluginPage;
     }
 
     public String getPluginId() {
@@ -70,5 +72,9 @@ public final class PluginInfo {
 
     public String getMain() {
         return main;
+    }
+
+    public String getPluginPage() {
+        return pluginPage;
     }
 }
