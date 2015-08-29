@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
 <?import net.orekyuu.javatter.core.control.TweetText?>
-
+<?import java.net.URL?>
 <GridPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.orekyuu.javatter.core.control.TweetCellController">
+    <stylesheets>
+        <URL value="@tweetCell.css"/>
+    </stylesheets>
+
     <columnConstraints>
         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" />
         <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="0.0" />
@@ -66,10 +66,10 @@
                    GridPane.vgrow="ALWAYS" GridPane.hgrow="ALWAYS"/>
         <HBox GridPane.columnIndex="1" GridPane.rowIndex="2">
             <children>
-                <Button fx:id="reply" mnemonicParsing="false" onAction="#clickReply" text="←" />
-                <Button fx:id="retweet" mnemonicParsing="false" onAction="#clickRetweet" text="↑" />
-                <ToggleButton fx:id="favorite" mnemonicParsing="false" onAction="#clickFavorite" text="★" />
-                <MenuButton fx:id="actions" mnemonicParsing="false" text="...">
+                <Button id="reply" fx:id="reply" onAction="#clickReply"/>
+                <Button id="retweet" fx:id="retweet" onAction="#clickRetweet"/>
+                <ToggleButton id="fav" fx:id="favorite" onAction="#clickFavorite"/>
+                <MenuButton id="actions" fx:id="actions">
                 </MenuButton>
                 <Pane HBox.hgrow="ALWAYS" />
                 <Hyperlink fx:id="via" text="via JavaBeamStudio" GridPane.columnIndex="1" GridPane.rowIndex="3" />
