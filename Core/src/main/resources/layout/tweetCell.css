@@ -1,0 +1,37 @@
+#fav {
+    -fx-graphic: url('/icons/favoriteoff.png');
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+    -fx-effect: inherit;
+}
+
+#fav:selected {
+    -fx-graphic: url('/icons/favoriteon.png');
+    -fx-padding: 0;
+    -fx-background-color: transparent;
+}
+
+#reply {
+    -fx-graphic: url('/icons/replyoff.png');
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#retweet {
+    -fx-graphic: url('/icons/retweetoff.png');
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#retweet:disabled {
+    -fx-graphic: url('/icons/retweeton.png');
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+#actions {
+    -fx-graphic: url('/icons/actions.png');
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+    -fx-content-display: graphic-only;
+}
