@@ -48,7 +48,7 @@ public class PluginServiceImpl implements PluginService {
                     classLoader.addPath(path);
                 } else {
                     NotificationService notificationService = Lookup.lookup(NotificationService.class);
-                    notificationService.showError("プラグインの読み込みをスキップ",
+                    notificationService.showWarning("プラグインの読み込みをスキップ",
                             "APIバージョンが古いため読み込みをスキップしました。\nPlugin ID:"+
                                     pluginInfo.getPluginId() + "\nAPI Version: " +
                                     pluginInfo.getApiVersion());
