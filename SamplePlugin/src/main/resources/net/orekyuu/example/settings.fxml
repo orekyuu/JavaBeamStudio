@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<ScrollPane maxHeight="Infinity" maxWidth="Infinity"
+            minHeight="-Infinity" minWidth="-Infinity"
+            fx:controller="net.orekyuu.example.SettingsController"
+            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+   <content>
+      <VBox>
+         <children>
+            <CheckBox text="サンプル" fx:id="checkbox"/>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

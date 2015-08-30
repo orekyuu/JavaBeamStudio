@@ -17,5 +17,6 @@ jar {
         attributes 'Author-Web': 'http://orekyuu.net/'
         attributes 'Plugin-Version': '1.0.0'
         attributes 'Plugin-Class': 'net.orekyuu.example.ExamplePlugin'
+        attributes 'Plugin-Page': '/net/orekyuu/example/settings.fxml'
     }
 }

@@ -16,7 +16,10 @@ import net.orekyuu.javatter.api.action.ActionManager;
 import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.notification.NotificationService;
-import net.orekyuu.javatter.api.plugin.*;
+import net.orekyuu.javatter.api.plugin.OnInit;
+import net.orekyuu.javatter.api.plugin.OnPostInit;
+import net.orekyuu.javatter.api.plugin.PluginInfo;
+import net.orekyuu.javatter.api.plugin.PluginService;
 import net.orekyuu.javatter.api.service.*;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
@@ -89,16 +92,15 @@ public class JavaBeamStudio extends Application {
 
     private void initPlugins(Runnable initializeTask) throws IOException {
         PluginService pluginService = Lookup.lookup(PluginService.class);
-        PluginClassLoader classLoader = new PluginClassLoader(ClassLoader.getSystemClassLoader());
         Path plugins = Paths.get("plugins");
         if (Files.notExists(plugins)) {
             Files.createDirectory(plugins);
         }
-        ImmutableList<PluginInfo> list = pluginService.loadPlugins(plugins, classLoader);
+        ImmutableList<PluginInfo> list = pluginService.loadPlugins(plugins);
         MutableList<Object> pluginClass = Lists.mutable.of();
         for (PluginInfo pluginInfo : list) {
             try {
-                Class<?> loadClass = Class.forName(pluginInfo.getMain(), true, classLoader);
+                Class<?> loadClass = Class.forName(pluginInfo.getMain(), true, pluginService.getPluginClassLoader());
                 Object instance = loadClass.getConstructor().newInstance();
                 pluginClass.add(instance);
                 Lookup.inject(instance);
