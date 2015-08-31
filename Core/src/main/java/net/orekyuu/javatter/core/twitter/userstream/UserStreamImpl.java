@@ -2,8 +2,7 @@ package net.orekyuu.javatter.core.twitter.userstream;
 
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
-import net.orekyuu.javatter.api.twitter.model.Tweet;
-import net.orekyuu.javatter.api.twitter.model.User;
+import net.orekyuu.javatter.api.twitter.model.*;
 import net.orekyuu.javatter.api.twitter.userstream.OnMention;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
 import net.orekyuu.javatter.api.twitter.userstream.events.*;
@@ -24,6 +23,15 @@ public class UserStreamImpl implements UserStream {
     private MutableList<WeakReference<OnUnblock>> onUnblockListeners = Lists.mutable.of();
     private MutableList<WeakReference<OnUnfavorite>> onUnfavoriteListeners = Lists.mutable.of();
     private MutableList<WeakReference<OnUnfollow>> onUnfollowListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnDirectMessage>> onDirectMessageListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListUpdate>> onUserListUpdateListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListSubscription>> onUserListSubscriptionListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListUnsubscription>> onUserListUnsubscriptionListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListMemberAddition>> onUserListMemberAdditionListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListMemberDeletion>> onUserListMemberDeletionListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListDeletion>> onUserListDeletionListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnUserListCreation>> onUserListCreationListeners = Lists.mutable.of();
+    private MutableList<WeakReference<OnStatusDeletion>> onDeletionListeners = Lists.mutable.of();
 
     /**
      * 参照が切れたものをListから削除してリスナを登録する
@@ -99,49 +107,49 @@ public class UserStreamImpl implements UserStream {
 
     @Override
     public UserStream onDirectMessage(OnDirectMessage onDirectMessage) {
-        //TODO 後で実装
+        addListener(onDirectMessage, onDirectMessageListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListUpdate(OnUserListUpdate onUserListUpdate) {
-        //TODO 後で実装
+        addListener(onUserListUpdate, onUserListUpdateListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListSubscription(OnUserListSubscription onUserListSubscription) {
-        //TODO 後で実装
+        addListener(onUserListSubscription, onUserListSubscriptionListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListUnsubscription(OnUserListUnsubscription onUserListUnsubscription) {
-        //TODO 後で実装
+        addListener(onUserListUnsubscription, onUserListUnsubscriptionListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListMemberAddition(OnUserListMemberAddition onUserListMemberAddition) {
-        //TODO 後で実装
+        addListener(onUserListMemberAddition, onUserListMemberAdditionListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListMemberDeletion(OnUserListMemberDeletion onUserListMemberDeletion) {
-        //TODO 後で実装
+        addListener(onUserListMemberDeletion, onUserListMemberDeletionListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListDeletion(OnUserListDeletion onUserListDeletion) {
-        //TODO 後で実装
+        addListener(onUserListDeletion, onUserListDeletionListeners);
         return this;
     }
 
     @Override
     public UserStream onUserListCreation(OnUserListCreation onUserListCreation) {
-        //TODO 後で実装
+        addListener(onUserListCreation, onUserListCreationListeners);
         return this;
     }
 
@@ -214,5 +222,59 @@ public class UserStreamImpl implements UserStream {
     }
 
     public void callScrubGeo(long userId, long upToStatusId) {
+    }
+
+    public void callDirectMessage(DirectMessage directMessage) {
+        onDirectMessageListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onDirectMessage(directMessage));
+    }
+
+    public void callDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
+        onDeletionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onDelete(statusDeletionNotice));
+    }
+
+    public void callUserListUpdate(User user, UserList userList) {
+        onUserListUpdateListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListUpdate(user, userList));
+    }
+
+    public void callUserListSubscription(User user, User user1, UserList userList) {
+        onUserListSubscriptionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListSubscription(user, user1, userList));
+    }
+
+    public void callUserListUnsubscription(User user, User user1, UserList userList) {
+        onUserListUnsubscriptionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListUnsubscription(user, user1, userList));
+    }
+
+    public void callUserListMemberAddition(User user, User user1, UserList userList) {
+        onUserListMemberAdditionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListMemberAddition(user, user1, userList));
+    }
+
+    public void callUserListMemberDeletion(User user, User user1, UserList userList) {
+        onUserListMemberDeletionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListMemberDeletion(user, user1, userList));
+    }
+
+    public void callUserListDeletion(User user, UserList userList) {
+        onUserListDeletionListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListDeletion(user, userList));
+    }
+
+    public void callUserListCreation(User user, UserList userList) {
+        onUserListCreationListeners.collect(Reference::get)
+                .select(listener -> listener != null)
+                .each(listener -> listener.onUserListCreation(user, userList));
     }
 }
