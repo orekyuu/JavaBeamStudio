@@ -3,7 +3,7 @@ package net.orekyuu.javatter.api.action;
 /**
  * ツイートセルのアクション
  */
-public class TweetCellAction {
+public final class TweetCellAction {
 
     private final String pluginId;
     private final String actionName;
@@ -52,7 +52,7 @@ public class TweetCellAction {
     /**
      * アクションを作成するビルダー
      */
-    public static class Builder {
+    public final static class Builder {
         private String pluginId;
         private String actionName;
         private ActionListener<TweetCellActionEvent> event;

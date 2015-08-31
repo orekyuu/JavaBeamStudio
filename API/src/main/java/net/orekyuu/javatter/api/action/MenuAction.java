@@ -64,7 +64,7 @@ public final class MenuAction {
     /**
      * アクションを作成するビルダー
      */
-    public static class Builder {
+    public final static class Builder {
         private String pluginId;
         private String actionName;
         private ActionListener<MenuActionEvent> event;

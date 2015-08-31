@@ -10,7 +10,7 @@ import java.net.URL;
 /**
  * FXML ControllerへDIを行うFXMLLoader
  */
-public class JavatterFXMLLoader extends FXMLLoader {
+public final class JavatterFXMLLoader extends FXMLLoader {
 
     private Stage ownerStage;
 
