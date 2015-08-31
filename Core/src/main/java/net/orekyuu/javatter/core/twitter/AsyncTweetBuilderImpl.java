@@ -27,9 +27,7 @@ public class AsyncTweetBuilderImpl extends TweetBuilderImpl implements AsyncTwee
     protected AsyncTweetBuilderImpl(String text, Twitter twitter, FastList<File> files, Optional<Tweet> reply) {
         super(twitter);
         setText(text);
-        for (File file : files) {
-            addFile(file);
-        }
+        files.each(this::addFile);
         reply.ifPresent(this::replyTo);
     }
 
