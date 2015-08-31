@@ -18,13 +18,15 @@ public final class PluginInfo {
     private final String version;
     private final String main;
     private final String pluginPage;
+    private final String apiVersion;
 
     public PluginInfo(String pluginId, String pluginName, String author, String authorWebLink, String repository,
-                      String srcWebLink, String bugTrackWebLink, String version, String main, String pluginPage) {
+                      String srcWebLink, String bugTrackWebLink, String version, String main, String pluginPage, String apiVersion) {
         Objects.requireNonNull(pluginId, "pluginId is null");
         Objects.requireNonNull(pluginName, "pluginName is null");
         Objects.requireNonNull(version, "version is null");
         Objects.requireNonNull(main, "main is null");
+        Objects.requireNonNull(apiVersion, "apiVersion is null");
 
         this.pluginId = pluginId;
         this.pluginName = pluginName;
@@ -36,6 +38,7 @@ public final class PluginInfo {
         this.version = version;
         this.main = main;
         this.pluginPage = pluginPage;
+        this.apiVersion = apiVersion;
     }
 
     public String getPluginId() {
@@ -76,5 +79,9 @@ public final class PluginInfo {
 
     public String getPluginPage() {
         return pluginPage;
+    }
+
+    public String getApiVersion() {
+        return apiVersion;
     }
 }

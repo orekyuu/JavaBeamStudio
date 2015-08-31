@@ -99,6 +99,10 @@ public class JavaBeamStudio extends Application {
         ImmutableList<PluginInfo> list = pluginService.loadPlugins(plugins);
         MutableList<Object> pluginClass = Lists.mutable.of();
         for (PluginInfo pluginInfo : list) {
+            //ビルドインは予約のためだけなので実際にはロードしない
+            if (pluginInfo.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
+                continue;
+            }
             try {
                 Class<?> loadClass = Class.forName(pluginInfo.getMain(), true, pluginService.getPluginClassLoader());
                 Object instance = loadClass.getConstructor().newInstance();

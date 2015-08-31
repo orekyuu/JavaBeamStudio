@@ -3,20 +3,22 @@ package net.orekyuu.javatter.core.service;
 import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.impl.factory.Lists;
 import com.gs.collections.impl.factory.Maps;
+import net.orekyuu.javatter.api.notification.NotificationService;
 import net.orekyuu.javatter.api.plugin.PluginClassLoader;
 import net.orekyuu.javatter.api.plugin.PluginInfo;
 import net.orekyuu.javatter.api.plugin.PluginService;
+import net.orekyuu.javatter.api.service.EnvironmentService;
+import net.orekyuu.javatter.api.util.lookup.Lookup;
+import net.orekyuu.javatter.core.util.VersionComparator;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.Map;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-import java.util.stream.Collectors;
 
 public class PluginServiceImpl implements PluginService {
 
@@ -25,7 +27,7 @@ public class PluginServiceImpl implements PluginService {
     public static final PluginInfo BUILD_IN;
 
     static {
-        BUILD_IN = new PluginInfo("BuildIn", "ビルドイン", "orekyuu", "javatter.orekyuu.net", null, null, null, "1.0.0", "", null);
+        BUILD_IN = new PluginInfo("BuildIn", "ビルドイン", "orekyuu", "javatter.orekyuu.net", null, null, null, "1.0.0", "", null, "1.0.0");
     }
 
     public PluginServiceImpl() {
@@ -39,8 +41,18 @@ public class PluginServiceImpl implements PluginService {
                 JarFile jarFile = new JarFile(path.toFile());
                 Manifest manifest = jarFile.getManifest();
                 PluginInfo pluginInfo = parseManifest(manifest);
-                map.put(pluginInfo.getPluginId(), pluginInfo);
-                classLoader.addPath(path);
+                VersionComparator comparator = new VersionComparator();
+                EnvironmentService service = Lookup.lookup(EnvironmentService.class);
+                if (comparator.compare(service.getJavaBeamStudioApiVersion(), pluginInfo.getApiVersion()) <= 0) {
+                    map.put(pluginInfo.getPluginId(), pluginInfo);
+                    classLoader.addPath(path);
+                } else {
+                    NotificationService notificationService = Lookup.lookup(NotificationService.class);
+                    notificationService.showWarning("プラグインの読み込みをスキップ",
+                            "APIバージョンが古いため読み込みをスキップしました。\nPlugin ID:"+
+                                    pluginInfo.getPluginId() + "\nAPI Version: " +
+                                    pluginInfo.getApiVersion());
+                }
                 return pluginInfo;
             } catch (IOException e) {
                 throw new UncheckedIOException(e);
@@ -78,11 +90,10 @@ public class PluginServiceImpl implements PluginService {
     @Override
     public ImmutableList<PluginInfo> loadPlugins(Path path) {
         try {
-            List<PluginInfo> pluginInfos = Files.walk(path)
+            Files.walk(path)
                     .filter(this::isPlugin)
-                    .map(this::load)
-                    .collect(Collectors.toList());
-            return Lists.immutable.ofAll(pluginInfos);
+                    .forEach(this::load);
+            return getAllPluginInfo();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -116,7 +127,8 @@ public class PluginServiceImpl implements PluginService {
         String version = attributes.getValue("Plugin-Version");
         String main = attributes.getValue("Plugin-Class");
         String pluginPage = attributes.getValue("Plugin-Page");
+        String apiVersion = attributes.getValue("Min-API-Version");
         return new PluginInfo(pluginId, pluginName, author, authorWebLink, repository, repositoryLink,
-                bugTrackWebLink, version, main, pluginPage);
+                bugTrackWebLink, version, main, pluginPage, apiVersion);
     }
 }

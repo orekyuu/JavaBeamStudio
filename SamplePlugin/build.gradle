@@ -18,5 +18,6 @@ jar {
         attributes 'Plugin-Version': '1.0.0'
         attributes 'Plugin-Class': 'net.orekyuu.example.ExamplePlugin'
         attributes 'Plugin-Page': '/net/orekyuu/example/settings.fxml'
+        attributes 'Min-API-Version': '1.0.0'
     }
 }
