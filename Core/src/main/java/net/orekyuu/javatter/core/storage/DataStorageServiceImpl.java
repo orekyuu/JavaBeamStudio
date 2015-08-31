@@ -6,9 +6,7 @@ import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 
 import javax.xml.bind.JAXB;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -22,8 +20,9 @@ public class DataStorageServiceImpl implements DataStorageService {
             throw new UncheckedIOException(
                     new FileNotFoundException("pluginID=" + pluginID + ", dataClass=" + dataClass.getName()));
         }
-        try {
-            return JAXB.unmarshal(Files.newBufferedReader(path), dataClass);
+
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            return JAXB.unmarshal(reader, dataClass);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -35,8 +34,8 @@ public class DataStorageServiceImpl implements DataStorageService {
         if (Files.notExists(path)) {
             return defaultValue;
         }
-        try {
-            return JAXB.unmarshal(Files.newBufferedReader(path), dataClass);
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            return JAXB.unmarshal(reader, dataClass);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -48,8 +47,8 @@ public class DataStorageServiceImpl implements DataStorageService {
         if (Files.notExists(path)) {
             return defaultValueSupplier.get();
         }
-        try {
-            return JAXB.unmarshal(Files.newBufferedReader(path), dataClass);
+        try (BufferedReader reader = Files.newBufferedReader(path)) {
+            return JAXB.unmarshal(reader, dataClass);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -63,7 +62,12 @@ public class DataStorageServiceImpl implements DataStorageService {
                 Files.createDirectories(path.getParent());
                 Files.createFile(path);
             }
-            JAXB.marshal(obj, Files.newBufferedWriter(path));
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+
+        try (BufferedWriter reader = Files.newBufferedWriter(path)) {
+            JAXB.marshal(obj, reader);
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
