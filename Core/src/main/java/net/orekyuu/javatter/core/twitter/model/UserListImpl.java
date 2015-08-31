@@ -1,6 +1,5 @@
 package net.orekyuu.javatter.core.twitter.model;
 
-import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.twitter.model.UserList;
 
@@ -69,11 +68,6 @@ public class UserListImpl implements UserList {
     @Override
     public User getUser() {
         return user;
-    }
-
-    @Override
-    public boolean isFollowing(TwitterUser user) {
-        return false;
     }
 
     @Override

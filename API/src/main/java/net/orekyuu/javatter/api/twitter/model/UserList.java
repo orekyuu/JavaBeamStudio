@@ -1,9 +1,10 @@
 package net.orekyuu.javatter.api.twitter.model;
 
-import net.orekyuu.javatter.api.twitter.TwitterUser;
-
 import java.time.LocalDateTime;
 
+/**
+ * ユーザーリスト
+ */
 public interface UserList {
 
     long getId();
@@ -21,8 +22,6 @@ public interface UserList {
     boolean isPublic();
 
     User getUser();
-
-    boolean isFollowing(TwitterUser user);
 
     LocalDateTime getCreatedAt();
 }
