@@ -20,7 +20,6 @@ public class VersionCommand implements Command {
 
     @Override
     public void exec(List<String> args) {
-        //TODO 実行時にバージョンチェックを行う
         CurrentTweetAreaService service = Lookup.lookup(CurrentTweetAreaService.class);
         EnvironmentService environmentService = Lookup.lookup(EnvironmentService.class);
         service.setText("Javaビーム工房 " + environmentService.getJavaBeamStudioVersion()

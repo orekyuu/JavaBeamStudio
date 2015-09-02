@@ -32,7 +32,6 @@ public class UserIconStorageImpl implements UserIconStorage {
     }
 
     private Image createImage(User user) {
-        System.out.println("create: " + user.getScreenName() + ", " + this);
         return new Image(user.getProfileImageURL(), true);
     }
 }
