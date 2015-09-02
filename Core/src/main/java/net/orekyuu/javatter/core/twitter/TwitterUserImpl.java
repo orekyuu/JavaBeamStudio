@@ -14,8 +14,7 @@ import net.orekyuu.javatter.core.cache.FavoriteCache;
 import net.orekyuu.javatter.core.cache.RetweetCache;
 import net.orekyuu.javatter.core.cache.TweetCache;
 import net.orekyuu.javatter.core.cache.UserCache;
-import net.orekyuu.javatter.core.twitter.model.TweetImpl;
-import net.orekyuu.javatter.core.twitter.model.UserImpl;
+import net.orekyuu.javatter.core.twitter.model.*;
 import net.orekyuu.javatter.core.twitter.userstream.UserStreamImpl;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -70,13 +69,11 @@ public class TwitterUserImpl implements TwitterUser {
         UserStreamAdapter adapter = new UserStreamAdapter() {
             @Override
             public void onException(Exception ex) {
-//                stream.onException(ex);
                 userStream.callException(ex);
             }
 
             @Override
             public void onScrubGeo(long userId, long upToStatusId) {
-//                stream.onScrubGeo(userId, upToStatusId);
                 userStream.callScrubGeo(userId, upToStatusId);
             }
 
@@ -87,7 +84,7 @@ public class TwitterUserImpl implements TwitterUser {
 
             @Override
             public void onDeletionNotice(StatusDeletionNotice statusDeletionNotice) {
-//                stream.onDeletionNotice(statusDeletionNotice);
+                userStream.callDeletionNotice(StatusDeletionNoticeImpl.create(statusDeletionNotice));
             }
 
             @Override
@@ -115,7 +112,6 @@ public class TwitterUserImpl implements TwitterUser {
 
             @Override
             public void onBlock(twitter4j.User source, twitter4j.User blockedUser) {
-//                stream.onBlock(source, blockedUser);
                 userStream.callBlock(UserImpl.create(source), UserImpl.create(blockedUser));
             }
 
@@ -156,42 +152,43 @@ public class TwitterUserImpl implements TwitterUser {
 
             @Override
             public void onDirectMessage(DirectMessage directMessage) {
-//                stream.onDirectMessage(directMessage);
+                userStream.callDirectMessage(DirectMessageImpl.create(directMessage));
             }
 
             @Override
             public void onUserListUpdate(twitter4j.User listOwner, UserList list) {
-//                stream.onUserListUpdate(listOwner, list);
+                userStream.callUserListUpdate(UserImpl.create(listOwner), UserListImpl.create(list));
             }
 
             @Override
             public void onUserListSubscription(twitter4j.User subscriber, twitter4j.User listOwner, UserList list) {
-//                stream.onUserListSubscription(subscriber, listOwner, list);
+                userStream.callUserListSubscription(UserImpl.create(subscriber), UserImpl.create(listOwner), UserListImpl.create(list));
             }
 
             @Override
             public void onUserListUnsubscription(twitter4j.User subscriber, twitter4j.User listOwner, UserList list) {
-//                stream.onUserListUnsubscription(subscriber, listOwner, list);
+                userStream.callUserListUnsubscription(UserImpl.create(subscriber), UserImpl.create(listOwner), UserListImpl.create(list));
             }
 
             @Override
             public void onUserListMemberAddition(twitter4j.User addedMember, twitter4j.User listOwner, UserList list) {
-//                stream.onUserListMemberAddition(addedMember, listOwner, list);
+                userStream.callUserListMemberAddition(UserImpl.create(addedMember), UserImpl.create(listOwner), UserListImpl.create(list));
             }
 
             @Override
             public void onUserListMemberDeletion(twitter4j.User deletedMember, twitter4j.User listOwner, UserList list) {
-//                stream.onUserListMemberDeletion(deletedMember, listOwner, list);
+                userStream.callUserListMemberDeletion(UserImpl.create(deletedMember), UserImpl.create(listOwner), UserListImpl.create(list));
             }
+
 
             @Override
             public void onUserListDeletion(twitter4j.User listOwner, UserList list) {
-//                stream.onUserListDeletion(listOwner, list);
+                userStream.callUserListDeletion(UserImpl.create(listOwner), UserListImpl.create(list));
             }
 
             @Override
             public void onUserListCreation(twitter4j.User listOwner, UserList list) {
-//                stream.onUserListCreation(listOwner, list);
+                userStream.callUserListCreation(UserImpl.create(listOwner), UserListImpl.create(list));
             }
         };
 
