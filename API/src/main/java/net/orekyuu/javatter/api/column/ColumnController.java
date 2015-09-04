@@ -33,15 +33,18 @@ public interface ColumnController {
      */
     String getColumnId();
 
-    //TODO onCloseの呼び出し
-
     /**
      * カラムが閉じられるときのイベントです。<br>
-     * 状態の永続化と後処理を行ってください。
+     * 後処理を行ってください。
      *
-     * @param columnState カラムの状態を保存するためのState
      */
-    void onClose(ColumnState columnState);
+    void onClose();
+
+    /**
+     * 現在のカラムの状態を返します
+     * @return カラムの状態
+     */
+    ColumnState getState();
 
     /**
      * デフォルトのカラムの状態を作成します。
@@ -49,7 +52,7 @@ public interface ColumnController {
      * @return デフォルトのカラムの状態
      * @since 1.0.0
      */
-    default ColumnState newColumnState() {
+    default ColumnState defaultColumnState() {
         return new ColumnState(getPluginId(), getColumnId());
     }
 }

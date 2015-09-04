@@ -56,13 +56,12 @@ public class MentionColumn implements ColumnController, Initializable {
     @Inject
     private ColumnService columnService;
     private OnMention onStatus;
+    private ColumnState columnState;
 
     //弱参照でリスナが保持されるためフィールドに束縛しておく
     @Override
     public void restoration(ColumnState columnState) {
-        if (columnState == null) {
-            columnState = newColumnState();
-        }
+        this.columnState = columnState;
         logger.info(columnState.toString());
         String userName = (String) columnState.getData(KEY).getFirst();
         if (userName == null) {
@@ -81,6 +80,7 @@ public class MentionColumn implements ColumnController, Initializable {
         user.ifPresent(user -> {
             timeline.getItems().addAll(user.getMentions());
             user.userStream().onMention(onStatus);
+            this.columnState.setData(KEY, user.getUser().getScreenName());
         });
     }
 
@@ -99,9 +99,13 @@ public class MentionColumn implements ColumnController, Initializable {
     }
 
     @Override
-    public void onClose(ColumnState columnState) {
+    public ColumnState getState() {
+        return columnState;
+    }
+
+    @Override
+    public void onClose() {
         logger.info("save");
-        user.map(TwitterUser::getUser).ifPresent(u -> columnState.setData(KEY, u.getScreenName()));
     }
 
     @Override
@@ -121,6 +125,7 @@ public class MentionColumn implements ColumnController, Initializable {
             MenuItem item = new MenuItem(twitterUser.getUser().getScreenName());
             item.setOnAction(e -> {
                 user = Optional.of(twitterUser);
+                columnState.setData(KEY, twitterUser.getUser().getScreenName());
                 title.setText(twitterUser.getUser().getScreenName());
                 timeline.getItems().clear();
                 twitterUser.userStream().onMention(onStatus);
