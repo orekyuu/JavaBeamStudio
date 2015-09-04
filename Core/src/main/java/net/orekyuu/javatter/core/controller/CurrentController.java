@@ -193,7 +193,10 @@ public class CurrentController implements Initializable {
         });
         columnStateStorageService.save(states);
         //ユーザーの後処理
-        twitterUserService.allUser().each(TwitterUser::dispose);
+        //後処理に時間かかるのでバックグラウンドでやらせる
+        new Thread(() -> {
+            twitterUserService.allUser().each(TwitterUser::dispose);
+        }).start();
     }
 
     private void initAccount() {
