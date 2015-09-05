@@ -3,6 +3,8 @@ package net.orekyuu.javatter.core.account;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import twitter4j.auth.AccessToken;
 
+import java.util.Objects;
+
 public class TwitterAccountImpl implements TwitterAccount {
 
     private String id;
@@ -38,5 +40,24 @@ public class TwitterAccountImpl implements TwitterAccount {
         sb.append(", tokenSecret='").append(tokenSecret).append('\'');
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        TwitterAccountImpl that = (TwitterAccountImpl) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(token, that.token) &&
+                Objects.equals(tokenSecret, that.tokenSecret);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, token, tokenSecret);
     }
 }

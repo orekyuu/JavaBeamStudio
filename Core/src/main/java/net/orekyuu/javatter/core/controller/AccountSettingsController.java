@@ -54,7 +54,6 @@ public class AccountSettingsController implements Initializable {
     public void removeAccount() {
         MultipleSelectionModel<TwitterAccount> selectionModel = accounts.getSelectionModel();
         ObservableList<TwitterAccount> selectedItems = selectionModel.getSelectedItems();
-        System.out.println(selectedItems);
         accountStorage.delete(selectedItems);
         updateAccountsList();
     }
