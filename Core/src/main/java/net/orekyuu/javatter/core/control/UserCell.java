@@ -5,11 +5,9 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
-import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 
 import java.io.IOException;
@@ -21,7 +19,7 @@ public class UserCell extends ListCell<User> {
     private ObjectProperty<User> user = new SimpleObjectProperty<>();
 
     public UserCell() throws IOException {
-        JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource("/layout/userCell.fxml"));
+        JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource("/layout/usercell.fxml"));
         parent = loader.load();
         controller = loader.getController();
         controller.userProperty().bind(user);
