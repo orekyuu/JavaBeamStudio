@@ -42,7 +42,8 @@ public class UserWindowController implements Initializable {
                         Parent p = loader.load();
                         UserWindowTab userTab = loader.getController();
                         StringProperty titleProperty = userTab.titleProperty();
-                        Tab tab = new Tab(titleProperty.get(), p);
+                        Tab tab = new Tab(titleProperty.get());
+                        tab.setContent(p);
                         tab.textProperty().bind(titleProperty);
                         tabPane.getTabs().add(tab);
                         tabControllers.add(userTab);
