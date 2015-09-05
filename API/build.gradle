@@ -27,10 +27,10 @@ archivesBaseName = 'JavaBeamStudioAPI'
     it.options.encoding = 'UTF-8'
 }
 
+apply plugin: 'maven'
+
 uploadArchives {
-    repositories {
-        mavenDeployer {
-            repositories(url: "file://localhost/var/repos")
-        }
+    repositories.mavenDeployer {
+            repository(url: 'file://localhost/var/repos')
     }
 }
