@@ -8,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.controller.OwnerStage;
 import net.orekyuu.javatter.api.service.AccountStorageService;
 import net.orekyuu.javatter.core.account.TwitterAccountImpl;
@@ -18,6 +19,7 @@ import twitter4j.auth.AccessToken;
 import twitter4j.auth.RequestToken;
 
 import java.net.URL;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -36,6 +38,7 @@ public class SignupController implements Initializable {
     private AccountStorageService accountStorageService;
     @OwnerStage
     private Stage owner;
+    public Optional<TwitterAccount> account = Optional.empty();
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -59,6 +62,7 @@ public class SignupController implements Initializable {
         try {
             AccessToken accessToken = twitter.getOAuthAccessToken(token, pinField.getText());
             TwitterAccountImpl account = new TwitterAccountImpl(accessToken);
+            this.account = Optional.of(account);
             accountStorageService.save(account);
             owner.close();
             onClose();
@@ -69,5 +73,9 @@ public class SignupController implements Initializable {
 
     public void onClose() {
         executorService.shutdown();
+    }
+
+    public Optional<TwitterAccount> getAccount() {
+        return account;
     }
 }

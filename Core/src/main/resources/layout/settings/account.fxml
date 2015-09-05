@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
-<ScrollPane maxHeight="Infinity" maxWidth="Infinity"
-            minHeight="-Infinity" minWidth="-Infinity"
-            xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8">
+<ScrollPane maxHeight="Infinity" maxWidth="Infinity" minHeight="-Infinity" minWidth="-Infinity"
+            fx:controller="net.orekyuu.javatter.core.controller.AccountSettingsController"
+            xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
     <content>
         <VBox>
             <children>
-                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="アカウント設定"/>
+                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="アカウント設定" />
+            <ListView fx:id="accounts" prefHeight="300.0" />
+            <HBox>
+               <children>
+                  <Button fx:id="remove" mnemonicParsing="false" text="削除" onAction="#removeAccount"/>
+                  <Button fx:id="add" mnemonicParsing="false" text="追加" onAction="#addAccount"/>
+               </children>
+            </HBox>
             </children>
         </VBox>
     </content>

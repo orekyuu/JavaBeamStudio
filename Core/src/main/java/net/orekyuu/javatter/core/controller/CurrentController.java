@@ -101,6 +101,14 @@ public class CurrentController implements Initializable {
         //アカウントの画像を設定
         twitterUserService.selectedAccount().ifPresent(user -> account
                 .setImage(new Image(user.getUser().getOriginalProfileImageURL(), true)));
+        //アカウント変更時に画像を変更する
+        twitterUserService.selectedAccountProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == null) {
+                account.setImage(null);
+            } else {
+                account.setImage(new Image(newValue.getUser().getOriginalProfileImageURL(), true));
+            }
+        });
 
         for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
             if (info.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
@@ -217,7 +225,9 @@ public class CurrentController implements Initializable {
     }
 
     private void showAccountList(MouseEvent mouseEvent) {
-        accountSelection.show(root, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+        if (accountSelection != null) {
+            accountSelection.show(root, mouseEvent.getScreenX(), mouseEvent.getScreenY());
+        }
     }
 
     //アカウントが見つからなければアカウント設定を促す

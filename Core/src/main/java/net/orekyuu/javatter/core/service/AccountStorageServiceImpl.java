@@ -54,7 +54,7 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     }
 
     @Override
-    public void save(Iterable<Account> accounts) {
+    public void save(Iterable<? extends Account> accounts) {
         AccountContainer container = loadContainer();
         MutableList<Account> select = container.getAccounts().select(a -> {
             for (Account account : accounts) {
@@ -75,7 +75,7 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     }
 
     @Override
-    public void delete(Iterable<Account> accounts) {
+    public void delete(Iterable<? extends Account> accounts) {
         AccountContainer container = loadContainer();
         MutableList<Account> list = container.getAccounts().toList();
         list.removeAllIterable(accounts);

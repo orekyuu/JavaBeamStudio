@@ -49,7 +49,7 @@ public interface AccountStorageService {
      * @param accounts 保存するアカウント
      * @since 1.0.0
      */
-    void save(Iterable<Account> accounts);
+    void save(Iterable<? extends Account> accounts);
 
     /**
      * アカウントを削除します
@@ -63,5 +63,5 @@ public interface AccountStorageService {
      * @param accounts 削除するアカウント
      * @since 1.0.0
      */
-    void delete(Iterable<Account> accounts);
+    void delete(Iterable<? extends Account> accounts);
 }
