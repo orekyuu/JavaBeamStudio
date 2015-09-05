@@ -58,12 +58,11 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
 
     //弱参照でリスナが保持されるためフィールドに束縛しておく
     private OnStatus onStatus = this::onStatus;
+    private ColumnState columnState;
 
     @Override
     public void restoration(ColumnState columnState) {
-        if (columnState == null) {
-            columnState = newColumnState();
-        }
+        this.columnState = columnState;
         logger.info(columnState.toString());
         String userName = (String) columnState.getData(KEY).getFirst();
         if (userName == null) {
@@ -81,6 +80,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
         user.ifPresent(user -> {
             timeline.getItems().addAll(user.getHomeTimeline());
             user.userStream().onStatus(onStatus);
+            this.columnState.setData(KEY, user.getUser().getScreenName());
         });
     }
 
@@ -146,9 +146,14 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
     }
 
     @Override
-    public void onClose(ColumnState columnState) {
+    public void onClose() {
+        System.out.println("close");
         logger.info("save");
-        user.map(TwitterUser::getUser).ifPresent(u -> columnState.setData(KEY, u.getScreenName()));
+    }
+
+    @Override
+    public ColumnState getState() {
+        return columnState;
     }
 
     private BlockingQueue<Tweet> queue = new LinkedBlockingQueue<>();
@@ -170,6 +175,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
             MenuItem item = new MenuItem(twitterUser.getUser().getScreenName());
             item.setOnAction(e -> {
                 user = Optional.of(twitterUser);
+                columnState.setData(KEY, twitterUser.getUser().getScreenName());
                 title.setText(twitterUser.getUser().getScreenName());
                 timeline.getItems().clear();
                 twitterUser.userStream().onStatus(this::onStatus);

@@ -15,6 +15,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 public class AccountStorageServiceImpl implements AccountStorageService {
@@ -48,26 +50,37 @@ public class AccountStorageServiceImpl implements AccountStorageService {
 
     @Override
     public void save(Account account) {
-        AccountContainer container = loadContainer();
-        MutableList<Account> result = container.getAccounts().select(a -> !a.equals(account)).toList();
-        result.add(account);
-        AccountContainer accountContainer = new AccountContainer(result);
-        saveContainer(accountContainer);
+        save(Collections.singletonList(account));
     }
 
     @Override
     public void save(Iterable<Account> accounts) {
-        //TODO
+        AccountContainer container = loadContainer();
+        MutableList<Account> select = container.getAccounts().select(a -> {
+            for (Account account : accounts) {
+                if (Objects.equals(account, a)) {
+                    return false;
+                }
+            }
+            return true;
+        }).toList();
+        accounts.forEach(select::add);
+        AccountContainer accountContainer = new AccountContainer(select);
+        saveContainer(accountContainer);
     }
 
     @Override
     public void delete(Account account) {
-        //TODO
+        delete(Collections.singletonList(account));
     }
 
     @Override
     public void delete(Iterable<Account> accounts) {
-        //TODO
+        AccountContainer container = loadContainer();
+        MutableList<Account> list = container.getAccounts().toList();
+        list.removeAllIterable(accounts);
+        AccountContainer accountContainer = new AccountContainer(list);
+        saveContainer(accountContainer);
     }
 
     private AccountContainer loadContainer() {

@@ -61,6 +61,9 @@ public class ColumnManagerImpl implements ColumnManager {
                 JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource(fxml));
                 Node node = loader.load();
                 ColumnController columnController = loader.getController();
+                if (state == null) {
+                    state = columnController.defaultColumnState();
+                }
                 columnController.restoration(state);
 
                 return new Column(columnController, node);
@@ -81,6 +84,9 @@ public class ColumnManagerImpl implements ColumnManager {
                         JavatterFXMLLoader fxmlLoader = new JavatterFXMLLoader(getClass().getResource(fxmlPath));
                         Node load = fxmlLoader.load();
                         ColumnController columnController = fxmlLoader.getController();
+                        if (state == null) {
+                            state = columnController.defaultColumnState();
+                        }
                         columnController.restoration(state);
                         return new Column(columnController, load);
                     }

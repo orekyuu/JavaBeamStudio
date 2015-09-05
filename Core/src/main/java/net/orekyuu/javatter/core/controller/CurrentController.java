@@ -187,8 +187,11 @@ public class CurrentController implements Initializable {
     private void onCloseRequest(WindowEvent windowEvent) {
         //カラムの状態の保存
         ImmutableList<ColumnState> states = columnService.getAllColumn().collect(c -> {
-            ColumnState columnState = c.newColumnState();
-            c.onClose(columnState);
+            ColumnState columnState = c.getState();
+            c.onClose();
+            if (columnState == null) {
+                columnState = c.defaultColumnState();
+            }
             return columnState;
         });
         columnStateStorageService.save(states);
