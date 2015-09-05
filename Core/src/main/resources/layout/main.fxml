@@ -4,7 +4,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.*?>
 <VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
@@ -15,16 +14,6 @@
                 <Menu mnemonicParsing="false" text="一般">
                     <items>
                         <MenuItem mnemonicParsing="false" text="設定" onAction="#openSettings"/>
-                        <Menu mnemonicParsing="false" text="Javaビーム">
-                            <items>
-                                <MenuItem mnemonicParsing="false" text="一般的Javaビーム"/>
-                                <MenuItem mnemonicParsing="false" text="日常的Javaビーム"/>
-                                <MenuItem mnemonicParsing="false" text="楽観的Javaビーム"/>
-                                <MenuItem mnemonicParsing="false" text="悲観的Javaビーム"/>
-                                <MenuItem mnemonicParsing="false" text="非日常的Javaビーム"/>
-                                <MenuItem mnemonicParsing="false" text="常習的Javaビーム"/>
-                            </items>
-                        </Menu>
 
                         <MenuItem mnemonicParsing="false" text="終了"/>
                     </items>
