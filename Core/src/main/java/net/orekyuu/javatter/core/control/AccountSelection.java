@@ -5,7 +5,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.PopupControl;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.HBox;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.User;
 
@@ -24,7 +24,7 @@ public class AccountSelection extends PopupControl {
     }
 
     private Parent createRootNode(List<TwitterUser> users, Consumer<TwitterUser> selectedEvent) {
-        VBox box = new VBox();
+        HBox box = new HBox();
         for (TwitterUser twitterUser : users) {
             User user = twitterUser.getUser();
             Image image = new Image(user.getProfileImageURL(), true);

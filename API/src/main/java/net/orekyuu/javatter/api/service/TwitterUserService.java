@@ -1,6 +1,7 @@
 package net.orekyuu.javatter.api.service;
 
 import com.gs.collections.api.list.ImmutableList;
+import javafx.beans.property.ObjectProperty;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 
@@ -18,6 +19,12 @@ public interface TwitterUserService {
      * @return 選択されているアカウント
      */
     Optional<TwitterUser> selectedAccount();
+
+    /**
+     * @since 1.0.0
+     * @return 選択されているユーザーのプロパティ
+     */
+    ObjectProperty<TwitterUser> selectedAccountProperty();
 
     /**
      * ツイートのためのアカウントを指定されたものに変更します

@@ -14,7 +14,6 @@ import java.io.ObjectOutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
@@ -54,9 +53,10 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     }
 
     @Override
-    public void save(Iterable<Account> accounts) {
+    public void save(Iterable<? extends Account> accounts) {
         AccountContainer container = loadContainer();
-        MutableList<Account> select = container.getAccounts().select(a -> {
+        ImmutableList<Account> list = container.getAccounts();
+        MutableList<Account> select = list.select(a -> {
             for (Account account : accounts) {
                 if (Objects.equals(account, a)) {
                     return false;
@@ -75,7 +75,7 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     }
 
     @Override
-    public void delete(Iterable<Account> accounts) {
+    public void delete(Iterable<? extends Account> accounts) {
         AccountContainer container = loadContainer();
         MutableList<Account> list = container.getAccounts().toList();
         list.removeAllIterable(accounts);
@@ -84,12 +84,11 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     }
 
     private AccountContainer loadContainer() {
-        AccountContainer container = null;
+        AccountContainer container = new AccountContainer(Lists.mutable.empty());
         //存在しなければファイル作成
         if (Files.notExists(path)) {
             try {
                 Files.createFile(path);
-                container = new AccountContainer(new ArrayList<>());
                 saveContainer(container);
             } catch (IOException e) {
                 e.printStackTrace();
