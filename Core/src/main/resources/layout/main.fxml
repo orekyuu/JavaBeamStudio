@@ -15,7 +15,8 @@
                     <items>
                         <MenuItem mnemonicParsing="false" text="設定" onAction="#openSettings"/>
 
-                        <MenuItem mnemonicParsing="false" text="終了"/>
+                        <MenuItem mnemonicParsing="false" text="プラグインフォルダを開く" onAction="#openPluginDir"/>
+                        <MenuItem mnemonicParsing="false" text="終了" onAction="#exit"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="アクション" fx:id="actionsMenu">

@@ -9,6 +9,9 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
@@ -38,6 +41,7 @@ import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
 
 import javax.inject.Inject;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -343,6 +347,24 @@ public class CurrentController implements Initializable {
             result.filter(t -> t == ButtonType.YES).ifPresent(t -> currentTweetAreaService.tweet());
         } else {
             currentTweetAreaService.tweet();
+        }
+    }
+
+    public void exit() {
+        ApplicationService service = Lookup.lookup(ApplicationService.class);
+        try {
+            service.getApplication().stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void openPluginDir() {
+        try {
+            Desktop.getDesktop().open(new File("plugins"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
