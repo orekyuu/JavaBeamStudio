@@ -3,13 +3,16 @@ repositories {
     maven {
         url = 'http://twitter4j.org/maven2'
     }
+    maven {
+        url = 'https://oss.sonatype.org/content/repositories/snapshots/'
+    }
 }
 
 version = '1.0.0'
 
 dependencies {
     compile project(':API')
-    compile 'org.controlsfx:controlsfx:8.20.8'
+    compile 'org.controlsfx:controlsfx:8.40.10-SNAPSHOT'
     compile 'com.google.inject:guice:3.0'
     compile 'org.twitter4j:twitter4j-core:4.0.2'
     compile 'org.twitter4j:twitter4j-async:4.0.2'
