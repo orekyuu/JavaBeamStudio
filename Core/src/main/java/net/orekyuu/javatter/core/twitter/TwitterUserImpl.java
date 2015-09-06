@@ -15,6 +15,7 @@ import net.orekyuu.javatter.core.cache.RetweetCache;
 import net.orekyuu.javatter.core.cache.TweetCache;
 import net.orekyuu.javatter.core.cache.UserCache;
 import net.orekyuu.javatter.core.twitter.model.*;
+import net.orekyuu.javatter.core.twitter.model.StatusDeletionNoticeImpl;
 import net.orekyuu.javatter.core.twitter.userstream.UserStreamImpl;
 import twitter4j.*;
 import twitter4j.auth.AccessToken;
@@ -516,5 +517,19 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void unfollowAsync(User target) {
         userActionExecutor.submit(() -> unfollow(target));
+    }
+
+    @Override
+    public void updateProfile(String name, String url, String location, String description) {
+        try {
+            twitter.updateProfile(name, url, location, description);
+        } catch (TwitterException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void updateProfileAsync(String name, String url, String location, String description) {
+        userActionExecutor.submit(() -> updateProfile(name, url, location, description));
     }
 }

@@ -69,4 +69,24 @@ public interface UserControl {
      * @param target フォロー解除する対象
      */
     void unfollowAsync(User target);
+
+    /**
+     * ユーザーのプロファイルを更新します。
+     * @since 1.0.0
+     * @param name ユーザー名
+     * @param url WebサイトのURL
+     * @param location 場所
+     * @param description 説明
+     */
+    void updateProfile(String name, String url, String location, String description);
+
+    /**
+     * 非同期でユーザーのプロファイルを更新します。
+     * @since 1.0.0
+     * @param name ユーザー名
+     * @param url WebサイトのURL
+     * @param location 場所
+     * @param description 説明
+     */
+    void updateProfileAsync(String name, String url, String location, String description);
 }
