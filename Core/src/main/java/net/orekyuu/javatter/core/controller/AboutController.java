@@ -19,6 +19,7 @@ public class AboutController implements Initializable {
     public Text jreInfo;
     public Hyperlink webSiteLink;
     public Text apiVersion;
+    public Text osInfo;
 
     @Inject
     private ApplicationService service;
@@ -41,5 +42,6 @@ public class AboutController implements Initializable {
         });
         jreInfo.setText(String
                 .format("%s %s", System.getProperty("java.runtime.name"), System.getProperty("java.runtime.version")));
+        osInfo.setText(System.getProperty("os.name"));
     }
 }

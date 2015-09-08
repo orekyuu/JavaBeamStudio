@@ -18,22 +18,28 @@
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JavaBeamStudio version" StackPane.alignment="BOTTOM_LEFT"
               fx:id="version">
             <StackPane.margin>
-                <Insets bottom="150.0" left="30.0"/>
+                <Insets bottom="170.0" left="30.0"/>
             </StackPane.margin>
         </Text>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JavaBeamStudioAPI version" StackPane.alignment="BOTTOM_LEFT"
               fx:id="apiVersion">
             <StackPane.margin>
-                <Insets bottom="130.0" left="30.0"/>
+                <Insets bottom="150.0" left="30.0"/>
             </StackPane.margin>
         </Text>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Release" StackPane.alignment="BOTTOM_LEFT" fx:id="release">
             <StackPane.margin>
-                <Insets bottom="110.0" left="30.0"/>
+                <Insets bottom="130.0" left="30.0"/>
             </StackPane.margin>
         </Text>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JRE version Info" StackPane.alignment="BOTTOM_LEFT"
               fx:id="jreInfo">
+            <StackPane.margin>
+                <Insets bottom="90.0" left="30.0"/>
+            </StackPane.margin>
+        </Text>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="OS Info" StackPane.alignment="BOTTOM_LEFT"
+              fx:id="osInfo">
             <StackPane.margin>
                 <Insets bottom="70.0" left="30.0"/>
             </StackPane.margin>
