@@ -12,7 +12,7 @@
     <children>
         <ImageView fitHeight="480.0" fitWidth="720.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@about.png"/>
+                <Image url="@about.jpg"/>
             </image>
         </ImageView>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text="JavaBeamStudio version" StackPane.alignment="BOTTOM_LEFT"
