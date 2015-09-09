@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class CurrentController implements Initializable {
+public class MainWindowController implements Initializable {
 
     @FXML
     private Menu actionsMenu;
@@ -80,13 +80,13 @@ public class CurrentController implements Initializable {
     @Inject
     private ColumnStateStorageService columnStateStorageService;
     @Inject
-    private CurrentTweetAreaService currentTweetAreaService;
+    private MainTweetAreaService mainTweetAreaService;
     @Inject
     private CommandManager commandManager;
     @Inject
     private DataStorageService storageService;
 
-    private static final Logger logger = Logger.getLogger(CurrentController.class.getName());
+    private static final Logger logger = Logger.getLogger(MainWindowController.class.getName());
 
     private AccountSelection accountSelection;
 
@@ -168,7 +168,7 @@ public class CurrentController implements Initializable {
         //保存されていたカラムを復元する
         openSavedColumns();
 
-        currentTweetAreaService.addChangeTextListener(((oldValue, newValue) -> {
+        mainTweetAreaService.addChangeTextListener(((oldValue, newValue) -> {
             Runnable runnable = () -> tweetInput.setText(newValue);
             if (Platform.isFxApplicationThread()) {
                 runnable.run();
@@ -177,7 +177,7 @@ public class CurrentController implements Initializable {
             }
         }));
         tweetInput.textProperty().addListener((observable, oldValue, newValue) -> {
-            currentTweetAreaService.setText(newValue);
+            mainTweetAreaService.setText(newValue);
         });
     }
 
@@ -320,7 +320,7 @@ public class CurrentController implements Initializable {
             List<File> first = dragboard.getFiles().stream()
                     .filter(file -> pattern.matcher(file.getPath()).find())
                     .collect(Collectors.toList());
-            first.forEach(currentTweetAreaService::addMedia);
+            first.forEach(mainTweetAreaService::addMedia);
             event.setDropCompleted(!first.isEmpty());
         }
         event.consume();
@@ -337,16 +337,16 @@ public class CurrentController implements Initializable {
 
     public void onTweet() {
         DataStorageService storageService = Lookup.lookup(DataStorageService.class);
-        CurrentTweetAreaService currentTweetAreaService = Lookup.lookup(CurrentTweetAreaService.class);
+        MainTweetAreaService mainTweetAreaService = Lookup.lookup(MainTweetAreaService.class);
         GeneralSetting setting = storageService
                 .find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         if (setting.isCheckTweet()) {
             Alert alert = new Alert(Alert.AlertType.INFORMATION, "ツイートしますか？", ButtonType.YES, ButtonType.NO);
             alert.setTitle("確認");
             Optional<ButtonType> result = alert.showAndWait();
-            result.filter(t -> t == ButtonType.YES).ifPresent(t -> currentTweetAreaService.tweet());
+            result.filter(t -> t == ButtonType.YES).ifPresent(t -> mainTweetAreaService.tweet());
         } else {
-            currentTweetAreaService.tweet();
+            mainTweetAreaService.tweet();
         }
     }
 

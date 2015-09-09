@@ -10,7 +10,7 @@ import java.util.Optional;
  * ツイートを行うテキストエリアを操作するサービス
  */
 @Service
-public interface CurrentTweetAreaService {
+public interface MainTweetAreaService {
 
     /**
      * リプライ先を設定します。

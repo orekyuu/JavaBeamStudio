@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <VBox fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="700.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="net.orekyuu.javatter.core.controller.CurrentController">
+      fx:controller="net.orekyuu.javatter.core.controller.MainWindowController">
     <children>
         <MenuBar useSystemMenuBar="true">
             <menus>
