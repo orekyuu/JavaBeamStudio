@@ -1,7 +1,7 @@
 /**
  * カラムを操作するためのAPIパッケージです。<br>
  * <h1>カラムの追加</h1>
- * Columnを新規に追加するためには、{@link net.orekyuu.javatter.api.service.ColumnManager#registerColumn(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}でプラグインIDとカラムIDとFXMLのパスを与えて登録します。<br>
+ * Columnを新規に追加するためには、{@link net.orekyuu.javatter.api.column.ColumnManager#registerColumn(java.lang.String, java.lang.String, java.lang.String, java.lang.String)}でプラグインIDとカラムIDとFXMLのパスを与えて登録します。<br>
  * FXMLのルートノードにはfx:controllerでColumnControllerを実装するクラスを指定します。<br>
  * <h1>カラムの状態を永続化する</h1>
  * カラムの情報はColumnStateに保存されます。<br>

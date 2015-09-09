@@ -10,9 +10,9 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.MultipleSelectionModel;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import net.orekyuu.javatter.api.account.AccountStorageService;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
-import net.orekyuu.javatter.api.service.AccountStorageService;
 
 import javax.inject.Inject;
 import java.io.IOException;

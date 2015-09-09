@@ -5,9 +5,9 @@ import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.column.Column;
 import net.orekyuu.javatter.api.column.ColumnController;
-import net.orekyuu.javatter.api.service.ColumnService;
-import net.orekyuu.javatter.api.service.events.ColumnAddListener;
-import net.orekyuu.javatter.api.service.events.ColumnRemoveListener;
+import net.orekyuu.javatter.api.column.ColumnService;
+import net.orekyuu.javatter.api.column.events.ColumnAddListener;
+import net.orekyuu.javatter.api.column.events.ColumnRemoveListener;
 
 import java.util.logging.Logger;
 

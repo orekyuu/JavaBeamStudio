@@ -1,7 +1,7 @@
-package net.orekyuu.javatter.api.service;
+package net.orekyuu.javatter.api.column;
 
 import com.gs.collections.api.list.ImmutableList;
-import net.orekyuu.javatter.api.column.ColumnState;
+import net.orekyuu.javatter.api.service.Service;
 
 /**
  * カラムの状態の保存/復元を行うServiceです。
