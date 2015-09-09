@@ -7,6 +7,7 @@ import java.nio.file.Path;
 
 /**
  * プラグインの機能を提供するサービス
+ * @since 1.0.0
  */
 @Service
 public interface PluginService {

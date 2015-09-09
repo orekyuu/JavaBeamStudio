@@ -2,6 +2,7 @@ package net.orekyuu.javatter.api.util;
 
 /**
  * 非同期操作などのコールバック
+ * @since 1.0.0
  * @param <T> コールバックの型
  */
 @FunctionalInterface

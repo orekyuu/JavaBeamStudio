@@ -2,6 +2,7 @@ package net.orekyuu.javatter.api.action;
 
 /**
  * ツイートセルのアクション
+ * @since 1.0.0
  */
 public final class TweetCellAction {
 
@@ -51,6 +52,7 @@ public final class TweetCellAction {
 
     /**
      * アクションを作成するビルダー
+     * @since 1.0.0
      */
     public final static class Builder {
         private String pluginId;
@@ -61,6 +63,7 @@ public final class TweetCellAction {
         /**
          * @since 1.0.0
          * @param pluginId プラグインID
+         * @param actionId アクションID
          */
         public Builder(String pluginId, String actionId) {
             this.pluginId = pluginId;

@@ -3,14 +3,15 @@ package net.orekyuu.javatter.core.controller;
 import com.google.inject.Inject;
 import javafx.application.Platform;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import net.orekyuu.javatter.api.account.AccountStorageService;
 import net.orekyuu.javatter.api.account.TwitterAccount;
 import net.orekyuu.javatter.api.controller.OwnerStage;
-import net.orekyuu.javatter.api.service.AccountStorageService;
 import net.orekyuu.javatter.core.account.TwitterAccountImpl;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -56,6 +57,8 @@ public class SignupController implements Initializable {
                 indicator.setVisible(false);
             });
         });
+
+        owner.setOnCloseRequest(e -> onClose());
     }
 
     public void signup() {
@@ -65,7 +68,10 @@ public class SignupController implements Initializable {
             this.account = Optional.of(account);
             accountStorageService.save(account);
             owner.close();
-            onClose();
+
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setContentText("アカウントの変更を適用するにはアプリを再起動してください。");
+            alert.showAndWait();
         } catch (TwitterException e) {
             e.printStackTrace();
         }

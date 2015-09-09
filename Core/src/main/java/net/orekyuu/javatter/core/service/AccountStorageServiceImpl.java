@@ -5,7 +5,7 @@ import com.gs.collections.api.list.MutableList;
 import com.gs.collections.api.multimap.ImmutableMultimap;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.account.Account;
-import net.orekyuu.javatter.api.service.AccountStorageService;
+import net.orekyuu.javatter.api.account.AccountStorageService;
 import net.orekyuu.javatter.core.account.AccountContainer;
 
 import java.io.IOException;

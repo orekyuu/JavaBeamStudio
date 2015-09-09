@@ -4,6 +4,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 
 /**
  * お気に入りに関する操作
+ * @since 1.0.0
  */
 public interface FavoriteControl {
     /**

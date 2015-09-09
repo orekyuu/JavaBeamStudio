@@ -8,7 +8,7 @@ import net.orekyuu.javatter.api.action.MenuAction;
 import net.orekyuu.javatter.api.action.TweetCellAction;
 import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.service.ApplicationService;
-import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
+import net.orekyuu.javatter.api.service.MainTweetAreaService;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.core.service.PluginServiceImpl;
@@ -29,16 +29,16 @@ public class ActionConfig {
                 .actionName("ツイート")
                 .action(e -> {
                     DataStorageService storageService = Lookup.lookup(DataStorageService.class);
-                    CurrentTweetAreaService currentTweetAreaService = Lookup.lookup(CurrentTweetAreaService.class);
+                    MainTweetAreaService mainTweetAreaService = Lookup.lookup(MainTweetAreaService.class);
                     GeneralSetting setting = storageService
                             .find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
                     if (setting.isCheckTweet()) {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION, "ツイートしますか？", ButtonType.YES, ButtonType.NO);
                         alert.setTitle("確認");
                         Optional<ButtonType> result = alert.showAndWait();
-                        result.filter(t -> t == ButtonType.YES).ifPresent(t -> currentTweetAreaService.tweet());
+                        result.filter(t -> t == ButtonType.YES).ifPresent(t -> mainTweetAreaService.tweet());
                     } else {
-                        currentTweetAreaService.tweet();
+                        mainTweetAreaService.tweet();
                     }
                 }).build());
         //コマンドアクション
@@ -46,13 +46,13 @@ public class ActionConfig {
                 .defaultShortcut(new KeyCodeCombination(KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN))
                 .actionName("コマンド実行")
                 .action(e -> {
-                    CurrentTweetAreaService currentTweetAreaService = Lookup.lookup(CurrentTweetAreaService.class);
+                    MainTweetAreaService mainTweetAreaService = Lookup.lookup(MainTweetAreaService.class);
                     CommandManager commandManager = Lookup.lookup(CommandManager.class);
-                    String text = currentTweetAreaService.getText();
-                    String s = commandManager.execCommand(currentTweetAreaService.getText());
+                    String text = mainTweetAreaService.getText();
+                    String s = commandManager.execCommand(mainTweetAreaService.getText());
                     //コマンドによってテキストが書き換えられなかった場合のみ実行
-                    if (currentTweetAreaService.getText().equals(text)) {
-                        currentTweetAreaService.setText(s);
+                    if (mainTweetAreaService.getText().equals(text)) {
+                        mainTweetAreaService.setText(s);
                     }
                 }).build());
         //ツイートをブラウザで開く

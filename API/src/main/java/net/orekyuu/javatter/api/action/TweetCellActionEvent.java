@@ -5,6 +5,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 
 /**
  * アクション実行時の引数となる値クラスです。
+ * @since 1.0.0
  */
 public final class TweetCellActionEvent {
     private final Tweet tweet;

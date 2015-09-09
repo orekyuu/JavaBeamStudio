@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 
 /**
  * ツイート
+ * @since 1.0.0
  */
 public interface Tweet {
 

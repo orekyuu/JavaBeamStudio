@@ -2,6 +2,9 @@ package net.orekyuu.javatter.api.twitter;
 
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 
+/**
+ * @since 1.0.0
+ */
 public interface TweetControl {
 
     /**

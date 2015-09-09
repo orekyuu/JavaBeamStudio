@@ -5,6 +5,7 @@ import net.orekyuu.javatter.api.util.Callback;
 
 /**
  * ユーザーを操作するAPI
+ * @since 1.0.0
  */
 public interface UserControl {
 

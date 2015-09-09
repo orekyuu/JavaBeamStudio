@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 /**
  * アカウントを表すインターフェイス
+ * @since 1.0.0
  */
 public interface Account extends Serializable {
 

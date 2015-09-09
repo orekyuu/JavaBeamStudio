@@ -5,6 +5,7 @@ import net.orekyuu.javatter.api.service.Service;
 
 /**
  * アクションの管理を行うサービスです。
+ * @since 1.0.0
  */
 @Service
 public interface ActionManager {

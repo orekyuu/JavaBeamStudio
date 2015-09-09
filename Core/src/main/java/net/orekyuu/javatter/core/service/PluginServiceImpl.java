@@ -4,11 +4,11 @@ import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.impl.factory.Lists;
 import com.gs.collections.impl.factory.Maps;
 import net.orekyuu.javatter.api.notification.NotificationService;
-import net.orekyuu.javatter.api.plugin.PluginClassLoader;
 import net.orekyuu.javatter.api.plugin.PluginInfo;
 import net.orekyuu.javatter.api.plugin.PluginService;
 import net.orekyuu.javatter.api.service.EnvironmentService;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
+import net.orekyuu.javatter.core.util.PluginClassLoader;
 import net.orekyuu.javatter.core.util.VersionComparator;
 
 import java.io.IOException;

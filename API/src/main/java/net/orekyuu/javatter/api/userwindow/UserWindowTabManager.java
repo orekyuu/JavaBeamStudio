@@ -7,6 +7,7 @@ import java.net.URL;
 
 /**
  * ユーザーウィンドウタブを管理するクラスです。
+ * @since 1.0.0
  */
 @Service
 public interface UserWindowTabManager {

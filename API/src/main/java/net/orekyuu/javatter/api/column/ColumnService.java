@@ -1,13 +1,13 @@
-package net.orekyuu.javatter.api.service;
+package net.orekyuu.javatter.api.column;
 
 import com.gs.collections.api.list.ImmutableList;
-import net.orekyuu.javatter.api.column.Column;
-import net.orekyuu.javatter.api.column.ColumnController;
-import net.orekyuu.javatter.api.service.events.ColumnAddListener;
-import net.orekyuu.javatter.api.service.events.ColumnRemoveListener;
+import net.orekyuu.javatter.api.column.events.ColumnAddListener;
+import net.orekyuu.javatter.api.column.events.ColumnRemoveListener;
+import net.orekyuu.javatter.api.service.Service;
 
 /**
  * 開いているカラムを制御するServiceです。
+ * @since 1.0.0
  */
 @Service
 public interface ColumnService {

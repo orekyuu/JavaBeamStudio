@@ -44,7 +44,7 @@
         </HBox>
         <StackPane GridPane.rowIndex="1">
            <children>
-               <ImageView fx:id="currentIcon" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+               <ImageView fx:id="mainIcon" fitHeight="48.0" fitWidth="48.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
                    <GridPane.margin>
                        <Insets left="3.0" right="3.0" />
                    </GridPane.margin>

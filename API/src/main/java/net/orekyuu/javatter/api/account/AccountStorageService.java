@@ -1,13 +1,14 @@
-package net.orekyuu.javatter.api.service;
+package net.orekyuu.javatter.api.account;
 
 import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.api.multimap.ImmutableMultimap;
-import net.orekyuu.javatter.api.account.Account;
+import net.orekyuu.javatter.api.service.Service;
 
 import java.util.Optional;
 
 /**
  * アカウントを管理するサービス
+ * @since 1.0.0
  */
 @Service
 public interface AccountStorageService {

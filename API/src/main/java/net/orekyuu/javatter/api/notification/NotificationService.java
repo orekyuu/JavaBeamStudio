@@ -4,6 +4,7 @@ import net.orekyuu.javatter.api.service.Service;
 
 /**
  * 通知機能を提供するサービス
+ * @since 1.0.0
  */
 @Service
 public interface NotificationService {

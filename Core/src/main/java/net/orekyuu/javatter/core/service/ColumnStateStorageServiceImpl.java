@@ -3,7 +3,7 @@ package net.orekyuu.javatter.core.service;
 import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.impl.factory.Lists;
 import net.orekyuu.javatter.api.column.ColumnState;
-import net.orekyuu.javatter.api.service.ColumnStateStorageService;
+import net.orekyuu.javatter.api.column.ColumnStateStorageService;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

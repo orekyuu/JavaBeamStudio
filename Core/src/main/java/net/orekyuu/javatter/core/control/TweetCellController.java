@@ -17,13 +17,13 @@ import net.orekyuu.javatter.api.action.ActionManager;
 import net.orekyuu.javatter.api.action.TweetCellAction;
 import net.orekyuu.javatter.api.action.TweetCellActionEvent;
 import net.orekyuu.javatter.api.service.ApplicationService;
-import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
+import net.orekyuu.javatter.api.service.MainTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
-import net.orekyuu.javatter.api.userwindow.UserWindowService;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
+import net.orekyuu.javatter.api.userwindow.UserWindowService;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
@@ -43,7 +43,7 @@ import java.util.ResourceBundle;
 public class TweetCellController implements Initializable {
 
     public TweetText tweetContent;
-    public ImageView currentIcon;
+    public ImageView mainIcon;
     public Hyperlink via;
     public Label userName;
     public Button reply;
@@ -59,7 +59,7 @@ public class TweetCellController implements Initializable {
     @Inject
     private UserIconStorage iconStorage;
     @Inject
-    private CurrentTweetAreaService tweetAreaService;
+    private MainTweetAreaService tweetAreaService;
     @Inject
     private UserWindowService service;
     @Inject
@@ -103,7 +103,7 @@ public class TweetCellController implements Initializable {
 
     //表示するツイートが変更された時呼び出される
     private void onChange(ObservableValue<? extends Tweet> observable, Tweet oldValue, Tweet newValue) {
-        Tweet currentTweet = newValue.getRetweetFrom() == null ? newValue : newValue.getRetweetFrom();
+        Tweet mainTweet = newValue.getRetweetFrom() == null ? newValue : newValue.getRetweetFrom();
         Tweet subTweet = null;
         if (newValue.getRetweetFrom() != null) {
             subTweet = newValue;
@@ -117,14 +117,14 @@ public class TweetCellController implements Initializable {
             subIcon.setVisible(true);
         }
 
-        tweetContent.setTweet(currentTweet);
-        currentIcon.setImage(iconStorage.find(currentTweet.getOwner()));
-        via.setText(currentTweet.getViaName());
+        tweetContent.setTweet(mainTweet);
+        mainIcon.setImage(iconStorage.find(mainTweet.getOwner()));
+        via.setText(mainTweet.getViaName());
         via.setOnAction(e -> {
             try {
                 applicationService.getApplication()
                         .getHostServices()
-                        .showDocument(new URL(currentTweet.getViaLink()).toURI().toString());
+                        .showDocument(new URL(mainTweet.getViaLink()).toURI().toString());
             } catch (URISyntaxException | MalformedURLException e1) {
                 e1.printStackTrace();
             }
@@ -132,25 +132,25 @@ public class TweetCellController implements Initializable {
 
         GeneralSetting setting = storageService.find(PluginServiceImpl.BUILD_IN.getPluginId(), GeneralSetting.class, new GeneralSetting());
         NameViewType type = NameViewType.valueOf(setting.getNameViewType());
-        userName.setText(type.convert(currentTweet.getOwner()));
+        userName.setText(type.convert(mainTweet.getOwner()));
         TwitterUser twitterUser = owner.get();
         if (twitterUser != null) {
-            updateButtonState(currentTweet, twitterUser);
+            updateButtonState(mainTweet, twitterUser);
         }
 
         images.getChildren().clear();
-        for (String url : currentTweet.medias()) {
+        for (String url : mainTweet.medias()) {
             Image image = new Image(url, 128, 128, true, true, true);
             ImageView view = new ImageView(image);
             view.setOnMouseClicked(e -> openPreview(url));
             images.getChildren().add(view);
         }
 
-        currentIcon.setOnMouseClicked(e -> {
+        mainIcon.setOnMouseClicked(e -> {
             service.open(newValue.getOwner(), twitterUser);
         });
 
-        updateTime(currentTweet);
+        updateTime(mainTweet);
     }
 
     private void updateTime(Tweet tweet) {

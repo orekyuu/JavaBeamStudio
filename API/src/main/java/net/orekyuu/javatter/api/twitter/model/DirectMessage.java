@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 /**
  * ダイレクトメッセージ
+ * @since 1.0.0
  */
 public interface DirectMessage {
 

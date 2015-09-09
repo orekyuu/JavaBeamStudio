@@ -3,7 +3,7 @@ package net.orekyuu.javatter.core.service;
 import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.factory.Lists;
-import net.orekyuu.javatter.api.service.CurrentTweetAreaService;
+import net.orekyuu.javatter.api.service.MainTweetAreaService;
 import net.orekyuu.javatter.api.service.TwitterUserService;
 import net.orekyuu.javatter.api.twitter.TweetBuilder;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
@@ -12,7 +12,7 @@ import net.orekyuu.javatter.api.util.lookup.Lookup;
 import java.io.File;
 import java.util.Optional;
 
-public class CurrentTweetAreaServiceImpl implements CurrentTweetAreaService {
+public class MainTweetAreaServiceImpl implements MainTweetAreaService {
 
     private Optional<Tweet> reply = Optional.empty();
     private StringBuilder text = new StringBuilder(140);

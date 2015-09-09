@@ -8,6 +8,7 @@ import java.util.function.Supplier;
 /**
  * 永続化したデータにアクセスするためのサービスです。
  * プリミティブな型とString、Listのみのフィールドを持つクラスのみ保存可能です。
+ * @since 1.0.0
  */
 @Service
 public interface DataStorageService {

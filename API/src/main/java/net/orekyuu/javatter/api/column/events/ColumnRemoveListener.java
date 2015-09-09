@@ -1,10 +1,12 @@
-package net.orekyuu.javatter.api.service.events;
+package net.orekyuu.javatter.api.column.events;
 
 import net.orekyuu.javatter.api.column.Column;
 
 /**
  * カラムが削除された時のイベントリスナ
+ * @since 1.0.0
  */
+@FunctionalInterface
 public interface ColumnRemoveListener {
 
     /**
