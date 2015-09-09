@@ -8,6 +8,7 @@ import java.util.Optional;
 
 /**
  * ツイートを行うテキストエリアを操作するサービス
+ * @since 1.0.0
  */
 @Service
 public interface MainTweetAreaService {

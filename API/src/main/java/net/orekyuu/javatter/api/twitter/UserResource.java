@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.twitter.model.User;
 
 /**
  * Userのリソースにアクセスする操作
+ * @since 1.0.0
  */
 public interface UserResource {
 

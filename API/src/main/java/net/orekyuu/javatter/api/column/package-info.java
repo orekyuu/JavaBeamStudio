@@ -5,6 +5,7 @@
  * FXMLのルートノードにはfx:controllerでColumnControllerを実装するクラスを指定します。<br>
  * <h1>カラムの状態を永続化する</h1>
  * カラムの情報はColumnStateに保存されます。<br>
+ * {@link net.orekyuu.javatter.api.column.ColumnController#getState()}で現在の状態を返すようにしておけば、適切なタイミングで状態が保存されます。<br>
  * {@link net.orekyuu.javatter.api.column.ColumnController#restoration(net.orekyuu.javatter.api.column.ColumnState)}がコントローラ生成時に呼び出されるため、引数の{@link net.orekyuu.javatter.api.column.ColumnState}から復元してください。<br>
  */
 package net.orekyuu.javatter.api.column;

@@ -8,6 +8,7 @@ import java.util.Optional;
 
 /**
  * アカウントを管理するサービス
+ * @since 1.0.0
  */
 @Service
 public interface AccountStorageService {

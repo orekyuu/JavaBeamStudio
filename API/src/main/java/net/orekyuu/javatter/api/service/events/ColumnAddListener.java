@@ -4,7 +4,9 @@ import net.orekyuu.javatter.api.column.Column;
 
 /**
  * カラムが追加された時のイベントリスナ
+ * @since 1.0.0
  */
+@FunctionalInterface
 public interface ColumnAddListener {
 
     /**

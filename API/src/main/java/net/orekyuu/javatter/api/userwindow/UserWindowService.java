@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.twitter.model.User;
 
 /**
  * ユーザー情報ウィンドウを表示するためのサービス
+ * @since 1.0.0
  */
 @Service
 public interface UserWindowService {

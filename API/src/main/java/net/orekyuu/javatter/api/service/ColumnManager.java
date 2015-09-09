@@ -7,6 +7,7 @@ import java.util.Optional;
 
 /**
  * 使用できるカラムを管理するManagerです。
+ * @since 1.0.0
  */
 @Service
 public interface ColumnManager {

@@ -2,6 +2,7 @@ package net.orekyuu.javatter.api.service;
 
 /**
  * 実行時の環境を取得するサービスです。
+ * @since 1.0.0
  */
 @Service
 public interface EnvironmentService {

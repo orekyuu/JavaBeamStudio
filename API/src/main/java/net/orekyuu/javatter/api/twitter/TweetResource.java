@@ -4,6 +4,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 
 /**
  * ツイートのリソースにアクセスする操作
+ * @since 1.0.0
  */
 public interface TweetResource {
 

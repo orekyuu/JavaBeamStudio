@@ -6,6 +6,7 @@ import java.util.List;
 
 /**
  * コマンドを表すインターフェイス
+ * @since 1.0.0
  */
 public interface Command {
 

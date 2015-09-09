@@ -9,15 +9,23 @@ import java.net.URL;
 
 /**
  * FXML ControllerへDIを行うFXMLLoader
+ * @since 1.0.0
  */
 public final class JavatterFXMLLoader extends FXMLLoader {
 
     private Stage ownerStage;
 
+    /**
+     * @since 1.0.0
+     */
     public JavatterFXMLLoader() {
         setControllerFactory(this::createController);
     }
 
+    /**
+     * @since 1.0.0
+     * @param url FXMLのURL
+     */
     public JavatterFXMLLoader(URL url) {
         super(url);
         setControllerFactory(this::createController);

@@ -6,6 +6,7 @@ import net.orekyuu.javatter.api.twitter.model.User;
 
 /**
  * ユーザーウィンドウのタブ
+ * @since 1.0.0
  */
 public interface UserWindowTab {
 

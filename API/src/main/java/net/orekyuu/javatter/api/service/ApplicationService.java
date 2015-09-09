@@ -4,6 +4,7 @@ import javafx.application.Application;
 
 /**
  * ApplicationへアクセスするためのService
+ * @since 1.0.0
  */
 @Service
 public interface ApplicationService {

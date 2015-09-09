@@ -2,6 +2,9 @@ package net.orekyuu.javatter.api.twitter.userstream;
 
 import net.orekyuu.javatter.api.twitter.userstream.events.*;
 
+/**
+ * @since 1.0.0
+ */
 public interface UserStream {
 
     UserStream onStatus(OnStatus onStatus);

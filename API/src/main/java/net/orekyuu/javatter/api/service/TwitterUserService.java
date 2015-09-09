@@ -9,6 +9,7 @@ import java.util.Optional;
 
 /**
  * Twitterを利用するユーザーへアクセスするためのサービス
+ * @since 1.0.0
  */
 @Service
 public interface TwitterUserService {

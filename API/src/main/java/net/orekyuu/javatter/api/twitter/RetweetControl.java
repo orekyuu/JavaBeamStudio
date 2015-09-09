@@ -4,6 +4,7 @@ import net.orekyuu.javatter.api.twitter.model.Tweet;
 
 /**
  * リツイートに関する操作
+ * @since 1.0.0
  */
 public interface RetweetControl {
     /**

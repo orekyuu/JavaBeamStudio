@@ -5,6 +5,7 @@ import net.orekyuu.javatter.api.twitter.model.User;
 
 /**
  * キャッシュされたユーザーアイコンへアクセスするサービス
+ * @since 1.0.0
  */
 @Service
 public interface UserIconStorage {

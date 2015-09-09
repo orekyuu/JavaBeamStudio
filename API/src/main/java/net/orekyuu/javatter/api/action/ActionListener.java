@@ -2,6 +2,7 @@ package net.orekyuu.javatter.api.action;
 
 /**
  * アクションの動作を表すインターフェイスです。
+ * @since 1.0.0
  * @param <T> Event
  */
 @FunctionalInterface

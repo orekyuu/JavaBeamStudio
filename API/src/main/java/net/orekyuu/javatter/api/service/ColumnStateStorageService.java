@@ -5,6 +5,7 @@ import net.orekyuu.javatter.api.column.ColumnState;
 
 /**
  * カラムの状態の保存/復元を行うServiceです。
+ * @since 1.0.0
  */
 @Service
 public interface ColumnStateStorageService {

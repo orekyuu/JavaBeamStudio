@@ -4,6 +4,7 @@ import javafx.scene.input.KeyCombination;
 
 /**
  * メニューバーのアクション
+ * @since 1.0.0
  */
 public final class MenuAction {
 
@@ -63,6 +64,7 @@ public final class MenuAction {
 
     /**
      * アクションを作成するビルダー
+     * @since 1.0.0
      */
     public final static class Builder {
         private String pluginId;
@@ -74,6 +76,7 @@ public final class MenuAction {
         /**
          * @since 1.0.0
          * @param pluginId プラグインID
+         * @param actionId アクションID
          */
         public Builder(String pluginId, String actionId) {
             this.pluginId = pluginId;

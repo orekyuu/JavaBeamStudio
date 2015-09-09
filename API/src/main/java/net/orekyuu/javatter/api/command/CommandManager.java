@@ -5,6 +5,7 @@ import net.orekyuu.javatter.api.service.Service;
 
 /**
  * コマンド機能を提供します
+ * @since 1.0.0
  */
 @Service
 public interface CommandManager {

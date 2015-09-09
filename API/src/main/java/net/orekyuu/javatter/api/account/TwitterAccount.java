@@ -2,6 +2,7 @@ package net.orekyuu.javatter.api.account;
 
 /**
  * Twitterの認証用アカウント
+ * @since 1.0.0
  */
 public interface TwitterAccount extends Account {
 

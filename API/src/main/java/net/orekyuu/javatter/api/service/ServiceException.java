@@ -6,6 +6,11 @@ package net.orekyuu.javatter.api.service;
  */
 public final class ServiceException extends RuntimeException {
 
+    /**
+     * メッセージ付きの例外を生成します
+     * @since 1.0.0
+     * @param message message
+     */
     public ServiceException(String message) {
         super(message);
     }

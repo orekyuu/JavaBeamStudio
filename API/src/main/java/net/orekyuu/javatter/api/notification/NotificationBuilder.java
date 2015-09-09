@@ -5,6 +5,7 @@ import javafx.scene.media.AudioClip;
 
 /**
  * 通知を作成するビルダー
+ * @since 1.0.0
  */
 public interface NotificationBuilder {
 

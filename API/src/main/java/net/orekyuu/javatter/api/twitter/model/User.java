@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 /**
  * ユーザー
+ * @since 1.0.0
  */
 public interface User {
     /**
