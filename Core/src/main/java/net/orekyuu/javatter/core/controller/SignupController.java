@@ -31,7 +31,7 @@ public class SignupController implements Initializable {
     public TextField pinField;
     public WebView webView;
 
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private ExecutorService executorService = Executors.newSingleThreadExecutor(r -> new Thread(r, "Signup-Task-Thread"));
     private Twitter twitter;
     private RequestToken token;
 
@@ -67,6 +67,7 @@ public class SignupController implements Initializable {
             TwitterAccountImpl account = new TwitterAccountImpl(accessToken);
             this.account = Optional.of(account);
             accountStorageService.save(account);
+            executorService.shutdown();
             owner.close();
 
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -78,7 +79,9 @@ public class SignupController implements Initializable {
     }
 
     public void onClose() {
-        executorService.shutdown();
+        if (!executorService.isShutdown()) {
+            executorService.shutdown();
+        }
     }
 
     public Optional<TwitterAccount> getAccount() {
