@@ -5,14 +5,11 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 import net.orekyuu.javatter.api.action.ActionManager;
 import net.orekyuu.javatter.api.action.TweetCellAction;
 import net.orekyuu.javatter.api.action.TweetCellActionEvent;
@@ -196,32 +193,9 @@ public class TweetCellController implements Initializable {
 
     }
 
+    private ImagePreviewPopup popup = new ImagePreviewPopup();
     private void openPreview(String url) {
-        Stage stage = new Stage();
-        stage.centerOnScreen();
-        Image image = new Image(url, true);
-        BorderPane pane = new BorderPane();
-        ProgressIndicator indicator = new ProgressIndicator(0);
-        indicator.setMaxSize(150, 150);
-        pane.setCenter(indicator);
-        Scene progressScene = new Scene(pane, 400, 400);
-        image.progressProperty().addListener((observable, oldValue, newValue) -> {
-            if (1.0 <= newValue.doubleValue()) {
-                ImageView imageView = new ImageView(image);
-                BorderPane borderPane = new BorderPane();
-                borderPane.setCenter(imageView);
-                Scene scene = new Scene(borderPane);
-                borderPane.setPrefSize(image.getWidth(), image.getHeight());
-                stage.setScene(scene);
-                imageView.fitWidthProperty().bind(borderPane.widthProperty());
-                imageView.fitHeightProperty().bind(borderPane.heightProperty());
-            } else {
-                indicator.setProgress(newValue.doubleValue());
-            }
-        });
-        stage.setScene(progressScene);
-        stage.setTitle(url);
-        stage.show();
+        popup.showImage(url, root);
     }
 
 
