@@ -1,10 +1,12 @@
 package net.orekyuu.javatter.core.control;
 
+import com.sun.javafx.event.RedirectedEvent;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.PopupControl;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.User;
@@ -21,6 +23,18 @@ public class AccountSelection extends PopupControl {
         setAutoHide(true);
 
         getScene().setRoot(createRootNode(users, selectedEvent));
+
+        getScene().getWindow().setEventDispatcher((event, tail) -> {
+            if (event.getEventType() == RedirectedEvent.REDIRECTED) {
+                RedirectedEvent ev = (RedirectedEvent) event;
+                if (ev.getOriginalEvent().getEventType() == MouseEvent.MOUSE_PRESSED) {
+                    hide();
+                }
+            } else {
+                tail.dispatchEvent(event);
+            }
+            return null;
+        });
     }
 
     private Parent createRootNode(List<TwitterUser> users, Consumer<TwitterUser> selectedEvent) {
