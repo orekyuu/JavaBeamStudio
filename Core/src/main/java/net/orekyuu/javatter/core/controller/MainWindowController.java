@@ -19,7 +19,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import net.orekyuu.javatter.api.account.AccountStorageService;
 import net.orekyuu.javatter.api.account.TwitterAccount;
@@ -37,6 +36,7 @@ import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
+import net.orekyuu.javatter.core.control.AboutPopup;
 import net.orekyuu.javatter.core.control.AccountSelection;
 import net.orekyuu.javatter.core.service.PluginServiceImpl;
 import net.orekyuu.javatter.core.settings.storage.GeneralSetting;
@@ -90,6 +90,7 @@ public class MainWindowController implements Initializable {
     private static final Logger logger = Logger.getLogger(MainWindowController.class.getName());
 
     private AccountSelection accountSelection;
+    private AboutPopup aboutPopup = new AboutPopup();
 
     @OwnerStage
     private Stage owner;
@@ -269,25 +270,7 @@ public class MainWindowController implements Initializable {
 
     @FXML
     public void openAbout() {
-        JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource("/layout/about.fxml"));
-        Stage stage = new Stage(StageStyle.TRANSPARENT);
-        loader.setOwnerStage(stage);
-        try {
-            stage.setAlwaysOnTop(true);
-            Scene scene = new Scene(loader.load());
-            stage.setScene(scene);
-            stage.requestFocus();
-            stage.initOwner(owner);
-            stage.focusedProperty().addListener((observable, oldValue, newValue) -> {
-                if (!newValue) {
-                    stage.close();
-                }
-            });
-            stage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        aboutPopup.show(root);
     }
 
     public void addHomeColumn() throws IOException {
