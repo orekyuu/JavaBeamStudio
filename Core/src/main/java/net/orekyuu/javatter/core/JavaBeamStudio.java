@@ -27,10 +27,7 @@ import net.orekyuu.javatter.api.plugin.PluginService;
 import net.orekyuu.javatter.api.service.*;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
-import net.orekyuu.javatter.api.twitter.model.User;
-import net.orekyuu.javatter.api.twitter.userstream.OnMention;
 import net.orekyuu.javatter.api.twitter.userstream.UserStream;
-import net.orekyuu.javatter.api.twitter.userstream.events.*;
 import net.orekyuu.javatter.api.userwindow.UserWindowService;
 import net.orekyuu.javatter.api.userwindow.UserWindowTabManager;
 import net.orekyuu.javatter.api.util.lookup.Lookup;
@@ -208,12 +205,6 @@ public class JavaBeamStudio extends Application {
         columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), MentionColumn.ID, "/columns/mention.fxml", "メンション");
     }
 
-    private OnFavorite onFavorite;
-    private OnUnfavorite onUnfavorite;
-    private OnMention onMention;
-    private OnStatus onStatus;
-    private OnFollow onFollow;
-    private OnUnfollow onUnfollow;
     private void registerNotification() {
         TwitterUserService service = Lookup.lookup(TwitterUserService.class);
         NotificationService notification = Lookup.lookup(NotificationService.class);
@@ -221,93 +212,67 @@ public class JavaBeamStudio extends Application {
         service.allUser().each(user -> {
             UserStream stream = user.userStream();
             //お気に入り
-            onFavorite = new OnFavorite() {
-                @Override
-                public void onFavorite(User source, User target, Tweet tweet) {
-                    if (source.getId() == user.getUser().getId()) {
-                        return;
-                    }
-                    notification.create()
-                            .title("@" + source.getScreenName() + "にふぁぼられました")
-                            .text(tweet.getText())
-                            .icon(iconStorage.find(source))
-                            .show();
+            stream.onFavorite((source, target, tweet) -> {
+                if (source.getId() == user.getUser().getId()) {
+                    return;
                 }
-            };
-            stream.onFavorite(onFavorite);
-            //あんふぁぼ
-            onUnfavorite = new OnUnfavorite() {
-                @Override
-                public void onUnfavorite(User source, User target, Tweet tweet) {
-                    if (source.getId() == user.getUser().getId()) {
-                        return;
-                    }
-                    notification.create()
-                            .title("@" + source.getScreenName() + "にあんふぁぼされました")
-                            .text(tweet.getText())
-                            .icon(iconStorage.find(source))
-                            .show();
-                }
-            };
-            stream.onUnfavorite(onUnfavorite);
-            //メンション
-            onMention = new OnMention() {
-                @Override
-                public void onMention(Tweet tweet, User from) {
-                    notification.create()
+                notification.create()
+                        .title("@" + source.getScreenName() + "にふぁぼられました")
+                        .text(tweet.getText())
+                        .icon(iconStorage.find(source))
+                        .show();
+            })
+                    //あんふぁぼ
+                    .onUnfavorite((source, target, tweet) -> {
+                        if (source.getId() == user.getUser().getId()) {
+                            return;
+                        }
+                        notification.create()
+                                .title("@" + source.getScreenName() + "にあんふぁぼされました")
+                                .text(tweet.getText())
+                                .icon(iconStorage.find(source))
+                                .show();
+                    })
+                            //メンション
+                    .onMention((tweet, from) -> notification.create()
                             .title("@" + from.getScreenName() + "からメンション")
                             .text(tweet.getText())
                             .icon(iconStorage.find(from))
-                            .show();
-                }
-            };
-            stream.onMention(onMention);
-            //RT
-            onStatus = new OnStatus() {
-                @Override
-                public void onStatus(Tweet tweet) {
-                    Tweet retweetFrom = tweet.getRetweetFrom();
-                    if (retweetFrom != null && retweetFrom.getOwner().getId() == user.getUser().getId()) {
-                        notification.create()
-                                .title("RTされました")
-                                .text(retweetFrom.getText())
-                                .icon(iconStorage.find(tweet.getOwner()))
-                                .show();
-                    }
-                }
-            };
-            stream.onStatus(onStatus);
-            //フォロー
-            onFollow = new OnFollow() {
-                @Override
-                public void onFollow(User source, User followedUser) {
-                    if (followedUser.getId() == user.getUser().getId()) {
-                        notification.create()
-                                .title("@" + source.getScreenName() + "にフォローされました")
-                                .text(source.getDescription())
-                                .icon(iconStorage.find(source))
-                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
-                                .show();
-                    }
-                }
-            };
-            stream.onFollow(onFollow);
-            //アンフォロー
-            onUnfollow = new OnUnfollow() {
-                @Override
-                public void onUnfollow(User source, User unfollowedUser) {
-                    if (unfollowedUser.getId() == user.getUser().getId()) {
+                            .show())
+                            //RT
+                    .onStatus(tweet -> {
+                        Tweet retweetFrom = tweet.getRetweetFrom();
+                        if (retweetFrom != null && retweetFrom.getOwner().getId() == user.getUser().getId()) {
+                            notification.create()
+                                    .title("RTされました")
+                                    .text(retweetFrom.getText())
+                                    .icon(iconStorage.find(tweet.getOwner()))
+                                    .show();
+                        }
+                    })
+                            //フォロー
+                    .onFollow((source, followedUser) -> {
+                        if (followedUser.getId() == user.getUser().getId()) {
+                            notification.create()
+                                    .title("@" + source.getScreenName() + "にフォローされました")
+                                    .text(source.getDescription())
+                                    .icon(iconStorage.find(source))
+                                    .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
+                                    .show();
+                        }
+                    })
+                            //アンフォロー
+                    .onUnfollow((source, unfollowedUser) -> {
+                        if (unfollowedUser.getId() == user.getUser().getId()) {
 
-                        notification.create()
-                                .title("@" + source.getScreenName() + "にリムられました")
-                                .text(source.getDescription())
-                                .icon(iconStorage.find(source))
-                                .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
-                                .show();
-                    }
-                }
-            };
-            stream.onUnfollow(onUnfollow);
+                            notification.create()
+                                    .title("@" + source.getScreenName() + "にリムられました")
+                                    .text(source.getDescription())
+                                    .icon(iconStorage.find(source))
+                                    .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
+                                    .show();
+                        }
+                    });
         });
     }
 }

@@ -34,7 +34,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
-public class HomeTimeLineColumn implements ColumnController, Initializable {
+public class HomeTimeLineColumn implements ColumnController, Initializable, OnStatus {
     public static final String ID = "timeline";
 
     private static final String KEY = "userId";
@@ -56,8 +56,6 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
     @Inject
     private ColumnService columnService;
 
-    //弱参照でリスナが保持されるためフィールドに束縛しておく
-    private OnStatus onStatus = this::onStatus;
     private ColumnState columnState;
 
     @Override
@@ -79,12 +77,13 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
         Platform.runLater(runnable);
         user.ifPresent(user -> {
             timeline.getItems().addAll(user.getHomeTimeline());
-            user.userStream().onStatus(onStatus);
+            user.userStream().onStatus(this);
             this.columnState.setData(KEY, user.getUser().getScreenName());
         });
     }
 
-    private void onStatus(Tweet tweet) {
+    @Override
+    public void onStatus(Tweet tweet) {
         Platform.runLater(() -> {
             logger.info("onStatus: " + tweet.getText());
 
@@ -147,7 +146,7 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
 
     @Override
     public void onClose() {
-        System.out.println("close");
+        user.ifPresent(u -> u.userStream().removeOnStatus(this));
         logger.info("save");
     }
 
@@ -174,19 +173,22 @@ public class HomeTimeLineColumn implements ColumnController, Initializable {
         for (TwitterUser twitterUser : twitterUsers) {
             MenuItem item = new MenuItem(twitterUser.getUser().getScreenName());
             item.setOnAction(e -> {
+                //切替時は登録済みのリスナを解除
+                user.ifPresent(u -> u.userStream().removeOnStatus(this));
+
                 user = Optional.of(twitterUser);
                 columnState.setData(KEY, twitterUser.getUser().getScreenName());
                 title.setText(twitterUser.getUser().getScreenName());
                 timeline.getItems().clear();
                 twitterUser.userStream().onStatus(this::onStatus);
                 owner.set(user.orElse(null));
-                System.gc();
             });
             accountSelect.getItems().add(item);
         }
     }
 
     public void closeRequest() {
+        user.ifPresent(u -> u.userStream().removeOnStatus(this));
         columnService.removeColumn(new Column(this, root));
     }
 }

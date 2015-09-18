@@ -33,7 +33,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Logger;
 
-public class MentionColumn implements ColumnController, Initializable {
+public class MentionColumn implements ColumnController, Initializable, OnMention {
 
     public static final String ID = "mention";
 
@@ -55,10 +55,8 @@ public class MentionColumn implements ColumnController, Initializable {
     private TwitterUserService userService;
     @Inject
     private ColumnService columnService;
-    private OnMention onStatus;
     private ColumnState columnState;
 
-    //弱参照でリスナが保持されるためフィールドに束縛しておく
     @Override
     public void restoration(ColumnState columnState) {
         this.columnState = columnState;
@@ -76,15 +74,15 @@ public class MentionColumn implements ColumnController, Initializable {
                 .map(name -> "@" + name)
                 .ifPresent(title::setText);
         Platform.runLater(runnable);
-        onStatus = this::onStatus;
         user.ifPresent(user -> {
             timeline.getItems().addAll(user.getMentions());
-            user.userStream().onMention(onStatus);
+            user.userStream().onMention(this);
             this.columnState.setData(KEY, user.getUser().getScreenName());
         });
     }
 
-    private void onStatus(Tweet tweet, User from) {
+    @Override
+    public void onMention(Tweet tweet, User from) {
         Platform.runLater(() -> timeline.getItems().add(0, tweet));
     }
 
@@ -105,6 +103,7 @@ public class MentionColumn implements ColumnController, Initializable {
 
     @Override
     public void onClose() {
+        user.ifPresent(u -> u.userStream().removeOnMention(this));
         logger.info("save");
     }
 
@@ -124,11 +123,13 @@ public class MentionColumn implements ColumnController, Initializable {
         for (TwitterUser twitterUser : twitterUsers) {
             MenuItem item = new MenuItem(twitterUser.getUser().getScreenName());
             item.setOnAction(e -> {
+                user.ifPresent(u -> u.userStream().removeOnMention(this));
+
                 user = Optional.of(twitterUser);
                 columnState.setData(KEY, twitterUser.getUser().getScreenName());
                 title.setText(twitterUser.getUser().getScreenName());
                 timeline.getItems().clear();
-                twitterUser.userStream().onMention(onStatus);
+                twitterUser.userStream().onMention(this);
                 owner.set(user.orElse(null));
                 System.gc();
             });
@@ -137,6 +138,7 @@ public class MentionColumn implements ColumnController, Initializable {
     }
 
     public void closeRequest() {
+        user.ifPresent(u -> u.userStream().removeOnMention(this));
         columnService.removeColumn(new Column(this, root));
     }
 

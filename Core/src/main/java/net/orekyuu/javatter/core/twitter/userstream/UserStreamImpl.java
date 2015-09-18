@@ -53,7 +53,7 @@ public class UserStreamImpl implements UserStream {
     @Override
     public UserStream onMention(OnMention onMention) {
         addListener(onMention, onMentionListeners);
-        return null;
+        return this;
     }
 
     @Override
