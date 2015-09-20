@@ -26,13 +26,13 @@
     <children>
         <HBox GridPane.columnIndex="1">
            <children>
-               <Label fx:id="userName" text="\@hoge / Name">
+               <Label fx:id="userName" text="\@hoge / Name" style="-fx-text-fill: black">
                    <font>
                        <Font name="System Bold" size="13.0" />
                    </font>
                </Label>
                <Pane HBox.hgrow="ALWAYS" />
-               <Label fx:id="time" text="Now">
+               <Label fx:id="time" text="Now" style="-fx-text-fill: black">
                    <font>
                        <Font name="System Bold" size="13.0" />
                    </font>

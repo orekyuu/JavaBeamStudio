@@ -35,3 +35,11 @@
     -fx-padding: 0;
     -fx-content-display: graphic-only;
 }
+
+.list-cell:filled:selected:focused, .list-cell:filled:selected{
+    -fx-background-color: #f1f1f2;
+    -fx-border-width: 2px;
+    -fx-border-color: #2e639f;
+    -fx-border-radius: 4px;
+}
+
