@@ -6,7 +6,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.Node;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
 import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -126,7 +125,7 @@ public final class TweetText extends TextFlow {
         if (t.isEmpty()) {
             return;
         }
-        Label label = new Label(t);
+        Text label = new Text(t);
         label.setFont(new Font(12));
         label.setStyle("-fx-text-fill: black;");
         nodes.add(label);
