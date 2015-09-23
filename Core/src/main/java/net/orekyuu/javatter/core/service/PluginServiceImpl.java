@@ -43,13 +43,13 @@ public class PluginServiceImpl implements PluginService {
                 PluginInfo pluginInfo = parseManifest(manifest);
                 VersionComparator comparator = new VersionComparator();
                 EnvironmentService service = Lookup.lookup(EnvironmentService.class);
-                if (comparator.compare(service.getJavaBeamStudioApiVersion(), pluginInfo.getApiVersion()) <= 0) {
+                if (comparator.compare(service.getJavaBeamStudioApiVersion(), pluginInfo.getApiVersion()) >= 0) {
                     map.put(pluginInfo.getPluginId(), pluginInfo);
                     classLoader.addPath(path);
                 } else {
                     NotificationService notificationService = Lookup.lookup(NotificationService.class);
                     notificationService.showWarning("プラグインの読み込みをスキップ",
-                            "APIバージョンが古いため読み込みをスキップしました。\nPlugin ID:"+
+                            "本体のAPIバージョンが古いため読み込みをスキップしました。\nPlugin ID:"+
                                     pluginInfo.getPluginId() + "\nAPI Version: " +
                                     pluginInfo.getApiVersion());
                 }
