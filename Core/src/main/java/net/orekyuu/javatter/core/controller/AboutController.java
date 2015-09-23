@@ -30,7 +30,7 @@ public class AboutController implements Initializable {
 
         version.setText(String.format("JavaBeamStudio %s", environmentService.getJavaBeamStudioVersion()));
         apiVersion.setText(String.format("JavaBeamStudioAPI %s", environmentService.getJavaBeamStudioApiVersion()));
-        release.setText(String.format("Release %d/%d/%d", 2015, 9, 10));
+        release.setText(String.format("Release %d/%d/%d", 2015, 9, 23));
         webSiteLink.setOnMouseClicked(e -> {
             try {
                 service.getApplication()
