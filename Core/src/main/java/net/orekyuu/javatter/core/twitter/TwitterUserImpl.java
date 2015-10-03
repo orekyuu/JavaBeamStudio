@@ -23,6 +23,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
@@ -532,4 +533,58 @@ public class TwitterUserImpl implements TwitterUser {
     public void updateProfileAsync(String name, String url, String location, String description) {
         userActionExecutor.submit(() -> updateProfile(name, url, location, description));
     }
+
+    //<editor-fold desc="API1.1.0 methods">
+    //<editor-fold desc="UserResource">
+    @Override
+    public CompletableFuture<User> findUserByScreenName(String screenName) {
+        return CompletableFuture.supplyAsync(() -> findUser(screenName));
+    }
+
+    @Override
+    public CompletableFuture<User> findUserById(long id) {
+        return CompletableFuture.supplyAsync(() -> findUser(id));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<Tweet>> fetchTimeline(User user) {
+        return CompletableFuture.supplyAsync(() -> getUserTimeline(user));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<Tweet>> fetchTimeline(long id) {
+        return CompletableFuture.supplyAsync(() -> getUserTimeline(id));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<Tweet>> fetchFavorites(User user) {
+        return CompletableFuture.supplyAsync(() -> getUserFavorites(user));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<Tweet>> fetchFavorites(long id) {
+        return CompletableFuture.supplyAsync(() -> getUserFavorites(id));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<User>> fetchFollowers(User user) {
+        return CompletableFuture.supplyAsync(() -> getFollowers(user));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<User>> fetchFollowers(long id) {
+        return CompletableFuture.supplyAsync(() -> getFollowers(id));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<User>> fetchFriends(User user) {
+        return CompletableFuture.supplyAsync(() -> getFriends(user));
+    }
+
+    @Override
+    public CompletableFuture<MutableList<User>> fetchFriends(long id) {
+        return CompletableFuture.supplyAsync(() -> getFriends(id));
+    }
+    //</editor-fold>
+    //</editor-fold>
 }
