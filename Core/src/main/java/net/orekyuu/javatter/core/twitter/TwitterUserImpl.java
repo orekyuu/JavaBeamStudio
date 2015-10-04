@@ -231,76 +231,80 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public void favorite(Tweet tweet) {
         try {
-            logger.info("favorite: " + tweet);
-            twitter.createFavorite(tweet.getStatusId());
-        } catch (TwitterException e) {
+            tryFavorite(tweet).join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void favoriteAsync(Tweet tweet) {
-        tweetActionExecutor.execute(() -> favorite(tweet));
+        try {
+            tryFavorite(tweet);
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void unFavorite(Tweet tweet) {
         try {
-            logger.info("unfavorite: " + tweet);
-            twitter.destroyFavorite(tweet.getStatusId());
-        } catch (TwitterException e) {
+            tryUnfavorite(tweet).join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void unFavoriteAsync(Tweet tweet) {
-        tweetActionExecutor.execute(() -> unFavorite(tweet));
+        try {
+            tryUnfavorite(tweet);
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void retweet(Tweet tweet) {
         try {
-            logger.info("retweet: " + tweet);
-            twitter.retweetStatus(tweet.getStatusId());
-        } catch (TwitterException e) {
+            tryRetweet(tweet).join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void retweetAsync(Tweet tweet) {
-        tweetActionExecutor.execute(() -> retweet(tweet));
+        try {
+            tryRetweet(tweet);
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void removeTweet(Tweet tweet) {
         try {
-            logger.info("removeTweet: " + tweet);
-            twitter.destroyStatus(tweet.getStatusId());
-        } catch (TwitterException e) {
+            deleteTweet(tweet).join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
     }
 
     @Override
     public void removeTweetAsync(Tweet tweet) {
-        tweetActionExecutor.execute(() -> removeTweet(tweet));
+        try {
+            deleteTweet(tweet);
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public Tweet findTweet(long id) {
-        Optional<Tweet> byId = TweetCache.getInstance().getById(id);
-        if (byId.isPresent()) {
-            return byId.get();
-        }
-
         try {
-            Status status = twitter.showStatus(id);
-            Tweet tweet = TweetImpl.create(status);
-            TweetCache.getInstance().update(tweet);
-            return tweet;
-        } catch (TwitterException e) {
+            findTweetById(id).join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
         return null;
@@ -409,9 +413,8 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public MutableList<Tweet> getHomeTimeline() {
         try {
-            ResponseList<Status> homeTimeline = twitter.getHomeTimeline();
-            return Lists.mutable.ofAll(homeTimeline).collect(TweetImpl::create);
-        } catch (TwitterException e) {
+            return fetchHomeTimeline().join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
         return Lists.mutable.empty();
@@ -420,9 +423,8 @@ public class TwitterUserImpl implements TwitterUser {
     @Override
     public MutableList<Tweet> getMentions() {
         try {
-            ResponseList<Status> statuses = twitter.getMentionsTimeline();
-            return Lists.mutable.ofAll(statuses).collect(TweetImpl::create);
-        } catch (TwitterException e) {
+            return fetchMentions().join();
+        } catch (net.orekyuu.javatter.api.twitter.TwitterException e) {
             e.printStackTrace();
         }
         return Lists.mutable.empty();
@@ -517,6 +519,108 @@ public class TwitterUserImpl implements TwitterUser {
     }
 
     //<editor-fold desc="API1.1.0 methods">
+    //<editor-fold desc="TweetControl">
+    @Override
+    public CompletableFuture<Tweet> deleteTweet(Tweet tweet) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Status status = twitter.destroyStatus(tweet.getStatusId());
+                return TweetImpl.create(status);
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        });
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="TweetResource">
+    @Override
+    public CompletableFuture<Tweet> findTweetById(long id) {
+        return CompletableFuture.supplyAsync(() -> {
+            Optional<Tweet> byId = TweetCache.getInstance().getById(id);
+            if (byId.isPresent()) {
+                return byId.get();
+            }
+
+            try {
+                Status status = twitter.showStatus(id);
+                Tweet tweet = TweetImpl.create(status);
+                TweetCache.getInstance().update(tweet);
+                return tweet;
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        }, tweetActionExecutor);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="RetweetControl">
+    @Override
+    public CompletableFuture<Tweet> tryRetweet(Tweet tweet) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Status status = twitter.retweetStatus(tweet.getStatusId());
+                return TweetImpl.create(status);
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        }, tweetActionExecutor);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="TimelineResource">
+    @Override
+    public CompletableFuture<MutableList<Tweet>> fetchHomeTimeline() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                ResponseList<Status> homeTimeline = twitter.getHomeTimeline();
+                return Lists.mutable.ofAll(homeTimeline).collect(TweetImpl::create);
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        }, tweetActionExecutor);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="MentionsResource">
+    @Override
+    public CompletableFuture<MutableList<Tweet>> fetchMentions() {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                ResponseList<Status> statuses = twitter.getMentionsTimeline();
+                return Lists.mutable.ofAll(statuses).collect(TweetImpl::create);
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        }, tweetActionExecutor);
+    }
+    //</editor-fold>
+
+    //<editor-fold desc="FavoriteControl">
+    @Override
+    public CompletableFuture<Tweet> tryFavorite(Tweet tweet) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Status favorite = twitter.createFavorite(tweet.getStatusId());
+                return TweetImpl.create(favorite);
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        }, tweetActionExecutor);
+    }
+
+    @Override
+    public CompletableFuture<Tweet> tryUnfavorite(Tweet tweet) {
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                Status favorite = twitter.destroyFavorite(tweet.getStatusId());
+                return TweetImpl.create(favorite);
+            } catch (TwitterException e) {
+                throw new net.orekyuu.javatter.api.twitter.TwitterException();
+            }
+        }, tweetActionExecutor);
+    }
+    //</editor-fold>
 
     //<editor-fold desc="UserControl">
     @Override
