@@ -76,7 +76,11 @@ public class HomeTimeLineColumn implements ColumnController, Initializable, OnSt
                 .ifPresent(title::setText);
         Platform.runLater(runnable);
         user.ifPresent(user -> {
-            timeline.getItems().addAll(user.getHomeTimeline());
+            user.fetchHomeTimeline().thenAccept(result -> {
+                Platform.runLater(() -> {
+                    timeline.getItems().addAll(result);
+                });
+            });
             user.userStream().onStatus(this);
             this.columnState.setData(KEY, user.getUser().getScreenName());
         });

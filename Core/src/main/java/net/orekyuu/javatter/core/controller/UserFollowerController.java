@@ -1,6 +1,6 @@
 package net.orekyuu.javatter.core.controller;
 
-import com.gs.collections.api.list.MutableList;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,8 +23,9 @@ public class UserFollowerController implements Initializable, UserWindowTab {
 
     @Override
     public void update(User user, TwitterUser owner) {
-        MutableList<User> friends = owner.getFollowers(user);
-        root.getItems().setAll(friends);
+        owner.fetchFollowers(user).thenAccept(result -> {
+            Platform.runLater(() -> root.getItems().setAll(result));
+        });
         this.owner.setValue(owner);
     }
 

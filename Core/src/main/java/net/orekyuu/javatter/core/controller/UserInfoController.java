@@ -1,5 +1,6 @@
 package net.orekyuu.javatter.core.controller;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -71,13 +72,14 @@ public class UserInfoController implements UserWindowTab {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy/MM/ddに作成されました。");
         created.setText(user.getCreatedAt().format(format));
         follow.textProperty().bind(Bindings.when(follow.selectedProperty()).then("フォローを外す").otherwise("フォローする"));
-        FollowStatus status = owner.checkFollowStatus(user);
-        updateStatus(status);
+        owner.fetchFollowStatus(user).thenAccept(result -> {
+            Platform.runLater(() -> updateStatus(result));
+        });
         follow.setOnAction(e -> {
             if (follow.isSelected()) {
-                owner.followAsync(user);
+                owner.tryFollow(user);
             } else {
-                owner.unfollowAsync(user);
+                owner.tryUnfollow(user);
             }
         });
     }

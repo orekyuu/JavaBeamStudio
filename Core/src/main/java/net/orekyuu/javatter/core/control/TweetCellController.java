@@ -1,6 +1,7 @@
 package net.orekyuu.javatter.core.control;
 
 import com.gs.collections.api.list.ImmutableList;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
@@ -84,7 +85,11 @@ public class TweetCellController implements Initializable {
         tweetContent.setOnClickUserLink(userName -> {
             TwitterUser user = owner.get();
             if (user != null) {
-                service.open(user.findUser(userName), user);
+                user.findUserByScreenName(userName).thenAccept(result -> {
+                    Platform.runLater(() -> {
+                        service.open(result, user);
+                    });
+                });
             }
         });
         //アクションボタンをクリックした時に現在のツイートを保存
@@ -247,7 +252,7 @@ public class TweetCellController implements Initializable {
         TwitterUser twitterUser = owner.get();
         Tweet tweet = this.tweet.get();
         if (twitterUser != null && tweet != null) {
-            twitterUser.retweetAsync(tweet);
+            twitterUser.tryRetweet(tweet);
         }
     }
 
@@ -275,9 +280,9 @@ public class TweetCellController implements Initializable {
         Tweet tweet = this.tweet.get();
         if (twitterUser != null && tweet != null) {
             if (favorite.isSelected()) {
-                twitterUser.favoriteAsync(tweet);
+                twitterUser.tryFavorite(tweet);
             } else {
-                twitterUser.unFavoriteAsync(tweet);
+                twitterUser.tryUnfavorite(tweet);
             }
         }
     }
