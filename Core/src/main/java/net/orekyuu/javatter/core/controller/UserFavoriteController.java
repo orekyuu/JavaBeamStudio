@@ -1,6 +1,6 @@
 package net.orekyuu.javatter.core.controller;
 
-import com.gs.collections.api.list.MutableList;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -24,8 +24,11 @@ public class UserFavoriteController implements UserWindowTab, Initializable {
 
     @Override
     public void update(User user, TwitterUser owner) {
-        MutableList<Tweet> favorites = owner.getUserFavorites(user);
-        root.getItems().setAll(favorites);
+        owner.fetchFavorites(user).thenAccept(result -> {
+            Platform.runLater(() -> {
+                root.getItems().setAll(result);
+            });
+        });
         this.owner.setValue(owner);
     }
 

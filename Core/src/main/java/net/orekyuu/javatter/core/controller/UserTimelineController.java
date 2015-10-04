@@ -1,14 +1,12 @@
 package net.orekyuu.javatter.core.controller;
 
-import com.gs.collections.api.list.MutableList;
+import javafx.application.Platform;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.util.Callback;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
@@ -27,8 +25,9 @@ public class UserTimelineController implements UserWindowTab, Initializable {
 
     @Override
     public void update(User user, TwitterUser owner) {
-        MutableList<Tweet> homeTimeline = owner.getUserTimeline(user);
-        root.getItems().setAll(homeTimeline);
+        owner.fetchTimeline(user).thenAccept(result -> {
+            Platform.runLater(() -> root.getItems().setAll(result));
+        });
         this.owner.setValue(owner);
     }
 

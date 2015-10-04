@@ -75,7 +75,11 @@ public class MentionColumn implements ColumnController, Initializable, OnMention
                 .ifPresent(title::setText);
         Platform.runLater(runnable);
         user.ifPresent(user -> {
-            timeline.getItems().addAll(user.getMentions());
+            user.fetchMentions().thenAccept(result -> {
+               Platform.runLater(() -> {
+                   timeline.getItems().addAll(result);
+               });
+            });
             user.userStream().onMention(this);
             this.columnState.setData(KEY, user.getUser().getScreenName());
         });
