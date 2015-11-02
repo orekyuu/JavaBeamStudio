@@ -12,7 +12,7 @@ version = '1.0.0'
 
 dependencies {
     compile project(':API')
-    compile 'org.controlsfx:controlsfx:8.40.10-SNAPSHOT'
+    compile 'org.controlsfx:controlsfx:8.40.10'
     compile 'com.google.inject:guice:3.0'
     compile 'org.twitter4j:twitter4j-core:4.0.2'
     compile 'org.twitter4j:twitter4j-async:4.0.2'
