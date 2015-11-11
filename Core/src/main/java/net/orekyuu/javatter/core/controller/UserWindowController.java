@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
+import net.orekyuu.javatter.api.plugin.PluginService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.userwindow.UserWindowTab;
@@ -30,6 +31,8 @@ public class UserWindowController implements Initializable {
 
     @Inject
     private UserWindowTabManager manager;
+    @Inject
+    private PluginService pluginService;
 
     private MutableList<UserWindowTab> tabControllers = Lists.mutable.of();
 
@@ -39,6 +42,7 @@ public class UserWindowController implements Initializable {
                 .collect(JavatterFXMLLoader::new)
                 .each(loader -> {
                     try {
+                        loader.setClassLoader(pluginService.getPluginClassLoader());
                         Parent p = loader.load();
                         UserWindowTab userTab = loader.getController();
                         StringProperty titleProperty = userTab.titleProperty();

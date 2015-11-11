@@ -136,11 +136,11 @@ public class JavaBeamStudio extends Application {
 
     private void initUserWindowTab() {
         UserWindowTabManager manager = Lookup.lookup(UserWindowTabManager.class);
-        manager.registerTab("/layout/userInfo.fxml");
-        manager.registerTab("/layout/user_timeline.fxml");
-        manager.registerTab("/layout/userFavorite.fxml");
-        manager.registerTab("/layout/userFollows.fxml");
-        manager.registerTab("/layout/userFollowers.fxml");
+        manager.registerTab("layout/userInfo.fxml");
+        manager.registerTab("layout/user_timeline.fxml");
+        manager.registerTab("layout/userFavorite.fxml");
+        manager.registerTab("layout/userFollows.fxml");
+        manager.registerTab("layout/userFollowers.fxml");
     }
 
     private void initAccount() {
