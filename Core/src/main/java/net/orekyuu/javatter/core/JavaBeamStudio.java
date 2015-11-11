@@ -201,8 +201,8 @@ public class JavaBeamStudio extends Application {
     private void registColumns() {
         ColumnManager columnManager = Lookup.lookup(ColumnManager.class);
         //タイムラインを登録
-        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), HomeTimeLineColumn.ID, "/columns/home.fxml", "タイムライン");
-        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), MentionColumn.ID, "/columns/mention.fxml", "メンション");
+        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), HomeTimeLineColumn.ID, "columns/home.fxml", "タイムライン");
+        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), MentionColumn.ID, "columns/mention.fxml", "メンション");
     }
 
     private void registerNotification() {

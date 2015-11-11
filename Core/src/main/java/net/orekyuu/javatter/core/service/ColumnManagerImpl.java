@@ -9,8 +9,11 @@ import com.gs.collections.impl.factory.Maps;
 import javafx.scene.Node;
 import net.orekyuu.javatter.api.column.*;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
+import net.orekyuu.javatter.api.plugin.PluginService;
+import net.orekyuu.javatter.api.util.lookup.Lookup;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 import java.util.Optional;
 
@@ -50,20 +53,27 @@ public class ColumnManagerImpl implements ColumnManager {
 
     @Override
     public Optional<ColumnFactory> findByPluginIdAndColumnId(String pluginId, String columnId) {
-        ColumnFactory factory = new ColumnFactory() {
-            @Override
-            public Column newInstance(ColumnState state) throws IOException {
-                String fxml = factories.get(pluginId + ":" + columnId);
-                JavatterFXMLLoader loader = new JavatterFXMLLoader(getClass().getResource(fxml));
-                Node node = loader.load();
-                ColumnController columnController = loader.getController();
-                if (state == null) {
-                    state = columnController.defaultColumnState();
-                }
-                columnController.restoration(state);
+        ColumnFactory factory = state -> {
+            String fxml = factories.get(pluginId + ":" + columnId);
 
-                return new Column(columnController, node);
+            //PluginServiceからPluginClassLoaderを取得
+            PluginService service = Lookup.lookup(PluginService.class);
+            ClassLoader classLoader = service.getPluginClassLoader();
+            //ClassLoaderからfxmlのパスを取得
+            URL resource = classLoader.getResource(fxml);
+
+            JavatterFXMLLoader loader = new JavatterFXMLLoader(resource);
+            //コントローラが作成できるようにPluginClassLoaderを設定
+            loader.setClassLoader(classLoader);
+
+            Node node = loader.load();
+            ColumnController columnController = loader.getController();
+            if (state == null) {
+                state = columnController.defaultColumnState();
             }
+            columnController.restoration(state);
+
+            return new Column(columnController, node);
         };
         return Optional.ofNullable(factory);
     }
