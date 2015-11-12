@@ -117,7 +117,7 @@ public class MainWindowController implements Initializable {
         });
 
         for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
-            if (info.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
+            //if (info.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
                 MenuItem menuItem = new MenuItem(info.getName());
                 menuItem.setOnAction(e -> {
                     Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(info.getPluginId(),
@@ -130,7 +130,7 @@ public class MainWindowController implements Initializable {
                     }
                 });
                 columnSelector.getItems().add(menuItem);
-            }
+            //}
         }
 
         //アクションの登録
