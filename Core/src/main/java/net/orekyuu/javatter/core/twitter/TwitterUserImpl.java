@@ -224,8 +224,9 @@ public class TwitterUserImpl implements TwitterUser {
 
     @Override
     public void dispose() {
+        logger.info("user stream shutdown start.");
         twitterStream.shutdown();
-        logger.info("user stream shutdown.");
+        logger.info("user stream shutdown finished.");
     }
 
     @Override

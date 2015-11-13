@@ -29,6 +29,7 @@ import net.orekyuu.javatter.api.column.*;
 import net.orekyuu.javatter.api.command.CommandManager;
 import net.orekyuu.javatter.api.controller.JavatterFXMLLoader;
 import net.orekyuu.javatter.api.controller.OwnerStage;
+import net.orekyuu.javatter.api.notification.NotificationService;
 import net.orekyuu.javatter.api.service.ApplicationService;
 import net.orekyuu.javatter.api.service.MainTweetAreaService;
 import net.orekyuu.javatter.api.service.TwitterUserService;
@@ -117,20 +118,22 @@ public class MainWindowController implements Initializable {
         });
 
         for (ColumnManager.ColumnInfo info : columnManager.getAllColumnInfo()) {
-            //if (info.getPluginId().equals(PluginServiceImpl.BUILD_IN.getPluginId())) {
-                MenuItem menuItem = new MenuItem(info.getName());
-                menuItem.setOnAction(e -> {
-                    Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(info.getPluginId(),
-                            info.getColumnName());
-                    try {
-                        Column pair = factory.get().newInstance(null);
-                        columnService.addColumn(pair);
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                });
-                columnSelector.getItems().add(menuItem);
-            //}
+            MenuItem menuItem = new MenuItem(info.getName());
+            menuItem.setOnAction(e -> {
+                Optional<ColumnFactory> factory = columnManager.findByPluginIdAndColumnId(info.getPluginId(),
+                        info.getColumnName());
+                if (!factory.isPresent()) {
+                    Lookup.lookup(NotificationService.class).showError("カラムが生成できませんでした。", info.getPluginId() + ":" + info.getColumnName());
+                    return;
+                }
+                try {
+                    Column pair = factory.get().newInstance(null);
+                    columnService.addColumn(pair);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+            });
+            columnSelector.getItems().add(menuItem);
         }
 
         //アクションの登録
@@ -186,14 +189,19 @@ public class MainWindowController implements Initializable {
     private void openSavedColumns() {
         ImmutableList<ColumnState> states = columnStateStorageService.loadColumnStates();
         for (ColumnState state : states) {
-            columnManager.findByPluginIdAndColumnId(state.getPluginId(), state.getColumnId())
+            Optional<Column> column = columnManager.findByPluginIdAndColumnId(state.getPluginId(), state.getColumnId())
                     .map(factory -> {
                         try {
                             return factory.newInstance(state);
                         } catch (IOException e) {
                             throw new UncheckedIOException(e);
                         }
-                    }).ifPresent(columnService::addColumn);
+                    });
+            if (column.isPresent()) {
+                columnService.addColumn(column.get());
+            } else {
+                Lookup.lookup(NotificationService.class).showError("カラムが生成できませんでした。", state.getPluginId() + ":" + state.getColumnId());
+            }
         }
     }
 

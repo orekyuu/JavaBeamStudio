@@ -53,8 +53,11 @@ public class ColumnManagerImpl implements ColumnManager {
 
     @Override
     public Optional<ColumnFactory> findByPluginIdAndColumnId(String pluginId, String columnId) {
+        String fxml = factories.get(pluginId + ":" + columnId);
+        if (fxml == null) {
+            return Optional.empty();
+        }
         ColumnFactory factory = state -> {
-            String fxml = factories.get(pluginId + ":" + columnId);
 
             //PluginServiceからPluginClassLoaderを取得
             PluginService service = Lookup.lookup(PluginService.class);
@@ -75,7 +78,7 @@ public class ColumnManagerImpl implements ColumnManager {
 
             return new Column(columnController, node);
         };
-        return Optional.ofNullable(factory);
+        return Optional.of(factory);
     }
 
     @Override
