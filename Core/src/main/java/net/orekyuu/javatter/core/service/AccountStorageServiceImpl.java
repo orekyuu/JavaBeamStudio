@@ -30,6 +30,7 @@ public class AccountStorageServiceImpl implements AccountStorageService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public <T> ImmutableList<T> findByType(Class<T> accountType) {
         AccountContainer container = loadContainer();
 
@@ -39,6 +40,20 @@ public class AccountStorageServiceImpl implements AccountStorageService {
         return container.getAccounts()
                 .select(account -> account != null && accountType.isAssignableFrom(account.getClass()))
                 .collect(account -> (T) account);
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends Account> ImmutableList<T> findAllByType(Class<T> accountType) {
+        AccountContainer container = loadContainer();
+
+        if (container == null) {
+            return Lists.immutable.of();
+        }
+
+        return container.getAccounts()
+                .select(account -> account != null && accountType.isAssignableFrom(account.getClass()))
+                .collect(account -> (T)account);
     }
 
     @Override

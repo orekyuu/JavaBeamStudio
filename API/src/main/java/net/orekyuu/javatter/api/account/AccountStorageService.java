@@ -29,8 +29,19 @@ public interface AccountStorageService {
      * @param <T> アカウントの型
      * @return 型に一致する全てのアカウント
      * @since 1.0.0
+     * @deprecated {@link #findAllByType(Class)}
      */
+    @Deprecated
     <T> ImmutableList<T> findByType(Class<T> accountType);
+
+    /**
+     * 型に一致する全てのアカウントを返します。
+     * @param accountType アカウントのClass
+     * @param <T> アカウントの型
+     * @return 型に一致する全てのアカウント
+     * @since 1.0.2
+     */
+    <T extends Account> ImmutableList<T> findAllByType(Class<T> accountType);
 
     /**
      * @return 全てのアカウント
