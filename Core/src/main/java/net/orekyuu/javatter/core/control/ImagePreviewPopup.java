@@ -43,8 +43,8 @@ public class ImagePreviewPopup extends PopupControl {
         image.progressProperty().addListener((observable, oldValue, newValue) -> {
             if (1.0 <= newValue.doubleValue()) {
                 ImageView imageView = new ImageView(image);
-                HBox borderPane = new HBox();
-                borderPane.getChildren().add(imageView);
+                HBox top = new HBox();
+                top.getChildren().add(imageView);
 
                 Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
 
@@ -55,7 +55,7 @@ public class ImagePreviewPopup extends PopupControl {
                 imageView.setFitWidth(image.getWidth() * a);
                 imageView.setFitHeight(image.getHeight() * a);
 
-                getScene().setRoot(borderPane);
+                getScene().setRoot(top);
                 moveToCenter();
             } else {
                 indicator.setProgress(newValue.doubleValue());
