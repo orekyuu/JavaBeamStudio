@@ -19,6 +19,7 @@ import net.orekyuu.javatter.api.service.MainTweetAreaService;
 import net.orekyuu.javatter.api.service.UserIconStorage;
 import net.orekyuu.javatter.api.storage.DataStorageService;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
+import net.orekyuu.javatter.api.twitter.media.Media;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.api.userwindow.UserWindowService;
@@ -141,10 +142,10 @@ public class TweetCellController implements Initializable {
         }
 
         images.getChildren().clear();
-        for (String url : mainTweet.medias()) {
-            Image image = new Image(url, 128, 128, true, true, true);
+        for (Media media : mainTweet.mediaList()) {
+            Image image = new Image(media.getPreviewImageUrl(), 128, 128, true, true, true);
             ImageView view = new ImageView(image);
-            view.setOnMouseClicked(e -> openPreview(url));
+            view.setOnMouseClicked(e -> openPreview(media));
             images.getChildren().add(view);
         }
 
@@ -199,8 +200,13 @@ public class TweetCellController implements Initializable {
     }
 
     private ImagePreviewPopup popup = new ImagePreviewPopup();
-    private void openPreview(String url) {
-        popup.showImage(url, root);
+    private MoviePreviewPopup moviePreviewPopup = new MoviePreviewPopup();
+    private void openPreview(Media media) {
+        if (media.getType() == Media.Type.IMAGE) {
+            popup.showImage(media.getContentUrl(), root);
+        } else {
+            moviePreviewPopup.showMovie(media.getContentUrl(), root);
+        }
     }
 
 
