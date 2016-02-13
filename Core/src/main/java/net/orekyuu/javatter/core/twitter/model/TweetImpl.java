@@ -4,6 +4,7 @@ import com.gs.collections.api.list.ImmutableList;
 import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.list.fixed.ArrayAdapter;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
+import net.orekyuu.javatter.api.twitter.media.Media;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.core.cache.FavoriteCache;
@@ -171,6 +172,33 @@ public class TweetImpl implements Tweet {
     public ImmutableList<String> medias() {
         MutableList<String> urls = ArrayAdapter.adapt(medias).collect(MediaEntity::getMediaURL);
         return urls.toImmutable();
+    }
+
+    @Override
+    public ImmutableList<Media> mediaList() {
+        MutableList<Media> collect = ArrayAdapter.adapt(medias).collect(e -> {
+            Media.Builder builder = new Media.Builder();
+            String type = e.getType();
+            if (type.equals("photo")) {
+                builder.setContentUrl(e.getMediaURL());
+                builder.setPreviewImageUrl(e.getMediaURL());
+                builder.setType(Media.Type.IMAGE);
+            } else {
+                ExtendedMediaEntity entity = (ExtendedMediaEntity) e;
+                builder.setPreviewImageUrl(e.getMediaURL());
+                builder.setContentUrl(e.getMediaURL());
+                builder.setType(Media.Type.IMAGE);
+                //動画があるか
+                for (ExtendedMediaEntity.Variant variant : entity.getVideoVariants()) {
+                    builder.setType(Media.Type.MOVIE);
+                    builder.setContentUrl("http" + variant.getUrl().substring(5));
+                    //一回ループしたら動画があるので抜ける
+                    break;
+                }
+            }
+            return builder.build();
+        });
+        return collect.toImmutable();
     }
 
     public static Tweet create(twitter4j.Status status) {

@@ -2,6 +2,7 @@ package net.orekyuu.javatter.api.twitter.model;
 
 import com.gs.collections.api.list.ImmutableList;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
+import net.orekyuu.javatter.api.twitter.media.Media;
 
 import java.time.LocalDateTime;
 
@@ -81,4 +82,13 @@ public interface Tweet {
      * @since 1.0.0
      */
     ImmutableList<String> medias();
+
+    /**
+     * ツイートに登録されたメディアを返します。
+     * @return 登録されているメディアの情報
+     * @since 1.0.2
+     */
+    default ImmutableList<Media> mediaList() {
+        throw new UnsupportedOperationException();
+    }
 }
