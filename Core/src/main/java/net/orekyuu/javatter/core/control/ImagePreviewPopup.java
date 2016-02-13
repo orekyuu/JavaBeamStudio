@@ -9,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Screen;
 
 public class ImagePreviewPopup extends PopupControl {
@@ -42,12 +43,19 @@ public class ImagePreviewPopup extends PopupControl {
         image.progressProperty().addListener((observable, oldValue, newValue) -> {
             if (1.0 <= newValue.doubleValue()) {
                 ImageView imageView = new ImageView(image);
-                BorderPane borderPane = new BorderPane();
-                borderPane.setCenter(imageView);
-                borderPane.setPrefSize(image.getWidth(), image.getHeight());
-                imageView.fitWidthProperty().bind(borderPane.widthProperty());
-                imageView.fitHeightProperty().bind(borderPane.heightProperty());
-                getScene().setRoot(borderPane);
+                HBox top = new HBox();
+                top.getChildren().add(imageView);
+
+                Rectangle2D visualBounds = Screen.getPrimary().getVisualBounds();
+
+                double w = visualBounds.getWidth() / image.getWidth();
+                double h = visualBounds.getHeight() / image.getHeight();
+                double a = Math.min(1.0, Math.min(w, h)) * 0.9;
+
+                imageView.setFitWidth(image.getWidth() * a);
+                imageView.setFitHeight(image.getHeight() * a);
+
+                getScene().setRoot(top);
                 moveToCenter();
             } else {
                 indicator.setProgress(newValue.doubleValue());
