@@ -7,3 +7,7 @@ allprojects {
 
     group = 'net.orekyuu'
 }
+
+task(taiho) {
+    println "俺九逮捕"
+}
