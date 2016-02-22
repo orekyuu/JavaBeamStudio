@@ -84,6 +84,15 @@ public interface Tweet {
     ImmutableList<String> medias();
 
     /**
+     * メンションの一覧を返します
+     * @return メンションの一覧
+     * @since 1.0.2
+     */
+    default ImmutableList<? extends Mention> mentions() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * ツイートに登録されたメディアを返します。
      * @return 登録されているメディアの情報
      * @since 1.0.2

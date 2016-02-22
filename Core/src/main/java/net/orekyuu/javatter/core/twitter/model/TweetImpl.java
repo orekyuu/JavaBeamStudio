@@ -5,6 +5,7 @@ import com.gs.collections.api.list.MutableList;
 import com.gs.collections.impl.list.fixed.ArrayAdapter;
 import net.orekyuu.javatter.api.twitter.TwitterUser;
 import net.orekyuu.javatter.api.twitter.media.Media;
+import net.orekyuu.javatter.api.twitter.model.Mention;
 import net.orekyuu.javatter.api.twitter.model.Tweet;
 import net.orekyuu.javatter.api.twitter.model.User;
 import net.orekyuu.javatter.core.cache.FavoriteCache;
@@ -172,6 +173,13 @@ public class TweetImpl implements Tweet {
     public ImmutableList<String> medias() {
         MutableList<String> urls = ArrayAdapter.adapt(medias).collect(MediaEntity::getMediaURL);
         return urls.toImmutable();
+    }
+
+    @Override
+    public ImmutableList<? extends Mention> mentions() {
+        return ArrayAdapter.adapt(mentions)
+                .collect(MentionImpl::new)
+                .toImmutable();
     }
 
     @Override
