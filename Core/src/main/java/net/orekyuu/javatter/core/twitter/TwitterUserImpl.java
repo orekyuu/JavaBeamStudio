@@ -100,14 +100,8 @@ public class TwitterUserImpl implements TwitterUser {
                 //お気に入り状態の更新
                 FavoriteCache.getInstance().update(TwitterUserImpl.this, tweet, status.isFavorited());
 
-                long replyStatusId = tweet.getReplyStatusId();
-                //リプライ先がなければおしまい
-                if (replyStatusId == -1) {
-
-                    return;
-                }
-                Tweet replyTo = findTweet(replyStatusId);
-                if (replyTo.getOwner().getId() == getUser().getId()) {
+                if (tweet.mentions().anySatisfy(m -> m.getId() == getUser().getId())
+                        && !status.isRetweet()) {
                     userStream.callMentions(tweet);
                 }
             }
