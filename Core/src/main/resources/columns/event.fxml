@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<VBox fx:controller="net.orekyuu.javatter.core.column.EventColumn"
+      xmlns="http://javafx.com/javafx/null" xmlns:fx="http://javafx.com/fxml/1" fx:id="root">
+    <stylesheets>
+        <URL value="@../layout/tweetCell.css"/>
+    </stylesheets>
+    <children>
+        <HBox>
+            <Label text="AccountName" fx:id="title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <MenuButton text="account" fx:id="accountSelect"/>
+            <Button text="☓" onAction="#closeRequest"/>
+
+        </HBox>
+        <ListView fx:id="event" VBox.vgrow="ALWAYS"/>
+    </children>
+</VBox>

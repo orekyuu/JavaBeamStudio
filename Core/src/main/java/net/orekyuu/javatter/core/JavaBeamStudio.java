@@ -34,6 +34,7 @@ import net.orekyuu.javatter.api.util.lookup.Lookup;
 import net.orekyuu.javatter.api.util.lookup.Lookuper;
 import net.orekyuu.javatter.core.action.ActionConfig;
 import net.orekyuu.javatter.core.action.ActionManagerImpl;
+import net.orekyuu.javatter.core.column.EventColumn;
 import net.orekyuu.javatter.core.column.HomeTimeLineColumn;
 import net.orekyuu.javatter.core.column.MentionColumn;
 import net.orekyuu.javatter.core.command.CommandManagerImpl;
@@ -203,6 +204,7 @@ public class JavaBeamStudio extends Application {
         //タイムラインを登録
         columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), HomeTimeLineColumn.ID, "columns/home.fxml", "タイムライン");
         columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), MentionColumn.ID, "columns/mention.fxml", "メンション");
+        columnManager.registerColumn(PluginServiceImpl.BUILD_IN.getPluginId(), EventColumn.ID, "columns/event.fxml", "イベント");
     }
 
     private void registerNotification() {
