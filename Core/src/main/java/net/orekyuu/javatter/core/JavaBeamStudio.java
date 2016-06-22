@@ -272,6 +272,15 @@ public class JavaBeamStudio extends Application {
                                     .setAction(() -> Lookup.lookup(UserWindowService.class).open(source, user))
                                     .show();
                         }
+                    })
+                    //ダイレクトメッセージ
+                    .onDirectMessage(directMessage -> {
+                        if (directMessage.sender().getId() != user.getUser().getId()) {
+                            notification.create().title("@" +directMessage.sender().getScreenName() + "からDM")
+                                    .text(directMessage.getText().substring(0, Math.min(100, directMessage.getText().length())))
+                                    .icon(iconStorage.find(directMessage.sender()))
+                                    .show();
+                        }
                     });
         });
     }
